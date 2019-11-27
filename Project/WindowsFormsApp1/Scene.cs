@@ -23,6 +23,8 @@ namespace WindowsFormsApp1
             SetStyle(ControlStyles.Opaque, true);
         }
 
+        public static string ERRORMESSAGE = "";
+
         private void ViewInLogLabel()
         {
             StringBuilder sb = new StringBuilder();
@@ -44,6 +46,7 @@ namespace WindowsFormsApp1
             sb.Append("\nPlayer direction: ");
             sb.Append("\n   z: " + MouseAndKeyboardEvents.movePlayerDirections.Z);
             sb.Append("\n   x: " + MouseAndKeyboardEvents.movePlayerDirections.X);
+            sb.Append("\n" + ERRORMESSAGE);
 
             label_Info.Text = sb.ToString();
         }
@@ -59,14 +62,17 @@ namespace WindowsFormsApp1
         {
             MouseAndKeyboardEvents.CreateGuidDevices();
             MouseAndKeyboardEvents.SetCooperativeLevels();
-            Render.CreateDeviceAndRenderthread();
+            //Render.CreateDeviceAndRenderthread();
+
+            //Tasks
+            MouseAndKeyboardEvents.KeysAndMouseEvents();
+            MouseAndKeyboardEvents.SetDirections();
+
             timerUpdate.Enabled = true;
         }
 
         private void Update(object sender, EventArgs e)
         {
-            MouseAndKeyboardEvents.KeysAndMouseEvents();
-            MouseAndKeyboardEvents.SetDirections();
             SetTestPanelPosition();
             ViewInLogLabel();
         }

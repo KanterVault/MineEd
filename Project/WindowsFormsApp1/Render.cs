@@ -28,6 +28,12 @@ namespace WindowsFormsApp1
             pp.Windowed = true;
             pp.SwapEffect = SwapEffect.Discard;
             pp.DeviceWindow = form;
+            pp.BackBufferCount = 1;
+            pp.BackBufferFormat = Format.A8R8G8B8;
+            pp.PresentationInterval = PresentInterval.Immediate;
+            pp.PresentFlag = PresentFlag.None;
+            pp.AutoDepthStencilFormat = DepthFormat.D16;
+            pp.EnableAutoDepthStencil = true;
         }
 
         public static bool CreateDirectXDevice()
@@ -43,39 +49,49 @@ namespace WindowsFormsApp1
                     pp);
                 return true;
             }
-            catch (Exception ex) { MessageBox.Show("Error: " + ex.ToString()); return false; }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.ToString());
+                Scene.ERRORMESSAGE = ex.ToString();
+                return false;
+            }
         }
 
         public delegate void TaskRender(); public static void NullMethod() { }
         public static void RenderThread(IAsyncResult result)
         {
-            MeshBuilder.CreateNewTerrainMesh();
-
             TaskRender task = (TaskRender)result.AsyncState;
             task.EndInvoke(result);
+
+            MeshBuilder.CreateNewTerrainMesh();
 
             while (live)
             {
                 try
                 {
                     dx.BeginScene();
-                    dx.Clear(ClearFlags.Target, Color.Aqua, 1.0f, 0);
+                    dx.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Aqua, 1.0f, 0);
 
                     RenderLineScene.RenderScene();
 
                     dx.EndScene();
                     dx.Present();
                 }
-                catch { Thread.Sleep(1000); }
+                catch (Exception ex)
+                {
+                    Thread.Sleep(1000);
+                    Scene.ERRORMESSAGE = ex.ToString();
+                }
             }
         }
 
         public static void SetRenderStateParametrs()
         {
             dx.RenderState.Lighting = false;
-            dx.RenderState.FillMode = FillMode.WireFrame;
+            dx.RenderState.FillMode = FillMode.Solid;
             dx.RenderState.ZBufferEnable = true;
             dx.RenderState.CullMode = Cull.None;
+            Render.dx.VertexFormat = CustomVertex.PositionColored.Format;
         }
 
         public static void StartRenderCallBack()

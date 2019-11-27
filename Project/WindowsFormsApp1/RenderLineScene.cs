@@ -27,7 +27,7 @@ namespace WindowsFormsApp1
                 100f);                                        //zFar
 
             Render.dx.Transform.View = Matrix.LookAtLH(
-                new Vector3(4, 6, -20),  //position
+                new Vector3(2, 3, -10),  //position
                 new Vector3(),          //lookAt
                 new Vector3(0, 1, 0));  //upVector
         }
@@ -60,12 +60,9 @@ namespace WindowsFormsApp1
             Render.SetRenderStateParametrs();
             SetProjectionsAndCameras();
 
-            ModelRotate(0, 0, 0, 0, 0, 0);
-            Render.dx.VertexFormat = CustomVertex.PositionColored.Format;
-            Render.dx.DrawUserPrimitives(PrimitiveType.TriangleList, 1, MeshBuilder.vt);
+            ModelRotate(0, 0, 0, MouseAndKeyboardEvents.mainXrot, MouseAndKeyboardEvents.mainYrot, 0);
 
-
-            //ModelRotate(0, 0, 0, MouseAndKeyboardEvents.mainXrot, MouseAndKeyboardEvents.mainYrot, 0);
+            //Render.dx.DrawUserPrimitives(PrimitiveType.TriangleList, 2 * 10 * 10, MeshBuilder.vt);
             mesh.DrawSubset(0);
         }
     }
