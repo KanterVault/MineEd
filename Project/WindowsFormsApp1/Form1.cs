@@ -18,53 +18,9 @@ namespace WindowsFormsApp1
         public Form1()
         {
             InitializeComponent();
-            //SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-            //SetStyle(ControlStyles.UserPaint, true);
-            //SetStyle(ControlStyles.Opaque, true);
-        }
-
-        private static Microsoft.DirectX.DirectInput.Device dvX = null;
-        private static Microsoft.DirectX.DirectInput.Device dvY = null;
-        private static Microsoft.DirectX.DirectInput.Device dvK = null;
-
-        private static float xrot = 0.0f;
-        private static float yrot = 0.0f;
-        private static float mainXrot = 0.0f;
-        private static float mainYrot = 0.0f;
-
-        private static int xdir = 0;
-        private static int ydir = 0;
-
-        private static Vector3 movePlayerDirections = new Vector3();
-
-        private static Key[] keys = null;
-
-        private void CreateGuidDevices()
-        {
-            dvX = new Microsoft.DirectX.DirectInput.Device(SystemGuid.Mouse);
-            dvY = new Microsoft.DirectX.DirectInput.Device(SystemGuid.Mouse);
-            dvK = new Microsoft.DirectX.DirectInput.Device(SystemGuid.Keyboard);
-        }
-
-        private void SetCooperativeLevels()
-        {
-            dvX.SetCooperativeLevel(
-               this,
-               Microsoft.DirectX.DirectInput.CooperativeLevelFlags.Background |
-               Microsoft.DirectX.DirectInput.CooperativeLevelFlags.NonExclusive);
-            dvX.Acquire();
-
-            dvY.SetCooperativeLevel(
-                this,
-                Microsoft.DirectX.DirectInput.CooperativeLevelFlags.Background |
-                Microsoft.DirectX.DirectInput.CooperativeLevelFlags.NonExclusive);
-            dvY.Acquire();
-
-            dvK.SetCooperativeLevel(
-                this,
-                Microsoft.DirectX.DirectInput.CooperativeLevelFlags.Background |
-                Microsoft.DirectX.DirectInput.CooperativeLevelFlags.NonExclusive);
-            dvK.Acquire();
+            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            SetStyle(ControlStyles.UserPaint, true);
+            SetStyle(ControlStyles.Opaque, true);
         }
 
         private void ViewInLogLabel()
@@ -72,77 +28,54 @@ namespace WindowsFormsApp1
             StringBuilder sb = new StringBuilder();
 
             sb.Append("X: ");
-            sb.Append(mainXrot.ToString());
+            sb.Append(MouseAndKeyboardEvents.mainXrot.ToString());
             sb.Append("\nY: ");
-            sb.Append(mainYrot.ToString());
+            sb.Append(MouseAndKeyboardEvents.mainYrot.ToString());
             sb.Append("\nKeysPress: ");
-            for (int a = 0; a < keys.Length; a++) sb.Append(keys[a].ToString());
+            for (int a = 0; a < MouseAndKeyboardEvents.keys.Length; a++) sb.Append(MouseAndKeyboardEvents.keys[a].ToString());
             sb.Append("\nKeysDirections: ");
-            sb.Append(xdir);
+            sb.Append(MouseAndKeyboardEvents.xdir);
             sb.Append(" | ");
-            sb.Append(ydir);
+            sb.Append(MouseAndKeyboardEvents.ydir);
             sb.Append("\nCos: ");
-            sb.Append(Math.Cos(DegresToRadian(mainXrot)).ToString());
+            sb.Append(Math.Cos(MouseAndKeyboardEvents.DegresToRadian(MouseAndKeyboardEvents.mainXrot)).ToString());
+            sb.Append("\nSin: ");
+            sb.Append(Math.Cos(MouseAndKeyboardEvents.DegresToRadian(MouseAndKeyboardEvents.mainXrot)).ToString());
+            sb.Append("\nPlayer direction: ");
+            sb.Append("\n   z: " + MouseAndKeyboardEvents.movePlayerDirections.Z);
+            sb.Append("\n   x: " + MouseAndKeyboardEvents.movePlayerDirections.X);
 
             label_Info.Text = sb.ToString();
         }
 
-        private void KeysAndMouseEvents()
+        private void SetTestPanelPosition()
         {
-            xrot += (float)dvX.CurrentMouseState.X / 2.0f;
-            yrot -= (float)dvY.CurrentMouseState.Y / 2.0f;
-
-            mainXrot = Lerp(mainXrot, xrot, 1.7f);
-            mainYrot = Lerp(mainYrot, yrot, 1.7f);
-
-            keys = dvK.GetPressedKeys();
-            xdir = 0;
-            ydir = 0;
-            for (int a = 0; a < keys.Length; a++)
-            {
-                if (keys[a] == Key.W) ydir += 1;
-                if (keys[a] == Key.S) ydir -= 1;
-                if (keys[a] == Key.A) xdir -= 1;
-                if (keys[a] == Key.D) xdir += 1;
-            }
-
-            if (xdir == 0 && ydir == 1) //forward
-            {
-                movePlayerDirections.X = 1;
-            }
-        }
-
-        private float Lerp(float a, float b, float t) { return a + (b - a) / t; }
-        private float DegresToRadian(float degres) { return (float)Math.PI / 180.0f * degres; }
-
-        private void DisposeAll()
-        {
-            Thread.Sleep(1000);
-            dvX.Unacquire();
-            dvY.Unacquire();
-            dvK.Unacquire();
-            dvX.Dispose();
-            dvY.Dispose();
-            dvK.Dispose();
+            panel1.Location = new Point(
+               (int)(MouseAndKeyboardEvents.movePlayerDirections.X * 40) + 100,
+               (int)(MouseAndKeyboardEvents.movePlayerDirections.Z * -40) + 100);
         }
 
         private void Start(object sender, EventArgs e)
         {
-            CreateGuidDevices();
-            SetCooperativeLevels();
+            MouseAndKeyboardEvents.CreateGuidDevices();
+            MouseAndKeyboardEvents.SetCooperativeLevels();
+            Render.CreateDeviceAndRenderthread();
             timerUpdate.Enabled = true;
         }
 
         private void Update(object sender, EventArgs e)
         {
-            KeysAndMouseEvents();
+            MouseAndKeyboardEvents.KeysAndMouseEvents();
+            MouseAndKeyboardEvents.SetDirections();
+            SetTestPanelPosition();
             ViewInLogLabel();
         }
 
         private void Quit(object sender, FormClosingEventArgs e)
         {
             timerUpdate.Enabled = false;
-            DisposeAll();
+            Render.DisposeAll();
+            MouseAndKeyboardEvents.DisposeAll();
         }
     }
 }
