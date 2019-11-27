@@ -82,6 +82,8 @@ namespace WindowsFormsApp1
         private static Mesh ms0 = null;
         private static Mesh ms1 = null;
         private static Material mat = new Material();
+        private static Sprite sprite = null;
+        private static Texture tex = null;
 
         private void CreateModel()
         {
@@ -91,6 +93,24 @@ namespace WindowsFormsApp1
                 ms1 = Mesh.Box(dx, 13, 0.4f, 0.2f);
 
                 mat.Diffuse = Color.White;
+
+                ImageInformation imgInf = new ImageInformation();
+                //tex = TextureLoader.FromFile(
+                //    dx,
+                //    @"C:\Users\Vadim\Desktop\MinecraftEd\Project\WindowsFormsApp1\Res\minecraft\textures\gui\accessibility.png",
+                //    32,
+                //    64,
+                //    0,
+                //    Usage.None,
+                //    Format.A8B8G8R8,
+                //    Pool.Default,
+                //    Filter.None,
+                //    Filter.None,
+                //    Color.White.ToArgb(),
+                //    ref imgInf);
+
+                tex = TextureLoader.FromFile(dx, @"C:\Users\Vadim\Desktop\MinecraftEd\Project\WindowsFormsApp1\Res\minecraft\textures\gui\accessibility.png");
+                sprite = new Sprite(dx);
             }
         }
 
@@ -105,8 +125,8 @@ namespace WindowsFormsApp1
             {
                 try
                 {
-                    dx.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Aqua, 1.0f, 0);
                     dx.BeginScene();
+                    dx.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Aqua, 1.0f, 0);
 
                     dx.Material = mat;
                     dx.Lights[0].Enabled = true;
@@ -150,6 +170,15 @@ namespace WindowsFormsApp1
 
                     ms1.DrawSubset(0);
 
+                    
+                    //sprite.Begin(SpriteFlags.SortTexture | SpriteFlags.AlphaBlend);
+                    //sprite.Draw(
+                    //    tex,
+                    //    new Vector3(),
+                    //    new Vector3(),
+                    //    Color.White.ToArgb());
+                    //sprite.End();
+
                     dx.EndScene();
                     dx.Present();
                 }
@@ -161,6 +190,12 @@ namespace WindowsFormsApp1
         {
             Task task = new Task(NoneMethods);
             task.BeginInvoke(new AsyncCallback(RenderTask), task);
+        }
+
+        private void DisposeObjects()
+        {
+            try { sprite.Dispose(); } catch { }
+            try { tex.Dispose(); } catch { }
         }
         private void DisposeDX()
         {
@@ -199,6 +234,7 @@ namespace WindowsFormsApp1
             process = -1;
             timerUpdate.Enabled = false;
             //Thread.Sleep(500);
+            DisposeObjects();
             DisposeDX();
             RemovePP();
         }
