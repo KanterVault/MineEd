@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.timerUpdate = new System.Windows.Forms.Timer(this.components);
+            this.label_Info = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // timerUpdate
@@ -38,25 +39,36 @@
             this.timerUpdate.Interval = 1;
             this.timerUpdate.Tick += new System.EventHandler(this.Update);
             // 
+            // label_Info
+            // 
+            this.label_Info.AutoSize = true;
+            this.label_Info.Location = new System.Drawing.Point(12, 9);
+            this.label_Info.Name = "label_Info";
+            this.label_Info.Size = new System.Drawing.Size(35, 13);
+            this.label_Info.TabIndex = 0;
+            this.label_Info.Text = "label1";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(532, 369);
+            this.ClientSize = new System.Drawing.Size(413, 301);
+            this.Controls.Add(this.label_Info);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(256, 128);
             this.Name = "Form1";
             this.Text = "Game";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Quit);
             this.Shown += new System.EventHandler(this.Start);
-            this.Resize += new System.EventHandler(this.ResizeWindow);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
         private System.Windows.Forms.Timer timerUpdate;
+        private System.Windows.Forms.Label label_Info;
     }
 }
 
