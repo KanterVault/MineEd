@@ -29,6 +29,13 @@ namespace WindowsFormsApp1
         private static int wWidht = 640;
         private static int wHeight = 480;
 
+        private static CustomVertex.PositionColored[] vx = new CustomVertex.PositionColored[3]
+        {
+            new CustomVertex.PositionColored(new Vector3(0, 0, 0), Color.Red.ToArgb()),
+            new CustomVertex.PositionColored(new Vector3(0, 0, 1), Color.Blue.ToArgb()),
+            new CustomVertex.PositionColored(new Vector3(5, 0, 1), Color.Green.ToArgb())
+        };
+
         private void SetPresentParametrs()
         {
             if (process == 0)
@@ -45,6 +52,8 @@ namespace WindowsFormsApp1
                 pp.PresentFlag = PresentFlag.None;
                 pp.SwapEffect = SwapEffect.Discard;
                 pp.Windowed = true;
+                pp.MultiSample = MultiSampleType.None;
+                pp.MultiSampleQuality = 0;
                 process = 1;
             }
         }
@@ -64,6 +73,9 @@ namespace WindowsFormsApp1
                     dx.RenderState.ZBufferEnable = true;
                     dx.RenderState.StencilEnable = true;
                     dx.RenderState.Lighting = true;
+                    dx.SetRenderState(RenderStates.MultisampleAntiAlias, 0);
+                    dx.SetRenderState(RenderStates.MaxTessellationLevel, 0);
+                    dx.SetRenderState(RenderStates.MinTessellationLevel, 0);
 
                     dx.Lights[0].Enabled = true;
                     dx.Lights[0].Diffuse = Color.White;
@@ -82,8 +94,8 @@ namespace WindowsFormsApp1
         private static Mesh ms0 = null;
         private static Mesh ms1 = null;
         private static Material mat = new Material();
-        private static Sprite sprite = null;
         private static Texture tex = null;
+        private static int trackValue = 0;
 
         private void CreateModel()
         {
@@ -95,22 +107,21 @@ namespace WindowsFormsApp1
                 mat.Diffuse = Color.White;
 
                 ImageInformation imgInf = new ImageInformation();
-                //tex = TextureLoader.FromFile(
-                //    dx,
-                //    @"C:\Users\Vadim\Desktop\MinecraftEd\Project\WindowsFormsApp1\Res\minecraft\textures\gui\accessibility.png",
-                //    32,
-                //    64,
-                //    0,
-                //    Usage.None,
-                //    Format.A8B8G8R8,
-                //    Pool.Default,
-                //    Filter.None,
-                //    Filter.None,
-                //    Color.White.ToArgb(),
-                //    ref imgInf);
+                tex = TextureLoader.FromFile(
+                    dx,
+                    @"C:\Users\Vadim\Desktop\MinecraftEd\Project\WindowsFormsApp1\Res\minecraft\textures\gui\accessibility.png",
+                    32,
+                    64,
+                    1,
+                    Usage.AutoGenerateMipMap,
+                    Format.A8R8G8B8,
+                    Pool.Managed,
+                    Filter.Point,
+                    Filter.Point,
+                    Color.White.ToArgb(),
+                    ref imgInf);
 
-                tex = TextureLoader.FromFile(dx, @"C:\Users\Vadim\Desktop\MinecraftEd\Project\WindowsFormsApp1\Res\minecraft\textures\gui\accessibility.png");
-                sprite = new Sprite(dx);
+                //tex = TextureLoader.FromFile(dx, @"C:\Users\Vadim\Desktop\MinecraftEd\Project\WindowsFormsApp1\Res\minecraft\textures\gui\accessibility.png");
             }
         }
 
@@ -132,13 +143,19 @@ namespace WindowsFormsApp1
                     dx.Lights[0].Enabled = true;
 
                     dx.Transform.Projection = Matrix.PerspectiveFovLH(
-                            0.5f,
-                            (float)wWidht / (float)wHeight, //(float)Width / (float)Height,
-                            0.01f,
-                            1000);
+                        0.5f,
+                        (float)wWidht / (float)wHeight, //(float)Width / (float)Height,
+                        0.01f,
+                        1000);
 
-                    dx.Transform.View =
-                        Matrix.LookAtLH(new Vector3(7, 8, -10), new Vector3(0, 0, 0), new Vector3(0, 1, 0));
+                    dx.Transform.View = dx.Transform.World = Matrix.Transformation(
+                        new Vector3(),
+                        Quaternion.Identity,
+                        new Vector3(1, 1, 1),
+                        new Vector3(),
+                        Quaternion.RotationYawPitchRoll(0, 0, 0),
+                        new Vector3(0, -5, trackValue));
+                    //Matrix.LookAtLH(new Vector3(0, 10, 20), new Vector3(0, 0, 0), new Vector3(0, 1, 0));
 
                     dx.Transform.World = Matrix.Transformation(
                         new Vector3(),
@@ -170,19 +187,20 @@ namespace WindowsFormsApp1
 
                     ms1.DrawSubset(0);
 
-                    
-                    //sprite.Begin(SpriteFlags.SortTexture | SpriteFlags.AlphaBlend);
-                    //sprite.Draw(
-                    //    tex,
-                    //    new Vector3(),
-                    //    new Vector3(),
-                    //    Color.White.ToArgb());
-                    //sprite.End();
+                    using (Sprite sprite = new Sprite(dx))
+                    {
+                        sprite.Begin(SpriteFlags.SortTexture | SpriteFlags.AlphaBlend);
+                        sprite.Transform = Matrix.Scaling(4.0f, 4.0f, 1) * Matrix.Translation(0, 0, 0) * Matrix.RotationYawPitchRoll(0, 0, 0);
+                        sprite.Draw(tex, new Vector3(), new Vector3(trackValue, 0, 0), Color.White.ToArgb());
+                        sprite.End();
+                    }
+
+                    dx.DrawUserPrimitives(PrimitiveType.TriangleList, 1, vx);
 
                     dx.EndScene();
                     dx.Present();
                 }
-                catch { /*MessageBox.Show("Ошибка при очистке экрана."); process = 3;*/ }
+                catch (Exception ex) { MessageBox.Show("Ошибка рендера. " + ex.ToString()); process = 3; }
             }
         }
 
@@ -192,9 +210,8 @@ namespace WindowsFormsApp1
             task.BeginInvoke(new AsyncCallback(RenderTask), task);
         }
 
-        private void DisposeObjects()
+        private void DisposeTextures()
         {
-            try { sprite.Dispose(); } catch { }
             try { tex.Dispose(); } catch { }
         }
         private void DisposeDX()
@@ -226,7 +243,7 @@ namespace WindowsFormsApp1
 
         private void Update(object sender, EventArgs e)
         {
-
+            trackValue = trackBar1.Value;
         }
 
         private void Quit(object sender, FormClosingEventArgs e)
@@ -234,7 +251,7 @@ namespace WindowsFormsApp1
             process = -1;
             timerUpdate.Enabled = false;
             //Thread.Sleep(500);
-            DisposeObjects();
+            DisposeTextures();
             DisposeDX();
             RemovePP();
         }
