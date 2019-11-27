@@ -16,7 +16,7 @@ namespace WindowsFormsApp1
     public static class RenderLineScene
     {
         public static Mesh mesh = Mesh.Cylinder(Render.dx, 3, 4, 6, 12, 6);
-        public static Form form = Form1.ActiveForm;
+        public static Form form = Scene.ActiveForm;
 
         public static void SetProjectionsAndCameras()
         {

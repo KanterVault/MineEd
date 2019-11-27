@@ -15,7 +15,7 @@ namespace WindowsFormsApp1
 {
     public static class Render
     {
-        public static Form form = Form1.ActiveForm;
+        public static Form form = Scene.ActiveForm;
 
         public static Microsoft.DirectX.Direct3D.Device dx = null;
         public static PresentParameters pp = null;

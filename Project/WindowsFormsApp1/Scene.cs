@@ -13,9 +13,9 @@ using Microsoft.DirectX.DirectInput;
 
 namespace WindowsFormsApp1
 {
-    public partial class Form1 : Form
+    public partial class Scene : Form
     {
-        public Form1()
+        public Scene()
         {
             InitializeComponent();
             SetStyle(ControlStyles.AllPaintingInWmPaint, true);
