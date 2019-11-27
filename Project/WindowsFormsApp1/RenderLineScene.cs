@@ -32,24 +32,40 @@ namespace WindowsFormsApp1
                 new Vector3(0, 1, 0));  //upVector
         }
 
-        public static void RenderScene()
+        /// <summary>
+        /// Model transform edit (World root)
+        /// </summary>
+        /// <param name="x">pos x units</param>
+        /// <param name="y">pos y units</param>
+        /// <param name="z">pos z units</param>
+        /// <param name="Yaw">rotate yaw degres</param>
+        /// <param name="Pitch">rotate pitch degres</param>
+        /// <param name="Roll">rotate roll degres</param>
+        public static void ModelRotate(float x, float y, float z, float Yaw, float Pitch, float Roll)
         {
-            SetProjectionsAndCameras();
-
-            //Render.dx.DrawUserPrimitives(PrimitiveType.TriangleList, 5, MeshBuilder.vt);
-
-            Render.SetRenderStateParametrs();
-
             Render.dx.Transform.World = Matrix.Transformation(
                 new Vector3(),
                 Quaternion.Identity,
                 new Vector3(1, 1, 1),
                 new Vector3(),
                 Quaternion.RotationYawPitchRoll(
-                    MouseAndKeyboardEvents.DegresToRadian(MouseAndKeyboardEvents.mainXrot),
-                    MouseAndKeyboardEvents.DegresToRadian(MouseAndKeyboardEvents.mainYrot), 0),
-                    new Vector3());
+                    MouseAndKeyboardEvents.DegresToRadian(Yaw),
+                    MouseAndKeyboardEvents.DegresToRadian(Pitch),
+                    MouseAndKeyboardEvents.DegresToRadian(Roll)),
+                    new Vector3(x, y, z));
+        }
 
+        public static void RenderScene()
+        {
+            Render.SetRenderStateParametrs();
+            SetProjectionsAndCameras();
+
+            ModelRotate(0, 0, 0, 0, 0, 0);
+            Render.dx.VertexFormat = CustomVertex.PositionColored.Format;
+            Render.dx.DrawUserPrimitives(PrimitiveType.TriangleList, 1, MeshBuilder.vt);
+
+
+            //ModelRotate(0, 0, 0, MouseAndKeyboardEvents.mainXrot, MouseAndKeyboardEvents.mainYrot, 0);
             mesh.DrawSubset(0);
         }
     }
