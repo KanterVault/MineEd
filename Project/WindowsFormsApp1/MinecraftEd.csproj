@@ -98,6 +98,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MeshBuilder.cs" />
     <Compile Include="Scene.cs">
       <SubType>Form</SubType>
     </Compile>

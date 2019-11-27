@@ -15,7 +15,7 @@ namespace WindowsFormsApp1
 {
     public static class RenderLineScene
     {
-        public static Mesh mesh = Mesh.Cylinder(Render.dx, 3, 4, 6, 12, 6);
+        public static Mesh mesh = Mesh.Cylinder(Render.dx, 4, 4, 10, 12, 6);
         public static Form form = Scene.ActiveForm;
 
         public static void SetProjectionsAndCameras()
@@ -27,7 +27,7 @@ namespace WindowsFormsApp1
                 100f);                                        //zFar
 
             Render.dx.Transform.View = Matrix.LookAtLH(
-                new Vector3(0, 0, -6),  //position
+                new Vector3(4, 6, -20),  //position
                 new Vector3(),          //lookAt
                 new Vector3(0, 1, 0));  //upVector
         }
@@ -35,6 +35,20 @@ namespace WindowsFormsApp1
         public static void RenderScene()
         {
             SetProjectionsAndCameras();
+
+            //Render.dx.DrawUserPrimitives(PrimitiveType.TriangleList, 5, MeshBuilder.vt);
+
+            Render.SetRenderStateParametrs();
+
+            Render.dx.Transform.World = Matrix.Transformation(
+                new Vector3(),
+                Quaternion.Identity,
+                new Vector3(1, 1, 1),
+                new Vector3(),
+                Quaternion.RotationYawPitchRoll(
+                    MouseAndKeyboardEvents.DegresToRadian(MouseAndKeyboardEvents.mainXrot),
+                    MouseAndKeyboardEvents.DegresToRadian(MouseAndKeyboardEvents.mainYrot), 0),
+                    new Vector3());
 
             mesh.DrawSubset(0);
         }

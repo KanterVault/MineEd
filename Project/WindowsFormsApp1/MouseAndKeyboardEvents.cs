@@ -66,8 +66,8 @@ namespace WindowsFormsApp1
 
         public static void KeysAndMouseEvents()
         {
-            xrot += (float)dvX.CurrentMouseState.X / 2.0f;
-            yrot -= (float)dvY.CurrentMouseState.Y / 2.0f;
+            xrot += (float)dvX.CurrentMouseState.X / 4.0f;
+            yrot -= (float)dvY.CurrentMouseState.Y / 4.0f;
 
             mainXrot = Lerp(mainXrot, xrot, 1.7f);
             mainYrot = Lerp(mainYrot, yrot, 1.7f);

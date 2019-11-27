@@ -41,7 +41,6 @@ namespace WindowsFormsApp1
                     form,
                     Microsoft.DirectX.Direct3D.CreateFlags.HardwareVertexProcessing,
                     pp);
-
                 return true;
             }
             catch (Exception ex) { MessageBox.Show("Error: " + ex.ToString()); return false; }
@@ -50,6 +49,8 @@ namespace WindowsFormsApp1
         public delegate void TaskRender(); public static void NullMethod() { }
         public static void RenderThread(IAsyncResult result)
         {
+            MeshBuilder.CreateNewTerrainMesh();
+
             TaskRender task = (TaskRender)result.AsyncState;
             task.EndInvoke(result);
 
@@ -68,6 +69,15 @@ namespace WindowsFormsApp1
                 catch { Thread.Sleep(1000); }
             }
         }
+
+        public static void SetRenderStateParametrs()
+        {
+            dx.RenderState.Lighting = false;
+            dx.RenderState.FillMode = FillMode.WireFrame;
+            dx.RenderState.ZBufferEnable = true;
+            dx.RenderState.CullMode = Cull.None;
+        }
+
         public static void StartRenderCallBack()
         {
             TaskRender render = new TaskRender(NullMethod);
