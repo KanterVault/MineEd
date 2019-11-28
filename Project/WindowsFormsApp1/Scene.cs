@@ -24,6 +24,7 @@ namespace WindowsFormsApp1
         }
 
         public static string ERRORMESSAGE = "";
+        public static string physDebag = "";
 
         private void ViewInLogLabel()
         {
@@ -51,6 +52,7 @@ namespace WindowsFormsApp1
             sb.Append("\n   x: " + PlayerMoving.playerWorldPosition.X);
             sb.Append("\n   y: " + PlayerMoving.playerWorldPosition.Y);
             sb.Append("\n   z: " + PlayerMoving.playerWorldPosition.Z);
+            sb.Append("\nКоллизия: " + physDebag);
 
 
             label_Info.Text = sb.ToString();
@@ -95,6 +97,8 @@ namespace WindowsFormsApp1
                 MouseAndKeyboardEvents.KeysMouseEvents();
             }
 
+            Collisions.CheckPlayerGrounCollision();
+
             SetCursoreVisible();
         }
 
@@ -114,7 +118,13 @@ namespace WindowsFormsApp1
 
         private void KeyboardDown(object sender, KeyEventArgs e)
         {
+            
+        }
 
+        private void KeyboardPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == ' ') PlayerMoving.spaceButton = true;
+            if (e.KeyChar == 'r' || e.KeyChar == 'R') PlayerMoving.playerWorldPosition = new Vector3(8, 256, 8);
         }
     }
 }

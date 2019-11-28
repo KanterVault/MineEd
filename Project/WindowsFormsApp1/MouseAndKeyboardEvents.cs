@@ -87,8 +87,8 @@ namespace WindowsFormsApp1
                 if (keys[a] == Key.A) xdir -= 1;
                 if (keys[a] == Key.D) xdir += 1;
                 if (keys[a] == Key.Escape) if (mouseLook == 2) mouseLook++;
-                if (keys[a] == Key.Space) movePlayerDirections.Y = 1;
-                if (keys[a] == Key.LeftShift) movePlayerDirections.Y = -1;
+                //if (keys[a] == Key.Space) movePlayerDirections.Y = 1;
+                //if (keys[a] == Key.LeftShift) movePlayerDirections.Y = -1;
             }
         }
 

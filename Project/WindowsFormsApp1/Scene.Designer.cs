@@ -82,6 +82,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Quit);
             this.Shown += new System.EventHandler(this.Start);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.KeyboardDown);
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.KeyboardPress);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MouseDownScene);
             this.ResumeLayout(false);
 

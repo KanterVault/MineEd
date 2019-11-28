@@ -17,9 +17,11 @@ namespace WindowsFormsApp1
     public static class PlayerMoving
     {
         public static Vector3 playerWorldPosition = new Vector3();
-        public static System.Timers.Timer time = null;
         public static Vector3 directionMove = new Vector3();
         public static float speedMove = 0.1f;
+
+        public static System.Timers.Timer time = null;
+        public static System.Timers.Timer timeUpdateGravity = null;
 
         public static void OnTimerEvent(Object sender, ElapsedEventArgs e)
         {
@@ -28,14 +30,40 @@ namespace WindowsFormsApp1
             time.Stop();
         }
 
+        public static float gravityAddForce = -0.015f;    //гравитация
+        public static float velocityY = 0.0f;            //инеция
+        public static float airAddForce = 0.0f;          //сопротивление воздуха
+        public static bool collisionY = false;           //состояние соприкосновения
+        public static float collisionYPosition = 0.0f;
+
+        public static bool spaceButton = false;
+        public static void OnGravityTimerUpdate(Object sender, ElapsedEventArgs e)
+        {
+            if (spaceButton)
+            {
+                collisionY = false;
+                velocityY = 0.4f;
+                spaceButton = false;
+            }
+
+            if (!collisionY) velocityY += gravityAddForce + airAddForce;
+            else playerWorldPosition.Y = collisionYPosition;
+            playerWorldPosition.Y += velocityY;
+        }
+
         public static void InitializeMoveTimer()
         {
             time = new System.Timers.Timer();
-            time.Start();
             time.Elapsed += OnTimerEvent;
             time.Interval = 5;
             time.Enabled = true;
             time.Start();
+
+            timeUpdateGravity = new System.Timers.Timer();
+            timeUpdateGravity.Elapsed += OnGravityTimerUpdate;
+            timeUpdateGravity.Interval = 5;
+            timeUpdateGravity.Enabled = true;
+            timeUpdateGravity.Start();
         }
 
         public static void DisposeMoveTimer()
@@ -43,6 +71,10 @@ namespace WindowsFormsApp1
             time.Stop();
             time.Close();
             time.Dispose();
+
+            timeUpdateGravity.Stop();
+            timeUpdateGravity.Close();
+            timeUpdateGravity.Dispose();
         }
 
         public static void PlayerMoveToDirection(Vector3 direction)

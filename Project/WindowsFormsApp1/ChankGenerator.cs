@@ -78,6 +78,13 @@ namespace WindowsFormsApp1
                             for (int Z = 4; Z < 12; Z++)
                                 for (int X = 4; X < 12; X++) chank.chankArray[Y][Z][X] = (byte)2;
                     }
+                    for (int Y = 7; Y < 16; Y++)
+                    {
+                        for (int Z = 7; Z < 12; Z++)
+                            for (int X = 7; X < 12; X++) chank.chankArray[Y][Z][X] = (byte)0;
+                    }
+                    chank.chankArray[5][1][1] = (byte)2;
+                    chank.chankArray[5][1][2] = (byte)2;
                 }
             }
 
