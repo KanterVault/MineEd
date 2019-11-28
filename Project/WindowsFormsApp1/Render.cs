@@ -21,18 +21,34 @@ namespace WindowsFormsApp1
         public static PresentParameters pp = null;
 
         public static bool live = true;
+        public static Thread renderThread = null;
 
         public static void SetUpPresentParametrs()
         {
+            //pp = new PresentParameters();
+            //pp.Windowed = true;
+            //pp.SwapEffect = SwapEffect.Copy;
+            //pp.DeviceWindow = form;
+            //pp.BackBufferCount = 1;
+            //pp.BackBufferFormat = Format.A8R8G8B8;
+            //pp.PresentationInterval = PresentInterval.Default;
+            //pp.PresentFlag = PresentFlag.None;
+            //pp.AutoDepthStencilFormat = DepthFormat.D24S8;
+            //pp.MultiSample = MultiSampleType.None;
+            //pp.MultiSampleQuality = 0;
+            //pp.EnableAutoDepthStencil = true;
+
             pp = new PresentParameters();
             pp.Windowed = true;
             pp.SwapEffect = SwapEffect.Discard;
             pp.DeviceWindow = form;
-            pp.BackBufferCount = 1;
+            pp.BackBufferCount = 0;
             pp.BackBufferFormat = Format.A8R8G8B8;
-            pp.PresentationInterval = PresentInterval.Immediate;
+            pp.PresentationInterval = PresentInterval.Default;
             pp.PresentFlag = PresentFlag.None;
-            pp.AutoDepthStencilFormat = DepthFormat.D16;
+            pp.AutoDepthStencilFormat = DepthFormat.D24S8;
+            pp.MultiSample = MultiSampleType.None; //MultiSampleType.FourSamples;
+            pp.MultiSampleQuality = 0;
             pp.EnableAutoDepthStencil = true;
         }
 
@@ -57,20 +73,21 @@ namespace WindowsFormsApp1
             }
         }
 
-        public delegate void TaskRender(); public static void NullMethod() { }
-        public static void RenderThread(IAsyncResult result)
+        public static void RenderThread()
         {
-            TaskRender task = (TaskRender)result.AsyncState;
-            task.EndInvoke(result);
-
             MeshBuilder.CreateNewTerrainMesh();
+            RenderLineScene.LoadTexture();
+            RenderLineScene.SetUpMaterial();
+
+            //SetRenderStateParametrs();
+            //RenderLineScene.SetProjectionsAndCameras();
 
             while (live)
             {
                 try
                 {
-                    dx.BeginScene();
                     dx.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Aqua, 1.0f, 0);
+                    dx.BeginScene();
 
                     RenderLineScene.RenderScene();
 
@@ -81,6 +98,8 @@ namespace WindowsFormsApp1
                 {
                     Thread.Sleep(1000);
                     Scene.ERRORMESSAGE = ex.ToString();
+
+                    //RenderLineScene.LoadTexture();
                 }
             }
         }
@@ -91,30 +110,43 @@ namespace WindowsFormsApp1
             dx.RenderState.FillMode = FillMode.Solid;
             dx.RenderState.ZBufferEnable = true;
             dx.RenderState.CullMode = Cull.None;
-            Render.dx.VertexFormat = CustomVertex.PositionColored.Format;
+            Render.dx.VertexFormat = CustomVertex.PositionTextured.Format;
+
+            dx.Lights[0].Diffuse = Color.White;
+            dx.Lights[0].Type = LightType.Directional;
+            dx.Lights[0].Direction = new Vector3(0.2f, -0.2f, 4f);
+            dx.Lights[0].Position = new Vector3();
+            dx.Lights[0].Enabled = true;
+            dx.Lights[0].Update();
         }
 
-        public static void StartRenderCallBack()
+        public static void StartRenderThread()
         {
-            TaskRender render = new TaskRender(NullMethod);
-            render.BeginInvoke(new AsyncCallback(RenderThread), render);
+            live = true;
+            renderThread = new Thread(RenderThread);
+            renderThread.Start();
         }
 
         public static void DisposeAll()
         {
             live = false;
-            Thread.Sleep(2000);
+            Thread.Sleep(500);
+
+            RenderLineScene.tex.Dispose();
+
             try { dx.EndScene(); } catch { }
             try { dx.Present(); } catch { }
             try { dx.Dispose(); } catch { }
+            try { renderThread.Abort(); } catch { }
             dx = null;
             pp = null;
+            renderThread = null;
         }
 
         public static void CreateDeviceAndRenderthread()
         {
             SetUpPresentParametrs();
-            if (CreateDirectXDevice()) StartRenderCallBack();
+            if (CreateDirectXDevice()) StartRenderThread();
             else DisposeAll();
         }
     }

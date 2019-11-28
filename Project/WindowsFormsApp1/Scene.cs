@@ -46,35 +46,48 @@ namespace WindowsFormsApp1
             sb.Append("\nPlayer direction: ");
             sb.Append("\n   z: " + MouseAndKeyboardEvents.movePlayerDirections.Z);
             sb.Append("\n   x: " + MouseAndKeyboardEvents.movePlayerDirections.X);
-            sb.Append("\n" + ERRORMESSAGE);
+            if (ERRORMESSAGE.Length > 20) sb.Append("\n" + ERRORMESSAGE.PadLeft(ERRORMESSAGE.Length - 20));
 
             label_Info.Text = sb.ToString();
-        }
-
-        private void SetTestPanelPosition()
-        {
-            panel1.Location = new Point(
-               (int)(MouseAndKeyboardEvents.movePlayerDirections.X * 40) + 100,
-               (int)(MouseAndKeyboardEvents.movePlayerDirections.Z * -40) + 100);
         }
 
         private void Start(object sender, EventArgs e)
         {
             MouseAndKeyboardEvents.CreateGuidDevices();
             MouseAndKeyboardEvents.SetCooperativeLevels();
-            //Render.CreateDeviceAndRenderthread();
-
-            //Tasks
-            MouseAndKeyboardEvents.KeysAndMouseEvents();
-            MouseAndKeyboardEvents.SetDirections();
+            Render.CreateDeviceAndRenderthread();
 
             timerUpdate.Enabled = true;
         }
 
+        private void SetCursoreVisible()
+        {
+            if (MouseAndKeyboardEvents.mouseLook == 1 || MouseAndKeyboardEvents.mouseLook == 2)
+                Cursor.Position = PointToScreen(new Point(ClientSize.Width / 2, ClientSize.Height / 2));
+
+            if (MouseAndKeyboardEvents.mouseLook == 1)
+            {
+                Cursor.Hide();
+                MouseAndKeyboardEvents.mouseLook++;
+            }
+            else if (MouseAndKeyboardEvents.mouseLook == 3)
+            {
+                Cursor.Show();
+                MouseAndKeyboardEvents.mouseLook = 0;
+            }
+        }
+
         private void Update(object sender, EventArgs e)
         {
-            SetTestPanelPosition();
             ViewInLogLabel();
+
+            if (MouseAndKeyboardEvents.mouseLook == 1 || MouseAndKeyboardEvents.mouseLook == 2)
+            {
+                MouseAndKeyboardEvents.KeysMouseEvents();
+                MouseAndKeyboardEvents.SetDirections();
+            }
+
+            SetCursoreVisible();
         }
 
         private void Quit(object sender, FormClosingEventArgs e)
@@ -82,6 +95,11 @@ namespace WindowsFormsApp1
             timerUpdate.Enabled = false;
             Render.DisposeAll();
             MouseAndKeyboardEvents.DisposeAll();
+        }
+
+        private void MouseDownScene(object sender, MouseEventArgs e)
+        {
+            if (MouseAndKeyboardEvents.mouseLook == 0) MouseAndKeyboardEvents.mouseLook++;
         }
     }
 }

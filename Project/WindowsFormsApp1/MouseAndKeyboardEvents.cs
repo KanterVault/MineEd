@@ -36,6 +36,8 @@ namespace WindowsFormsApp1
 
         public static Key[] keys = new Key[0];
 
+        public static int mouseLook = 1;
+
         public static void CreateGuidDevices()
         {
             dvX = new Microsoft.DirectX.DirectInput.Device(SystemGuid.Mouse);
@@ -64,67 +66,41 @@ namespace WindowsFormsApp1
             dvK.Acquire();
         }
 
-
-        public delegate void Task1(); public static void NullMethod1() { }
-        public delegate void Task2(); public static void NullMethod2() { }
-
-        public static void AsyncKeysAndMouseEvents(IAsyncResult result)
+        public static void KeysMouseEvents()
         {
-            Task1 task = (Task1)result.AsyncState;
-            task.EndInvoke(result);
+            xrot += (float)dvX.CurrentMouseState.X / 4.0f;
+            yrot -= (float)dvY.CurrentMouseState.Y / 4.0f;
 
-            while(live)
+            mainXrot = Lerp(mainXrot, xrot, 1.7f);
+            mainYrot = Lerp(mainYrot, yrot, 1.7f);
+
+            keys = dvK.GetPressedKeys();
+            xdir = 0;
+            ydir = 0;
+            for (int a = 0; a < keys.Length; a++)
             {
-                xrot += (float)dvX.CurrentMouseState.X / 4.0f;
-                yrot -= (float)dvY.CurrentMouseState.Y / 4.0f;
-
-                mainXrot = Lerp(mainXrot, xrot, 1.7f);
-                mainYrot = Lerp(mainYrot, yrot, 1.7f);
-
-                keys = dvK.GetPressedKeys();
-                xdir = 0;
-                ydir = 0;
-                for (int a = 0; a < keys.Length; a++)
-                {
-                    if (keys[a] == Key.W) ydir += 1;
-                    if (keys[a] == Key.S) ydir -= 1;
-                    if (keys[a] == Key.A) xdir -= 1;
-                    if (keys[a] == Key.D) xdir += 1;
-                }
-            }
-        }
-        public static void KeysAndMouseEvents()
-        {
-            Task1 task = new Task1(NullMethod1);
-            task.BeginInvoke(new AsyncCallback(AsyncKeysAndMouseEvents), task);
-        }
-
-        public static void AsyncSetDirections(IAsyncResult result)
-        {
-            Task2 task = (Task2)result.AsyncState;
-            task.EndInvoke(result);
-
-            while (live)
-            {
-                if (xdir == 0 && ydir == 1) angleToPlayerDirection = 0.0f;
-                if (xdir == 0 && ydir == -1) angleToPlayerDirection = 180.0f;
-                if (xdir == 1 && ydir == 0) angleToPlayerDirection = 90.0f;
-                if (xdir == -1 && ydir == 0) angleToPlayerDirection = -90.0f;
-
-                if (xdir == -1 && ydir == 1) angleToPlayerDirection = -45.0f;
-                if (xdir == 1 && ydir == -1) angleToPlayerDirection = 180.0f - 45.0f;
-                if (xdir == 1 && ydir == 1) angleToPlayerDirection = 45.0f;
-                if (xdir == -1 && ydir == -1) angleToPlayerDirection = 180.0f + 45.0f;
-
-                movePlayerDirections.Z = (float)Math.Cos(DegresToRadian(angleToPlayerDirection + mainXrot));
-                movePlayerDirections.X = (float)Math.Sin(DegresToRadian(angleToPlayerDirection + mainXrot));
+                if (keys[a] == Key.W) ydir += 1;
+                if (keys[a] == Key.S) ydir -= 1;
+                if (keys[a] == Key.A) xdir -= 1;
+                if (keys[a] == Key.D) xdir += 1;
+                if (keys[a] == Key.Escape) if (mouseLook == 2) mouseLook++;
             }
         }
 
         public static void SetDirections()
         {
-            Task2 task = new Task2(NullMethod2);
-            task.BeginInvoke(new AsyncCallback(AsyncSetDirections), task);
+            if (xdir == 0 && ydir == 1) angleToPlayerDirection = 0.0f;
+            if (xdir == 0 && ydir == -1) angleToPlayerDirection = 180.0f;
+            if (xdir == 1 && ydir == 0) angleToPlayerDirection = 90.0f;
+            if (xdir == -1 && ydir == 0) angleToPlayerDirection = -90.0f;
+
+            if (xdir == -1 && ydir == 1) angleToPlayerDirection = -45.0f;
+            if (xdir == 1 && ydir == -1) angleToPlayerDirection = 180.0f - 45.0f;
+            if (xdir == 1 && ydir == 1) angleToPlayerDirection = 45.0f;
+            if (xdir == -1 && ydir == -1) angleToPlayerDirection = 180.0f + 45.0f;
+
+            movePlayerDirections.Z = (float)Math.Cos(DegresToRadian(angleToPlayerDirection + mainXrot));
+            movePlayerDirections.X = (float)Math.Sin(DegresToRadian(angleToPlayerDirection + mainXrot));
         }
 
         public static float Lerp(float a, float b, float t) { return a + (b - a) / t; }
