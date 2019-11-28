@@ -111,5 +111,11 @@ namespace WindowsFormsApp1
         {
             if (MouseAndKeyboardEvents.mouseLook == 0) MouseAndKeyboardEvents.mouseLook++;
         }
+
+        private void KeyboardDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.D1)
+                ChankGenerator.CreateChank(new Vector2(), ChankGenerator.GeneratorKey.Flat);
+        }
     }
 }

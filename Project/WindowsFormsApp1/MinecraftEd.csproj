@@ -3221,6 +3221,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Res\debug.stitched_items.png" />
+    <Content Include="Res\debug.stitched_terrain.png" />
     <Content Include="Res\minecraft\shaders\program\blit.vsh" />
     <Content Include="Res\minecraft\shaders\program\blobs.vsh" />
     <Content Include="Res\minecraft\shaders\program\bumpy.vsh" />

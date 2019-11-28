@@ -33,13 +33,13 @@ namespace WindowsFormsApp1
         {
             Render.dx.Transform.Projection = Matrix.PerspectiveFovLH(
                 DegresToRadian(60.0f),                        //fov
-                (float)form.Width / (float)form.Height,       //aspectRatio
+                (float)form.ClientSize.Width / (float)form.ClientSize.Height,       //aspectRatio
                 0.01f,                                        //zNear
                 100f);                                        //zFar
 
             translationsBefore = Vector3.Lerp(
                 translationsBefore,
-                -PlayerMoving.playerWorldPosition + new Vector3(0, -1.75f, 0),
+                -PlayerMoving.playerWorldPosition + new Vector3(0, -1.75f - 0.5f, 0),
                 0.3f);
 
             Render.dx.Transform.View =
@@ -68,7 +68,7 @@ namespace WindowsFormsApp1
         {
             tex = TextureLoader.FromFile(
                 Render.dx,
-                @"Res/minecraft/textures/block/grass_block_top.png");
+                @"Res/debug.stitched_terrain.png");
             tex.PreLoad();
         }
 
@@ -106,8 +106,8 @@ namespace WindowsFormsApp1
             
 
             //ModelRotate(0, 0, 0, 0, 0, 0);
-            DrawSprite();
-            Render.dx.DrawUserPrimitives(PrimitiveType.TriangleList, 2 * 10 * 10, MeshBuilder.vt);
+            //DrawSprite();
+            Render.dx.DrawUserPrimitives(PrimitiveType.TriangleList, MeshBuilder.vt.Length / 3, MeshBuilder.vt);
             //mesh.DrawSubset(0);
         }
     }

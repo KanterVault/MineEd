@@ -75,7 +75,8 @@ namespace WindowsFormsApp1
 
         public static void RenderThread()
         {
-            MeshBuilder.CreateNewTerrainMesh();
+            //MeshBuilder.CreateNewTerrainMesh();
+            MeshBuilder.CreateChankMesh();
             RenderLineScene.LoadTexture();
             RenderLineScene.SetUpMaterial();
 
@@ -109,7 +110,7 @@ namespace WindowsFormsApp1
             dx.RenderState.Lighting = false;
             dx.RenderState.FillMode = FillMode.Solid;
             dx.RenderState.ZBufferEnable = true;
-            dx.RenderState.CullMode = Cull.None;
+            dx.RenderState.CullMode = Cull.CounterClockwise;
             Render.dx.VertexFormat = CustomVertex.PositionColoredTextured.Format;
 
             dx.Lights[0].Diffuse = Color.White;
@@ -118,6 +119,12 @@ namespace WindowsFormsApp1
             dx.Lights[0].Position = new Vector3();
             dx.Lights[0].Enabled = true;
             dx.Lights[0].Update();
+
+            dx.RenderState.AlphaBlendEnable = true;
+            dx.RenderState.AlphaBlendOperation = BlendOperation.Add;
+            dx.RenderState.SourceBlend = Blend.SourceAlpha;
+            dx.RenderState.DestinationBlend = Blend.InvSourceAlpha;
+            //dx.RenderState.BlendFactor = Color.FromArgb(0, 0, 0, 0);
         }
 
         public static void StartRenderThread()

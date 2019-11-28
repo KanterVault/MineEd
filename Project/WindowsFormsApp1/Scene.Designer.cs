@@ -81,6 +81,7 @@
             this.Text = "Game";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Quit);
             this.Shown += new System.EventHandler(this.Start);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.KeyboardDown);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MouseDownScene);
             this.ResumeLayout(false);
 
