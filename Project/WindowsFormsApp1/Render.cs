@@ -110,11 +110,11 @@ namespace WindowsFormsApp1
             dx.RenderState.FillMode = FillMode.Solid;
             dx.RenderState.ZBufferEnable = true;
             dx.RenderState.CullMode = Cull.None;
-            Render.dx.VertexFormat = CustomVertex.PositionTextured.Format;
+            Render.dx.VertexFormat = CustomVertex.PositionColoredTextured.Format;
 
             dx.Lights[0].Diffuse = Color.White;
             dx.Lights[0].Type = LightType.Directional;
-            dx.Lights[0].Direction = new Vector3(0.2f, -0.2f, 4f);
+            dx.Lights[0].Direction = new Vector3(0, -1, 0);
             dx.Lights[0].Position = new Vector3();
             dx.Lights[0].Enabled = true;
             dx.Lights[0].Update();

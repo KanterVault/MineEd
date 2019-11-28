@@ -25,8 +25,8 @@ namespace WindowsFormsApp1
 
         public static void SetUpMaterial()
         {
-            mat.Diffuse = Color.White;
-            mat.Ambient = Color.FromArgb(40, 30, 20);
+            mat.Diffuse = Color.Green;
+            mat.Ambient = Color.FromArgb(255, 255, 255);
         }
 
         public static void SetProjectionsAndCameras()
@@ -41,7 +41,6 @@ namespace WindowsFormsApp1
                 translationsBefore,
                 -PlayerMoving.playerWorldPosition + new Vector3(0, -1.75f, 0),
                 0.3f);
-            
 
             Render.dx.Transform.View =
                 Matrix.Translation(translationsBefore) *
@@ -67,7 +66,9 @@ namespace WindowsFormsApp1
 
         public static void LoadTexture()
         {
-            tex = TextureLoader.FromFile(Render.dx, @"C:\Users\Vadim\Desktop\MinecraftEd\Project\WindowsFormsApp1\Res\minecraft\textures\map\map_background.png");
+            tex = TextureLoader.FromFile(
+                Render.dx,
+                @"Res/minecraft/textures/block/grass_block_top.png");
             tex.PreLoad();
         }
 
@@ -101,6 +102,8 @@ namespace WindowsFormsApp1
 
             Render.dx.Material = mat;
             Render.dx.SetTexture(0, tex);
+            //Render.dx.Lights[0].Update();
+            
 
             //ModelRotate(0, 0, 0, 0, 0, 0);
             DrawSprite();

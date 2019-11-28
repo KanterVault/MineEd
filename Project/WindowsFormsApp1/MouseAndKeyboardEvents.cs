@@ -68,14 +68,14 @@ namespace WindowsFormsApp1
 
         public static void KeysMouseEvents()
         {
-            xrot += (float)dvX.CurrentMouseState.X / 4.0f;
-            yrot -= (float)dvY.CurrentMouseState.Y / 4.0f;
+            xrot += (float)dvX.CurrentMouseState.X / 3.0f;
+            yrot -= (float)dvY.CurrentMouseState.Y / 3.0f;
 
             //Clamping 180.0f = 0.0f (y axis)
             yrot = yrot < 90.0f ? 90.0f : (yrot > 270.0f ? 270.0f : (yrot - (float)dvY.CurrentMouseState.Y / 4.0f));
 
-            mainXrot = Lerp(mainXrot, xrot, 2.6f);
-            mainYrot = Lerp(mainYrot, yrot - 180.0f, 2.6f);
+            mainXrot = Lerp(mainXrot, xrot, 2.0f);
+            mainYrot = Lerp(mainYrot, yrot - 180.0f, 2.0f);
 
             keys = dvK.GetPressedKeys();
             xdir = 0;
