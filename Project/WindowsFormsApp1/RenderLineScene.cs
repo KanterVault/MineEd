@@ -35,11 +35,29 @@ namespace WindowsFormsApp1
                 0.01f,                                        //zNear
                 100f);                                        //zFar
 
-            Render.dx.Transform.View = Matrix.LookAtLH(
-                new Vector3(2, 3, -10),  //position
-                new Vector3(),          //lookAt
-                new Vector3(0, 1, 0));  //upVector
+            //Render.dx.Transform.View = Matrix.LookAtLH(
+            //    new Vector3(2, 3, -10),  //position
+            //    new Vector3(),          //lookAt
+            //    new Vector3(0, 1, 0));  //upVector
+
+            //Render.dx.Transform.View = Matrix.Transformation(
+            //    new Vector3(0, 0, 0),
+            //    Quaternion.Identity,
+            //    new Vector3(1, 1, 1),
+            //    new Vector3(0, 4, 4),
+            //    Quaternion.RotationYawPitchRoll(
+            //        MouseAndKeyboardEvents.DegresToRadian(MouseAndKeyboardEvents.mainXrot),
+            //        MouseAndKeyboardEvents.DegresToRadian(MouseAndKeyboardEvents.mainYrot),
+            //        MouseAndKeyboardEvents.DegresToRadian(0)),
+            //        new Vector3(0, -4, -4));
+
+            Render.dx.Transform.View =
+                Matrix.Translation(-5.0f, -3.0f, -5.0f) *
+                Matrix.RotationY(DegresToRadian(-MouseAndKeyboardEvents.mainXrot)) *
+                Matrix.RotationX(DegresToRadian(MouseAndKeyboardEvents.mainYrot));
         }
+
+        public static float DegresToRadian(float degres) { return (float)Math.PI / 180.0f * degres; }
 
         public static void ModelRotate(float x, float y, float z, float Yaw, float Pitch, float Roll)
         {
@@ -93,9 +111,7 @@ namespace WindowsFormsApp1
             Render.dx.SetTexture(0, tex);
 
             //ModelRotate(0, 0, 0, 0, 0, 0);
-            //DrawSprite();
-
-            ModelRotate(0, 0, 0, MouseAndKeyboardEvents.mainXrot, MouseAndKeyboardEvents.mainYrot, 0);
+            DrawSprite();
             Render.dx.DrawUserPrimitives(PrimitiveType.TriangleList, 2 * 10 * 10, MeshBuilder.vt);
             //mesh.DrawSubset(0);
         }
