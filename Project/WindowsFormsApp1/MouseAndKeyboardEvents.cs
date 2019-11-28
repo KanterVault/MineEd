@@ -87,6 +87,8 @@ namespace WindowsFormsApp1
                 if (keys[a] == Key.A) xdir -= 1;
                 if (keys[a] == Key.D) xdir += 1;
                 if (keys[a] == Key.Escape) if (mouseLook == 2) mouseLook++;
+                if (keys[a] == Key.Space) movePlayerDirections.Y = 1;
+                if (keys[a] == Key.LeftShift) movePlayerDirections.Y = -1;
             }
         }
 
@@ -102,10 +104,19 @@ namespace WindowsFormsApp1
             if (xdir == 1 && ydir == 1) angleToPlayerDirection = 45.0f;
             if (xdir == -1 && ydir == -1) angleToPlayerDirection = 180.0f + 45.0f;
 
-            if (xdir != 0 || ydir != 0) PlayerMoving.PlayerMoveToDirection(movePlayerDirections);
-
-            movePlayerDirections.Z = (float)Math.Cos(DegresToRadian(angleToPlayerDirection + mainXrot));
-            movePlayerDirections.X = (float)Math.Sin(DegresToRadian(angleToPlayerDirection + mainXrot));
+            if (xdir != 0 || ydir != 0 || movePlayerDirections.Y != 0) PlayerMoving.PlayerMoveToDirection(movePlayerDirections);
+            if (xdir == 0 && ydir == 0)
+            {
+                movePlayerDirections.Z = 0;
+                movePlayerDirections.X = 0;
+            }
+            else
+            {
+                movePlayerDirections.Z = (float)Math.Cos(DegresToRadian(angleToPlayerDirection + mainXrot));
+                movePlayerDirections.X = (float)Math.Sin(DegresToRadian(angleToPlayerDirection + mainXrot));
+            }
+            
+            movePlayerDirections.Y = 0;
         }
 
         public static float Lerp(float a, float b, float t) { return a + (b - a) / t; }

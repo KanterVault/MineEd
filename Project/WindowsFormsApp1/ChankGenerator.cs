@@ -16,7 +16,7 @@ namespace WindowsFormsApp1
 {
     public static class ChankGenerator
     {
-        const int CHANK_MAX_UP_BLOCKS = 256;
+        public const int CHANK_MAX_UP_BLOCKS = 256;
 
         public enum GeneratorKey
         {
@@ -24,6 +24,7 @@ namespace WindowsFormsApp1
         };
 
         public static ArrayList chanks = new ArrayList();
+        public static Vector2[][] chanksRootToPlayer = null;
         public static int chankCount = 0;
 
         public class Chank
@@ -32,6 +33,18 @@ namespace WindowsFormsApp1
             public string chankName = "chank_0";
             public Vector2 chankWorldPosition = new Vector2();
             public byte[][][] chankArray = null;
+        }
+
+        public static float Distance(float a, float b) { return Math.Abs(b - a); }
+        public static float VectorDistance(Vector3 a, Vector3 b) {
+            return (float)Math.Sqrt((b.X - a.X) * (b.X - a.X) + (b.Y - a.Y) * (b.Y - a.Y) + (b.Z - a.Z) * (b.Z - a.Z)); }
+        public static void CreateChanksAroundArray()
+        {
+            for (int i = 0; i < chanks.Count; i++)
+            {
+                //if (((Chank)chanks[i]).chankWorldPosition)
+            }
+            //PlayerMoving.playerWorldPosition;
         }
 
         public static void CreateChank(Vector2 chankWorldPosition, GeneratorKey generatorKey)
@@ -43,32 +56,41 @@ namespace WindowsFormsApp1
 
             InitializeArray();
             PasteBlocksToArray();
-
             chanks.Add(chank);
-            MessageBox.Show("Чанк создан!");
 
-            
+            MeshBuilder.CreateChankMesh(chank);
+
+            //MessageBox.Show("Чанк создан!");
 
             void PasteBlocksToArray()
             {
                 if (generatorKey == GeneratorKey.Flat)
                 {
-                    for (int y = 0; y < CHANK_MAX_UP_BLOCKS / 8; y++)
-                        for (int z = 0; z < 16; z++)
-                            for (int x = 0; x < 16; x++) chank.chankArray[y][z][x] = (byte)1;
+                    for (int Y = 0; Y < CHANK_MAX_UP_BLOCKS / 16; Y++)
+                    {
+                        if (Y < 4 || Y > 8)
+                            for (int Z = 0; Z < 16; Z++)
+                                for (int X = 0; X < 16; X++) chank.chankArray[Y][Z][X] = (byte)3;
+                        if (Y == 6)
+                            for (int Z = 4; Z < 12; Z++)
+                                for (int X = 4; X < 12; X++) chank.chankArray[Y][Z][X] = (byte)2;
+                        if (Y == 15)
+                            for (int Z = 4; Z < 12; Z++)
+                                for (int X = 4; X < 12; X++) chank.chankArray[Y][Z][X] = (byte)2;
+                    }
                 }
             }
 
             void InitializeArray()
             {
                 chank.chankArray = new byte[CHANK_MAX_UP_BLOCKS][][];
-                for (int y = 0; y < CHANK_MAX_UP_BLOCKS; y++)
+                for (int Y = 0; Y < CHANK_MAX_UP_BLOCKS; Y++)
                 {
-                    chank.chankArray[y] = new byte[16][];
-                    for (int z = 0; z < 16; z++)
+                    chank.chankArray[Y] = new byte[16][];
+                    for (int Z = 0; Z < 16; Z++)
                     {
-                        chank.chankArray[y][z] = new byte[16];
-                        for (int x = 0; x < 16; x++) chank.chankArray[y][z][x] = (byte)0;
+                        chank.chankArray[Y][Z] = new byte[16];
+                        for (int X = 0; X < 16; X++) chank.chankArray[Y][Z][X] = (byte)0;
                     }
                 }
             }

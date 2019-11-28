@@ -15,7 +15,6 @@ namespace WindowsFormsApp1
 {
     public static class RenderLineScene
     {
-        public static Mesh mesh = Mesh.Cylinder(Render.dx, 4, 4, 10, 12, 6);
         public static Form form = Scene.ActiveForm;
 
         public static Texture tex = null;
@@ -35,7 +34,7 @@ namespace WindowsFormsApp1
                 DegresToRadian(60.0f),                        //fov
                 (float)form.ClientSize.Width / (float)form.ClientSize.Height,       //aspectRatio
                 0.01f,                                        //zNear
-                100f);                                        //zFar
+                1000f);                                        //zFar
 
             translationsBefore = Vector3.Lerp(
                 translationsBefore,
@@ -102,13 +101,8 @@ namespace WindowsFormsApp1
 
             Render.dx.Material = mat;
             Render.dx.SetTexture(0, tex);
-            //Render.dx.Lights[0].Update();
             
-
-            //ModelRotate(0, 0, 0, 0, 0, 0);
-            //DrawSprite();
             Render.dx.DrawUserPrimitives(PrimitiveType.TriangleList, MeshBuilder.vt.Length / 3, MeshBuilder.vt);
-            //mesh.DrawSubset(0);
         }
     }
 }

@@ -54,6 +54,7 @@ namespace WindowsFormsApp1
 
         public static bool CreateDirectXDevice()
         {
+            Thread.Sleep(1000);
             try
             {
                 live = true;
@@ -76,7 +77,7 @@ namespace WindowsFormsApp1
         public static void RenderThread()
         {
             //MeshBuilder.CreateNewTerrainMesh();
-            MeshBuilder.CreateChankMesh();
+            ChankGenerator.CreateChank(new Vector2(), ChankGenerator.GeneratorKey.Flat);
             RenderLineScene.LoadTexture();
             RenderLineScene.SetUpMaterial();
 
@@ -117,7 +118,7 @@ namespace WindowsFormsApp1
             dx.Lights[0].Type = LightType.Directional;
             dx.Lights[0].Direction = new Vector3(0, -1, 0);
             dx.Lights[0].Position = new Vector3();
-            dx.Lights[0].Enabled = true;
+            dx.Lights[0].Enabled = false;
             dx.Lights[0].Update();
 
             dx.RenderState.AlphaBlendEnable = true;
