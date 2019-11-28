@@ -49,7 +49,7 @@
             this.label_Info.ImageAlign = System.Drawing.ContentAlignment.BottomLeft;
             this.label_Info.Location = new System.Drawing.Point(3, 3);
             this.label_Info.Name = "label_Info";
-            this.label_Info.Size = new System.Drawing.Size(161, 135);
+            this.label_Info.Size = new System.Drawing.Size(161, 201);
             this.label_Info.TabIndex = 0;
             this.label_Info.Text = "label1";
             // 

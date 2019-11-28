@@ -24,7 +24,7 @@ namespace WindowsFormsApp1
         public static Microsoft.DirectX.DirectInput.Device dvK = null;
 
         public static float xrot = 0.0f;
-        public static float yrot = 0.0f;
+        public static float yrot = 180.0f;
         public static float mainXrot = 0.0f;
         public static float mainYrot = 0.0f;
 
@@ -71,8 +71,11 @@ namespace WindowsFormsApp1
             xrot += (float)dvX.CurrentMouseState.X / 4.0f;
             yrot -= (float)dvY.CurrentMouseState.Y / 4.0f;
 
-            mainXrot = Lerp(mainXrot, xrot, 1.7f);
-            mainYrot = Lerp(mainYrot, yrot, 1.7f);
+            //Clamping 180.0f = 0.0f (y axis)
+            yrot = yrot < 90.0f ? 90.0f : (yrot > 270.0f ? 270.0f : (yrot - (float)dvY.CurrentMouseState.Y / 4.0f));
+
+            mainXrot = Lerp(mainXrot, xrot, 2.6f);
+            mainYrot = Lerp(mainYrot, yrot - 180.0f, 2.6f);
 
             keys = dvK.GetPressedKeys();
             xdir = 0;
@@ -98,6 +101,8 @@ namespace WindowsFormsApp1
             if (xdir == 1 && ydir == -1) angleToPlayerDirection = 180.0f - 45.0f;
             if (xdir == 1 && ydir == 1) angleToPlayerDirection = 45.0f;
             if (xdir == -1 && ydir == -1) angleToPlayerDirection = 180.0f + 45.0f;
+
+            if (xdir != 0 || ydir != 0) PlayerMoving.PlayerMoveToDirection(movePlayerDirections);
 
             movePlayerDirections.Z = (float)Math.Cos(DegresToRadian(angleToPlayerDirection + mainXrot));
             movePlayerDirections.X = (float)Math.Sin(DegresToRadian(angleToPlayerDirection + mainXrot));

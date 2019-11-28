@@ -47,6 +47,11 @@ namespace WindowsFormsApp1
             sb.Append("\n   z: " + MouseAndKeyboardEvents.movePlayerDirections.Z);
             sb.Append("\n   x: " + MouseAndKeyboardEvents.movePlayerDirections.X);
             if (ERRORMESSAGE.Length > 20) sb.Append("\n" + ERRORMESSAGE.PadLeft(ERRORMESSAGE.Length - 20));
+            sb.Append("\nPlayer World position:");
+            sb.Append("\n   x: " + PlayerMoving.playerWorldPosition.X);
+            sb.Append("\n   y: " + PlayerMoving.playerWorldPosition.Y);
+            sb.Append("\n   z: " + PlayerMoving.playerWorldPosition.Z);
+
 
             label_Info.Text = sb.ToString();
         }
@@ -56,6 +61,9 @@ namespace WindowsFormsApp1
             MouseAndKeyboardEvents.CreateGuidDevices();
             MouseAndKeyboardEvents.SetCooperativeLevels();
             Render.CreateDeviceAndRenderthread();
+
+            PlayerMoving.InitializeMoveTimer();
+
 
             timerUpdate.Enabled = true;
         }
@@ -83,8 +91,8 @@ namespace WindowsFormsApp1
 
             if (MouseAndKeyboardEvents.mouseLook == 1 || MouseAndKeyboardEvents.mouseLook == 2)
             {
-                MouseAndKeyboardEvents.KeysMouseEvents();
                 MouseAndKeyboardEvents.SetDirections();
+                MouseAndKeyboardEvents.KeysMouseEvents();
             }
 
             SetCursoreVisible();
@@ -95,6 +103,8 @@ namespace WindowsFormsApp1
             timerUpdate.Enabled = false;
             Render.DisposeAll();
             MouseAndKeyboardEvents.DisposeAll();
+
+            PlayerMoving.DisposeMoveTimer();
         }
 
         private void MouseDownScene(object sender, MouseEventArgs e)

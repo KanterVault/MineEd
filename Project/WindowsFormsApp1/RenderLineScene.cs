@@ -21,6 +21,8 @@ namespace WindowsFormsApp1
         public static Texture tex = null;
         public static Material mat = new Material();
 
+        public static Vector3 translationsBefore = new Vector3();
+
         public static void SetUpMaterial()
         {
             mat.Diffuse = Color.White;
@@ -30,29 +32,19 @@ namespace WindowsFormsApp1
         public static void SetProjectionsAndCameras()
         {
             Render.dx.Transform.Projection = Matrix.PerspectiveFovLH(
-                MouseAndKeyboardEvents.DegresToRadian(90.0f), //fov
+                DegresToRadian(60.0f),                        //fov
                 (float)form.Width / (float)form.Height,       //aspectRatio
                 0.01f,                                        //zNear
                 100f);                                        //zFar
 
-            //Render.dx.Transform.View = Matrix.LookAtLH(
-            //    new Vector3(2, 3, -10),  //position
-            //    new Vector3(),          //lookAt
-            //    new Vector3(0, 1, 0));  //upVector
-
-            //Render.dx.Transform.View = Matrix.Transformation(
-            //    new Vector3(0, 0, 0),
-            //    Quaternion.Identity,
-            //    new Vector3(1, 1, 1),
-            //    new Vector3(0, 4, 4),
-            //    Quaternion.RotationYawPitchRoll(
-            //        MouseAndKeyboardEvents.DegresToRadian(MouseAndKeyboardEvents.mainXrot),
-            //        MouseAndKeyboardEvents.DegresToRadian(MouseAndKeyboardEvents.mainYrot),
-            //        MouseAndKeyboardEvents.DegresToRadian(0)),
-            //        new Vector3(0, -4, -4));
+            translationsBefore = Vector3.Lerp(
+                translationsBefore,
+                -PlayerMoving.playerWorldPosition + new Vector3(0, -1.75f, 0),
+                0.3f);
+            
 
             Render.dx.Transform.View =
-                Matrix.Translation(-5.0f, -3.0f, -5.0f) *
+                Matrix.Translation(translationsBefore) *
                 Matrix.RotationY(DegresToRadian(-MouseAndKeyboardEvents.mainXrot)) *
                 Matrix.RotationX(DegresToRadian(MouseAndKeyboardEvents.mainYrot));
         }

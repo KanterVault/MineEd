@@ -99,6 +99,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MeshBuilder.cs" />
+    <Compile Include="PlayerMoving.cs" />
     <Compile Include="Scene.cs">
       <SubType>Form</SubType>
     </Compile>
