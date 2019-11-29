@@ -48,9 +48,9 @@ namespace WindowsFormsApp1
         public static void SetCooperativeLevels()
         {
             dvX.SetCooperativeLevel(
-               handleForm,
-               Microsoft.DirectX.DirectInput.CooperativeLevelFlags.Background |
-               Microsoft.DirectX.DirectInput.CooperativeLevelFlags.NonExclusive);
+                handleForm,
+                Microsoft.DirectX.DirectInput.CooperativeLevelFlags.Background |
+                Microsoft.DirectX.DirectInput.CooperativeLevelFlags.NonExclusive);
             dvX.Acquire();
 
             dvY.SetCooperativeLevel(
@@ -87,8 +87,10 @@ namespace WindowsFormsApp1
                 if (keys[a] == Key.A) xdir -= 1;
                 if (keys[a] == Key.D) xdir += 1;
                 if (keys[a] == Key.Escape) if (mouseLook == 2) mouseLook++;
-                //if (keys[a] == Key.Space) movePlayerDirections.Y = 1;
-                //if (keys[a] == Key.LeftShift) movePlayerDirections.Y = -1;
+                if (keys[a] == Key.Space) movePlayerDirections.Y = 1;
+                if (keys[a] == Key.LeftShift) movePlayerDirections.Y = -1;
+                //if (keys[a] == Key.R) PlayerMoving.playerWorldPosition = new Vector3(8, 256, 8);
+                //if (keys[a] == Key.Space) PlayerMoving.spaceButton = true;
             }
         }
 

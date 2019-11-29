@@ -94,6 +94,8 @@ namespace WindowsFormsApp1
             }
         }
 
+
+        public static Mesh testMesh = Mesh.Cylinder(Render.dx, 0.4f, 0.4f, 1.7f, 10, 10);
         public static void RenderScene()
         {
             Render.SetRenderStateParametrs();
@@ -101,8 +103,11 @@ namespace WindowsFormsApp1
 
             Render.dx.Material = mat;
             Render.dx.SetTexture(0, tex);
-            
-            Render.dx.DrawUserPrimitives(PrimitiveType.TriangleList, MeshBuilder.vt.Length / 3, MeshBuilder.vt);
+
+            testMesh.DrawSubset(0);
+            Collisions.chankMesh.DrawSubset(0);
+
+            //Render.dx.DrawUserPrimitives(PrimitiveType.TriangleList, MeshBuilder.vt.Length / 3, MeshBuilder.vt);
         }
     }
 }

@@ -17,44 +17,52 @@ namespace WindowsFormsApp1
     public static class Collisions
     {
         public static Vector3 comparePosition = new Vector3();
+        public static float bortOffset = 0.0f;
+        public static Mesh playerMesh;
+        public static Mesh chankMesh;
+        public static VertexBuffer vbChank;
+        public static IndexBuffer ibChank;
+
+        public static void InitializeCollisions()
+        {
+            try
+            {
+                playerMesh = Mesh.Cylinder(Render.dx, 0.4f, 0.4f, 1.7f, 10, 10);
+
+                vbChank = new VertexBuffer(
+                    typeof(CustomVertex.PositionColoredTextured),
+                    3,
+                    Render.dx,
+                    Usage.Dynamic | Usage.WriteOnly,
+                    CustomVertex.PositionColoredTextured.Format,
+                    Pool.Default);
+                vbChank.SetData(MeshBuilder.vt, 0, Microsoft.DirectX.Direct3D.LockFlags.None);
+
+                int[] id = new int[3] { 0, 1, 2 };
+
+                ibChank = new IndexBuffer(
+                    typeof(int),
+                    3,
+                    Render.dx,
+                    Usage.Dynamic | Usage.WriteOnly,
+                    Pool.Default);
+                ibChank.SetData(id, 0, Microsoft.DirectX.Direct3D.LockFlags.None);
+
+                chankMesh = new Mesh(
+                    1,
+                    3,
+                    MeshFlags.Managed,
+                    CustomVertex.PositionColoredTextured.Format,
+                    Render.dx);
+                chankMesh.SetIndexBufferData(ibChank, Microsoft.DirectX.Direct3D.LockFlags.None);
+                chankMesh.SetVertexBufferData(vbChank, Microsoft.DirectX.Direct3D.LockFlags.None);
+            }
+            catch (Exception ex) { MessageBox.Show(ex.ToString()); }
+        }
+
         public static void CheckPlayerGrounCollision()
         {
-            comparePosition = new Vector3(
-                (int)Math.Round(PlayerMoving.playerWorldPosition.X),
-                (int)Math.Round(PlayerMoving.playerWorldPosition.Y),
-                (int)Math.Round(PlayerMoving.playerWorldPosition.Z));
 
-            if ((comparePosition.X >= 0 && comparePosition.X < 16) &&
-                (comparePosition.Y >= 0 && comparePosition.Y < 16) &&
-                (comparePosition.Z >= 0 && comparePosition.Z < 16))
-            {
-                if ((ChankGenerator.chanks.Count > 0) &&
-                    (((ChankGenerator.Chank)ChankGenerator.chanks[0]).chankArray
-                    [(int)comparePosition.Y]
-                    [(int)comparePosition.Z]
-                    [(int)comparePosition.X] != (byte)0))
-                {
-                    PlayerMoving.velocityY = 0.001f;
-                    PlayerMoving.collisionY = true;
-
-                    PlayerMoving.collisionYPosition = comparePosition.Y;
-                }
-                else PlayerMoving.collisionY = false;
-            }
-            else PlayerMoving.collisionY = false;
-            //for (int y = 0; y < ChankGenerator.CHANK_MAX_UP_BLOCKS; y++)
-            //{
-            //    for (int z = 0; z < 16; z++)
-            //    {
-            //        for (int x = 0; x < 16; x++)
-            //        {
-            //            if (((ChankGenerator.Chank)ChankGenerator.chanks[0]).chankArray[y][z][x] == '0')
-            //            {
-
-            //            }
-            //        }
-            //    }
-            //}
         }
     }
 }

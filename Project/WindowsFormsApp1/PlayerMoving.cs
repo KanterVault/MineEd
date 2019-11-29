@@ -16,7 +16,7 @@ namespace WindowsFormsApp1
 {
     public static class PlayerMoving
     {
-        public static Vector3 playerWorldPosition = new Vector3();
+        public static Vector3 playerWorldPosition = new Vector3(-2, 7, -2);
         public static Vector3 directionMove = new Vector3();
         public static float speedMove = 0.1f;
 
@@ -30,25 +30,15 @@ namespace WindowsFormsApp1
             time.Stop();
         }
 
-        public static float gravityAddForce = -0.015f;    //гравитация
-        public static float velocityY = 0.0f;            //инеция
-        public static float airAddForce = 0.0f;          //сопротивление воздуха
-        public static bool collisionY = false;           //состояние соприкосновения
-        public static float collisionYPosition = 0.0f;
+        public static float gravityAddForce = -0.015f;    //Гравитация
+        public static float velocityY = 0.0f;             //Инеция
+        public static float jumpForceValue = 0.2f;        //Сила прыжка
 
+        public static bool onCollision = false;
         public static bool spaceButton = false;
         public static void OnGravityTimerUpdate(Object sender, ElapsedEventArgs e)
         {
-            if (spaceButton)
-            {
-                collisionY = false;
-                velocityY = 0.4f;
-                spaceButton = false;
-            }
-
-            if (!collisionY) velocityY += gravityAddForce + airAddForce;
-            else playerWorldPosition.Y = collisionYPosition;
-            playerWorldPosition.Y += velocityY;
+            Collisions.CheckPlayerGrounCollision();
         }
 
         public static void InitializeMoveTimer()

@@ -63,9 +63,7 @@ namespace WindowsFormsApp1
             MouseAndKeyboardEvents.CreateGuidDevices();
             MouseAndKeyboardEvents.SetCooperativeLevels();
             Render.CreateDeviceAndRenderthread();
-
             PlayerMoving.InitializeMoveTimer();
-
 
             timerUpdate.Enabled = true;
         }
@@ -74,7 +72,6 @@ namespace WindowsFormsApp1
         {
             if (MouseAndKeyboardEvents.mouseLook == 1 || MouseAndKeyboardEvents.mouseLook == 2)
                 Cursor.Position = PointToScreen(new Point(ClientSize.Width / 2, ClientSize.Height / 2));
-
             if (MouseAndKeyboardEvents.mouseLook == 1)
             {
                 Cursor.Hide();
@@ -89,16 +86,13 @@ namespace WindowsFormsApp1
 
         private void Update(object sender, EventArgs e)
         {
-            ViewInLogLabel();
-
             if (MouseAndKeyboardEvents.mouseLook == 1 || MouseAndKeyboardEvents.mouseLook == 2)
             {
                 MouseAndKeyboardEvents.SetDirections();
                 MouseAndKeyboardEvents.KeysMouseEvents();
             }
 
-            Collisions.CheckPlayerGrounCollision();
-
+            ViewInLogLabel();
             SetCursoreVisible();
         }
 
@@ -107,7 +101,6 @@ namespace WindowsFormsApp1
             timerUpdate.Enabled = false;
             Render.DisposeAll();
             MouseAndKeyboardEvents.DisposeAll();
-
             PlayerMoving.DisposeMoveTimer();
         }
 
@@ -118,13 +111,12 @@ namespace WindowsFormsApp1
 
         private void KeyboardDown(object sender, KeyEventArgs e)
         {
-            
+
         }
 
         private void KeyboardPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == ' ') PlayerMoving.spaceButton = true;
-            if (e.KeyChar == 'r' || e.KeyChar == 'R') PlayerMoving.playerWorldPosition = new Vector3(8, 256, 8);
+
         }
     }
 }

@@ -33,6 +33,10 @@
             this.timerUpdate = new System.Windows.Forms.Timer(this.components);
             this.label_Info = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.trackBar1 = new System.Windows.Forms.TrackBar();
+            this.trackBar2 = new System.Windows.Forms.TrackBar();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
             this.SuspendLayout();
             // 
             // timerUpdate
@@ -44,7 +48,6 @@
             // 
             this.label_Info.AutoEllipsis = true;
             this.label_Info.BackColor = System.Drawing.SystemColors.Control;
-            this.label_Info.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label_Info.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.label_Info.ImageAlign = System.Drawing.ContentAlignment.BottomLeft;
             this.label_Info.Location = new System.Drawing.Point(3, 3);
@@ -57,14 +60,37 @@
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label1.BackColor = System.Drawing.SystemColors.Control;
-            this.label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label1.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.label1.Location = new System.Drawing.Point(3, 430);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(161, 23);
             this.label1.TabIndex = 1;
-            this.label1.Text = "28.11.2019 6:26:59 2199935a";
+            this.label1.Text = "29.11.2019 2:17:22 6c0b1fed";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // trackBar1
+            // 
+            this.trackBar1.AutoSize = false;
+            this.trackBar1.BackColor = System.Drawing.SystemColors.Control;
+            this.trackBar1.Location = new System.Drawing.Point(3, 207);
+            this.trackBar1.Maximum = 100;
+            this.trackBar1.Name = "trackBar1";
+            this.trackBar1.Size = new System.Drawing.Size(161, 25);
+            this.trackBar1.TabIndex = 2;
+            this.trackBar1.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.trackBar1.Value = 4;
+            // 
+            // trackBar2
+            // 
+            this.trackBar2.AutoSize = false;
+            this.trackBar2.BackColor = System.Drawing.SystemColors.Control;
+            this.trackBar2.Location = new System.Drawing.Point(3, 235);
+            this.trackBar2.Maximum = 100;
+            this.trackBar2.Name = "trackBar2";
+            this.trackBar2.Size = new System.Drawing.Size(161, 25);
+            this.trackBar2.TabIndex = 2;
+            this.trackBar2.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.trackBar2.Value = 10;
             // 
             // Scene
             // 
@@ -72,6 +98,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(599, 456);
+            this.Controls.Add(this.trackBar2);
+            this.Controls.Add(this.trackBar1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.label_Info);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -84,6 +112,8 @@
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.KeyboardDown);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.KeyboardPress);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MouseDownScene);
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -93,6 +123,8 @@
         private System.Windows.Forms.Timer timerUpdate;
         private System.Windows.Forms.Label label_Info;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TrackBar trackBar1;
+        private System.Windows.Forms.TrackBar trackBar2;
     }
 }
 
