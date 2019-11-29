@@ -23,28 +23,28 @@ namespace WindowsFormsApp1
         public static VertexBuffer vbChank;
         public static IndexBuffer ibChank;
 
+        public static readonly short[] id = new short[3] { 0, 1, 2 };
+
         public static void InitializeCollisions()
         {
             try
             {
-                playerMesh = Mesh.Cylinder(Render.dx, 0.4f, 0.4f, 1.7f, 10, 10);
+                playerMesh = Mesh.Cylinder(Render.dx, 0.4f, 0.4f, 1.7f, 16, 1);
 
                 vbChank = new VertexBuffer(
-                    typeof(CustomVertex.PositionColoredTextured),
+                    typeof(CustomVertex.PositionColored),
                     3,
                     Render.dx,
                     Usage.Dynamic | Usage.WriteOnly,
-                    CustomVertex.PositionColoredTextured.Format,
+                    CustomVertex.PositionColored.Format,
                     Pool.Default);
-                vbChank.SetData(MeshBuilder.vt, 0, Microsoft.DirectX.Direct3D.LockFlags.None);
-
-                int[] id = new int[3] { 0, 1, 2 };
+                vbChank.SetData(MeshBuilder.vt2, 0, Microsoft.DirectX.Direct3D.LockFlags.None);
 
                 ibChank = new IndexBuffer(
                     typeof(int),
                     3,
                     Render.dx,
-                    Usage.Dynamic | Usage.WriteOnly,
+                    Usage.WriteOnly,
                     Pool.Default);
                 ibChank.SetData(id, 0, Microsoft.DirectX.Direct3D.LockFlags.None);
 
@@ -52,10 +52,11 @@ namespace WindowsFormsApp1
                     1,
                     3,
                     MeshFlags.Managed,
-                    CustomVertex.PositionColoredTextured.Format,
+                    CustomVertex.PositionColored.Format,
                     Render.dx);
-                chankMesh.SetIndexBufferData(ibChank, Microsoft.DirectX.Direct3D.LockFlags.None);
+
                 chankMesh.SetVertexBufferData(vbChank, Microsoft.DirectX.Direct3D.LockFlags.None);
+                chankMesh.SetIndexBufferData(ibChank, Microsoft.DirectX.Direct3D.LockFlags.None);
             }
             catch (Exception ex) { MessageBox.Show(ex.ToString()); }
         }
