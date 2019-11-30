@@ -67,7 +67,7 @@ namespace WindowsFormsApp1
         {
             tex = TextureLoader.FromFile(
                 Render.dx,
-                @"Res/debug.stitched_terrain.png");
+                @"Res\debug.stitched_terrain.png");
             tex.PreLoad();
         }
 
@@ -94,7 +94,6 @@ namespace WindowsFormsApp1
             }
         }
 
-
         public static Mesh testMesh = Mesh.Cylinder(Render.dx, 0.4f, 0.4f, 1.7f, 16, 1);
         public static void RenderScene()
         {
@@ -104,12 +103,13 @@ namespace WindowsFormsApp1
             Render.dx.Material = mat;
             Render.dx.SetTexture(0, tex);
 
-            ModelRotate(0, -(1.7f / 2.0f), 0, 0, 90, 0);
-            testMesh.DrawSubset(0);
-            ModelRotate(0, 0, 0, 0, 0, 0);
-            Collisions.chankMesh.DrawSubset(0);
+            //ModelRotate(0, -(1.7f / 2.0f), 0, 0, 90, 0);
+            //testMesh.DrawSubset(0);
+            //Collisions.chankMesh.DrawSubset(0);
 
-            //Render.dx.DrawUserPrimitives(PrimitiveType.TriangleList, MeshBuilder.vt.Length / 3, MeshBuilder.vt);
+            Render.dx.DrawUserPrimitives(PrimitiveType.TriangleList, MeshBuilder.vt.Length / 3, MeshBuilder.vt);
+
+            Collisions.mesh.DrawSubset(0);
         }
     }
 }

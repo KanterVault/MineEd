@@ -16,7 +16,7 @@ namespace WindowsFormsApp1
 {
     public static class PlayerMoving
     {
-        public static Vector3 playerWorldPosition = new Vector3(); //new Vector3(-2, 7, -2);
+        public static Vector3 playerWorldPosition = new Vector3(7.0f, 5.4f, 4.8f); //new Vector3(-2, 7, -2);
         public static Vector3 directionMove = new Vector3();
         public static float speedMove = 0.1f;
 

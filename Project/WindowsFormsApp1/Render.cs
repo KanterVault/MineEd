@@ -76,8 +76,8 @@ namespace WindowsFormsApp1
 
         public static void RenderThread()
         {
-            ChankGenerator.CreateChank(new Vector2(), ChankGenerator.GeneratorKey.Flat);
             RenderLineScene.LoadTexture();
+            ChankGenerator.CreateChank(new Vector2(), ChankGenerator.GeneratorKey.Flat);
             RenderLineScene.SetUpMaterial();
 
             while (live)
@@ -105,10 +105,10 @@ namespace WindowsFormsApp1
         public static void SetRenderStateParametrs()
         {
             dx.RenderState.Lighting = false;
-            dx.RenderState.FillMode = FillMode.WireFrame;
+            dx.RenderState.FillMode = FillMode.Solid;
             dx.RenderState.ZBufferEnable = true;
             dx.RenderState.CullMode = Cull.CounterClockwise;
-            //Render.dx.VertexFormat = CustomVertex.PositionColoredTextured.Format;
+            Render.dx.VertexFormat = CustomVertex.PositionColoredTextured.Format; //CustomVertex.PositionColored.Format;
 
             dx.Lights[0].Diffuse = Color.White;
             dx.Lights[0].Type = LightType.Directional;
