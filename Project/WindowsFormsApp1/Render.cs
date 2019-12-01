@@ -18,6 +18,7 @@ namespace WindowsFormsApp1
         public static Form form = Scene.ActiveForm;
 
         public static Microsoft.DirectX.Direct3D.Device dx = null;
+
         public static PresentParameters pp = null;
 
         public static bool live = true;
@@ -122,6 +123,10 @@ namespace WindowsFormsApp1
             dx.RenderState.SourceBlend = Blend.SourceAlpha;
             dx.RenderState.DestinationBlend = Blend.InvSourceAlpha;
             //dx.RenderState.BlendFactor = Color.FromArgb(0, 0, 0, 0);
+
+            dx.SamplerState[0].MagFilter = TextureFilter.Point;
+            dx.SamplerState[0].MipFilter = TextureFilter.Point;
+            dx.SamplerState[0].MinFilter = TextureFilter.Point;
         }
 
         public static void StartRenderThread()
@@ -136,7 +141,7 @@ namespace WindowsFormsApp1
             live = false;
             Thread.Sleep(500);
 
-            try { RenderLineScene.tex.Dispose(); } catch { }
+            try { RenderLineScene.DisposeAllTextures(); } catch { }
 
             try { dx.EndScene(); } catch { }
             try { dx.Present(); } catch { }

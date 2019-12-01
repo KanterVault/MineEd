@@ -87,21 +87,58 @@ namespace WindowsFormsApp1
         public static float xoffset = 0.0f;
         public static void CheckPlayerGrounCollision()
         {
-            //chankMesh.Intersect(
-            //    PlayerMoving.playerWorldPosition,
-            //    PlayerMoving.directionMove,
-            //    out rayInfo);
+        }
 
-            testMesh.Intersect(
-                new Vector3(0, 0, -dis),
-                new Vector3(xoffset, 0, 1),
-                out rayInfo);
+        public static float Lerp(float a, float b, float t) { return a + (b - a) / t; }
+        public static float DegresToRadian(float degres) { return (float)Math.PI / 180.0f * degres; }
 
-            Scene.physDebag = "\n" +
-                "FaceIndex: " + rayInfo.FaceIndex.ToString() + "\n" +
-                "Dist: " + rayInfo.Dist.ToString() + "\n" +
-                "U: " + rayInfo.U.ToString() + "\n" +
-                "V: " + rayInfo.V.ToString();
+
+        public static Vector3 viewDirection = new Vector3();
+        public static IntersectInformation triesCollisionInfo;
+        public static void CheckCameraRayCollision()
+        {
+            try
+            {
+                viewDirection = new Vector3(
+                    (float)Math.Sin(DegresToRadian(MouseAndKeyboardEvents.mainXrot)) * (float)Math.Cos(DegresToRadian(MouseAndKeyboardEvents.mainYrot)),
+                    (float)Math.Sin(DegresToRadian(MouseAndKeyboardEvents.mainYrot)),
+                    (float)Math.Cos(DegresToRadian(MouseAndKeyboardEvents.mainXrot)) * (float)Math.Cos(DegresToRadian(MouseAndKeyboardEvents.mainYrot)));
+
+                chankMesh.Intersect(PlayerMoving.playerWorldPosition + new Vector3(0, 1.75f + 0.5f, 0), viewDirection, out triesCollisionInfo);
+
+                Scene.physDebag = "\n" +
+                "FaceIndex: " + triesCollisionInfo.FaceIndex.ToString() + "\n" +
+                "Dist: " + triesCollisionInfo.Dist.ToString() + "\n" +
+                "U: " + triesCollisionInfo.U.ToString() + "\n" +
+                "V: " + triesCollisionInfo.V.ToString();
+
+                vrt[0] = new CustomVertex.PositionColoredTextured(
+                    MeshBuilder.vt[(triesCollisionInfo.FaceIndex * 3)].Position,
+                    Color.Red.ToArgb(),
+                    0.0f, 0.0f);
+
+                vrt[1] = new CustomVertex.PositionColoredTextured(
+                    MeshBuilder.vt[(triesCollisionInfo.FaceIndex * 3) + 1].Position,
+                    Color.Red.ToArgb(),
+                    0.0f, 0.0f);
+
+                vrt[2] = new CustomVertex.PositionColoredTextured(
+                    MeshBuilder.vt[(triesCollisionInfo.FaceIndex * 3) + 2].Position,
+                    Color.Red.ToArgb(),
+                    0.0f, 0.0f);
+
+                using (VertexBuffer vb = testMesh.VertexBuffer)
+                {
+                    using (GraphicsStream gs = vb.Lock(0, 0, Microsoft.DirectX.Direct3D.LockFlags.None))
+                    {
+                        gs.Write(vrt[0]);
+                        gs.Write(vrt[1]);
+                        gs.Write(vrt[2]);
+                    }
+                    vb.Unlock();
+                }
+            }
+            catch { }
         }
     }
 }

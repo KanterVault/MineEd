@@ -17,7 +17,7 @@ namespace WindowsFormsApp1
     {
         public static Form form = Scene.ActiveForm;
 
-        public static Texture tex = null;
+        public static Texture[] tex = null;
         public static Material mat = new Material();
 
         public static Vector3 translationsBefore = new Vector3();
@@ -31,10 +31,10 @@ namespace WindowsFormsApp1
         public static void SetProjectionsAndCameras()
         {
             Render.dx.Transform.Projection = Matrix.PerspectiveFovLH(
-                DegresToRadian(60.0f),                        //fov
+                DegresToRadian(60.0f),                                              //fov
                 (float)form.ClientSize.Width / (float)form.ClientSize.Height,       //aspectRatio
-                0.01f,                                        //zNear
-                1000f);                                        //zFar
+                0.01f,                                                              //zNear
+                1000f);                                                             //zFar
 
             translationsBefore = Vector3.Lerp(
                 translationsBefore,
@@ -65,10 +65,33 @@ namespace WindowsFormsApp1
 
         public static void LoadTexture()
         {
-            tex = TextureLoader.FromFile(
+            tex = new Texture[2];
+                
+            tex[0] = TextureLoader.FromFile(
                 Render.dx,
                 @"Res\debug.stitched_terrain.png");
-            tex.PreLoad();
+            tex[0].PreLoad();
+
+            //tex[1] = TextureLoader.FromFile(
+            //    Render.dx,
+            //    @"Res\minecraft\textures\gui\widgets.png");
+            //tex[1].PreLoad();
+
+            tex[1] = TextureLoader.FromFile(
+                Render.dx,
+                @"Res\minecraft\textures\gui\widgets.png",
+                256,
+                256,
+                0,
+                Usage.None,
+                Format.A8R8G8B8,
+                Pool.Managed,
+                Filter.Point,
+                Filter.Point,
+                Color.White.ToArgb());
+            tex[1].PreLoad();
+
+            if (tex[1] == null) MessageBox.Show("Fack!"); 
         }
 
         public static void DrawSprite()
@@ -88,9 +111,55 @@ namespace WindowsFormsApp1
                     MouseAndKeyboardEvents.DegresToRadian(0)),
                     new Vector3(0, 0, 0));
 
-                sp.Draw(tex, new Vector3(), new Vector3(), Color.White.ToArgb());
+                sp.Draw(tex[0], new Vector3(), new Vector3(), Color.White.ToArgb());
 
                 sp.End();
+            }
+        }
+
+        public static void DrawUISprite()
+        {
+            using (Sprite spCursore = new Sprite(Render.dx))
+            {
+                spCursore.Begin(SpriteFlags.AlphaBlend | SpriteFlags.SortTexture);
+
+                //spCursore.Transform = Matrix.Transformation(
+                //    new Vector3(),
+                //    Quaternion.Identity,
+                //    new Vector3(2, 2, 2),
+                //    new Vector3(),
+                //    Quaternion.RotationYawPitchRoll(
+                //        MouseAndKeyboardEvents.DegresToRadian(0),
+                //        MouseAndKeyboardEvents.DegresToRadian(0),
+                //        MouseAndKeyboardEvents.DegresToRadian(0)),
+                //    new Vector3(0, 0, 0));
+
+                //spCursore.Draw(
+                //    tex[1],
+                //    new Rectangle(256 - 16, 0, 16, 16),
+                //    new Vector3(8, 8, 0),
+                //    new Vector3(Scene.ActiveForm.ClientSize.Width / 2 / 2, Scene.ActiveForm.ClientSize.Height / 2 / 2, 0),
+                //    Color.White.ToArgb());
+
+                spCursore.Transform = Matrix.Transformation(
+                    new Vector3(),
+                    Quaternion.Identity,
+                    new Vector3(2, 2, 2),
+                    new Vector3(),
+                    Quaternion.RotationYawPitchRoll(
+                        MouseAndKeyboardEvents.DegresToRadian(0),
+                        MouseAndKeyboardEvents.DegresToRadian(0),
+                        MouseAndKeyboardEvents.DegresToRadian(0)),
+                    new Vector3(0, 0, 0));
+
+                spCursore.Draw(
+                    tex[1],
+                    new Rectangle(0, 0, 256, 256),
+                    new Vector3(0, 0, 0),
+                    new Vector3(0, 0, 0),
+                    Color.White.ToArgb());
+
+                spCursore.End();
             }
         }
 
@@ -99,30 +168,27 @@ namespace WindowsFormsApp1
             Render.SetRenderStateParametrs();
             SetProjectionsAndCameras();
 
+            DrawUISprite();
+
             Render.dx.Material = mat;
-            Render.dx.SetTexture(0, tex);
+            Render.dx.SetTexture(0, tex[0]);
 
             ModelRotate(0, 0, 0, 0, 0, 0);
-            Collisions.chankMesh.DrawSubset(0);
-            ModelRotate(14, 0, 0, 0, 0, 0);
-            Collisions.chankMesh.DrawSubset(0);
-            ModelRotate(28, 0, 0, 0, 0, 0);
             Collisions.chankMesh.DrawSubset(0);
 
             ModelRotate(0, 0, 0, 0, 0, 0);
             Collisions.testMesh.DrawSubset(0);
 
-            CustomVertex.PositionColored[] cold = {
-                new CustomVertex.PositionColored(new Vector3(0, 0, -Collisions.dis), Color.Black.ToArgb()),
-                new CustomVertex.PositionColored(new Vector3((float)Collisions.xoffset, 0, Collisions.dis), Color.Black.ToArgb())
-            };
-
-            Render.dx.DrawUserPrimitives(
-                PrimitiveType.LineList,
-                1,
-                cold);
-
             Collisions.CheckPlayerGrounCollision();
+            Collisions.CheckCameraRayCollision();
+        }
+
+        public static void DisposeAllTextures()
+        {
+            for (int i = 0; i < tex.Length; i++)
+            {
+                try { tex[i].Dispose(); } catch { }
+            }
         }
     }
 }

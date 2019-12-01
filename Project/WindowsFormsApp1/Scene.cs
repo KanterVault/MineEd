@@ -21,6 +21,11 @@ namespace WindowsFormsApp1
             SetStyle(ControlStyles.AllPaintingInWmPaint, true);
             SetStyle(ControlStyles.UserPaint, true);
             SetStyle(ControlStyles.Opaque, true);
+        #if DEBUG
+            this.TopMost = true;
+        #else
+            this.TopMost = false;
+        #endif
         }
 
         public static string ERRORMESSAGE = "";
