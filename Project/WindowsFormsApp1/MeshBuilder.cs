@@ -24,13 +24,6 @@ namespace WindowsFormsApp1
         public static Color color = new Color();
         public static CustomVertex.PositionColoredTextured[] vt = null;
 
-        public static CustomVertex.PositionColored[] vt2 = new CustomVertex.PositionColored[3]
-        {
-            new CustomVertex.PositionColored(new Vector3(0, 0, 0), Color.Red.ToArgb()),
-            new CustomVertex.PositionColored(new Vector3(0, 1, 0), Color.Blue.ToArgb()),
-            new CustomVertex.PositionColored(new Vector3(1, 1, 0), Color.Green.ToArgb())
-        };
-
         public static void CreateChankMesh(ChankGenerator.Chank chankToView)
         {
             ArrayList vertexes = new ArrayList();

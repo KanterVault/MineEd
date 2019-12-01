@@ -103,13 +103,12 @@ namespace WindowsFormsApp1
             Render.dx.Material = mat;
             Render.dx.SetTexture(0, tex);
 
-            //ModelRotate(0, -(1.7f / 2.0f), 0, 0, 90, 0);
-            //testMesh.DrawSubset(0);
-            //Collisions.chankMesh.DrawSubset(0);
-
-            Render.dx.DrawUserPrimitives(PrimitiveType.TriangleList, MeshBuilder.vt.Length / 3, MeshBuilder.vt);
-
-            Collisions.mesh.DrawSubset(0);
+            ModelRotate(0, 0, 0, 0, 0, 0);
+            Collisions.chankMesh.DrawSubset(0);
+            ModelRotate(14, 0, 0, 0, 0, 0);
+            Collisions.chankMesh.DrawSubset(0);
+            ModelRotate(28, 0, 0, 0, 0, 0);
+            Collisions.chankMesh.DrawSubset(0);
         }
     }
 }
