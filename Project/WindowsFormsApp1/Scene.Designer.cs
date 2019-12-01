@@ -52,7 +52,7 @@
             this.label_Info.ImageAlign = System.Drawing.ContentAlignment.BottomLeft;
             this.label_Info.Location = new System.Drawing.Point(3, 3);
             this.label_Info.Name = "label_Info";
-            this.label_Info.Size = new System.Drawing.Size(161, 201);
+            this.label_Info.Size = new System.Drawing.Size(161, 289);
             this.label_Info.TabIndex = 0;
             this.label_Info.Text = "label1";
             // 
@@ -72,7 +72,7 @@
             // 
             this.trackBar1.AutoSize = false;
             this.trackBar1.BackColor = System.Drawing.SystemColors.Control;
-            this.trackBar1.Location = new System.Drawing.Point(3, 207);
+            this.trackBar1.Location = new System.Drawing.Point(3, 295);
             this.trackBar1.Maximum = 100;
             this.trackBar1.Name = "trackBar1";
             this.trackBar1.Size = new System.Drawing.Size(161, 25);
@@ -84,13 +84,13 @@
             // 
             this.trackBar2.AutoSize = false;
             this.trackBar2.BackColor = System.Drawing.SystemColors.Control;
-            this.trackBar2.Location = new System.Drawing.Point(3, 235);
+            this.trackBar2.Location = new System.Drawing.Point(3, 323);
             this.trackBar2.Maximum = 100;
+            this.trackBar2.Minimum = -100;
             this.trackBar2.Name = "trackBar2";
             this.trackBar2.Size = new System.Drawing.Size(161, 25);
             this.trackBar2.TabIndex = 2;
             this.trackBar2.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.trackBar2.Value = 10;
             // 
             // Scene
             // 

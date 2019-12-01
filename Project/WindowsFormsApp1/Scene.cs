@@ -94,6 +94,9 @@ namespace WindowsFormsApp1
 
             ViewInLogLabel();
             SetCursoreVisible();
+
+            Collisions.dis = (float)trackBar1.Value;
+            Collisions.xoffset = (float)trackBar2.Value / 200.0f;
         }
 
         private void Quit(object sender, FormClosingEventArgs e)

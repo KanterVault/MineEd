@@ -94,7 +94,6 @@ namespace WindowsFormsApp1
             }
         }
 
-        public static Mesh testMesh = Mesh.Cylinder(Render.dx, 0.4f, 0.4f, 1.7f, 16, 1);
         public static void RenderScene()
         {
             Render.SetRenderStateParametrs();
@@ -109,6 +108,21 @@ namespace WindowsFormsApp1
             Collisions.chankMesh.DrawSubset(0);
             ModelRotate(28, 0, 0, 0, 0, 0);
             Collisions.chankMesh.DrawSubset(0);
+
+            ModelRotate(0, 0, 0, 0, 0, 0);
+            Collisions.testMesh.DrawSubset(0);
+
+            CustomVertex.PositionColored[] cold = {
+                new CustomVertex.PositionColored(new Vector3(0, 0, -Collisions.dis), Color.Black.ToArgb()),
+                new CustomVertex.PositionColored(new Vector3((float)Collisions.xoffset, 0, Collisions.dis), Color.Black.ToArgb())
+            };
+
+            Render.dx.DrawUserPrimitives(
+                PrimitiveType.LineList,
+                1,
+                cold);
+
+            Collisions.CheckPlayerGrounCollision();
         }
     }
 }
