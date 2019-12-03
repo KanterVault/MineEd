@@ -95,6 +95,8 @@ namespace WindowsFormsApp1
 
         public static Vector3 viewDirection = new Vector3();
         public static IntersectInformation triesCollisionInfo;
+
+        public static float[] intersectionsUV = new float[2];
         public static void CheckCameraRayCollision()
         {
             try
@@ -127,13 +129,27 @@ namespace WindowsFormsApp1
                     Color.Red.ToArgb(),
                     0.0f, 0.0f);
 
+                intersectionsUV[0] = triesCollisionInfo.U;
+                intersectionsUV[1] = triesCollisionInfo.V;
+
                 using (VertexBuffer vb = testMesh.VertexBuffer)
                 {
                     using (GraphicsStream gs = vb.Lock(0, 0, Microsoft.DirectX.Direct3D.LockFlags.None))
                     {
                         gs.Write(vrt[0]);
-                        gs.Write(vrt[1]);
-                        gs.Write(vrt[2]);
+
+                        CustomVertex.PositionColoredTextured U = new CustomVertex.PositionColoredTextured(
+                            vrt[1].Position + new Vector3(intersectionsUV[0], 0, 0),
+                            Color.White.ToArgb(),
+                            vrt[1].Tu, vrt[1].Tv);
+
+                        CustomVertex.PositionColoredTextured V = new CustomVertex.PositionColoredTextured(
+                            vrt[2].Position + new Vector3(intersectionsUV[1], 0, 0),
+                            Color.White.ToArgb(),
+                            vrt[2].Tu, vrt[2].Tv);
+
+                        gs.Write(U);
+                        gs.Write(V);
                     }
                     vb.Unlock();
                 }
