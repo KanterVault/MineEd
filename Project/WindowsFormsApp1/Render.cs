@@ -106,7 +106,7 @@ namespace WindowsFormsApp1
         public static void SetRenderStateParametrs()
         {
             dx.RenderState.Lighting = false;
-            dx.RenderState.FillMode = FillMode.Solid;
+            dx.RenderState.FillMode = FillMode.WireFrame;
             dx.RenderState.ZBufferEnable = true;
             dx.RenderState.CullMode = Cull.None; //Cull.CounterClockwise;
             Render.dx.VertexFormat = CustomVertex.PositionColoredTextured.Format;

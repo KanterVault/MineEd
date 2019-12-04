@@ -72,24 +72,24 @@ namespace WindowsFormsApp1
                 @"Res\debug.stitched_terrain.png");
             tex[0].PreLoad();
 
-            //tex[1] = TextureLoader.FromFile(
-            //    Render.dx,
-            //    @"Res\minecraft\textures\gui\widgets.png");
-            //tex[1].PreLoad();
-
             tex[1] = TextureLoader.FromFile(
                 Render.dx,
-                @"Res\minecraft\textures\gui\widgets.png",
-                256,
-                256,
-                0,
-                Usage.None,
-                Format.A8R8G8B8,
-                Pool.Managed,
-                Filter.Point,
-                Filter.Point,
-                Color.White.ToArgb());
+                @"Res\minecraft\textures\gui\widgets.png");
             tex[1].PreLoad();
+
+            //tex[1] = TextureLoader.FromFile(
+            //    Render.dx,
+            //    @"Res\minecraft\textures\gui\widgets.png",
+            //    256,
+            //    256,
+            //    0,
+            //    Usage.None,
+            //    Format.A8R8G8B8,
+            //    Pool.Managed,
+            //    Filter.Point,
+            //    Filter.Point,
+            //    Color.White.ToArgb());
+            //tex[1].PreLoad();
 
             if (tex[1] == null) MessageBox.Show("Fack!"); 
         }
@@ -123,6 +123,24 @@ namespace WindowsFormsApp1
             {
                 spCursore.Begin(SpriteFlags.AlphaBlend | SpriteFlags.SortTexture);
 
+                spCursore.Transform = Matrix.Transformation(
+                    new Vector3(),
+                    Quaternion.Identity,
+                    new Vector3(1, 1, 1),
+                    new Vector3(),
+                    Quaternion.RotationYawPitchRoll(
+                        MouseAndKeyboardEvents.DegresToRadian(0),
+                        MouseAndKeyboardEvents.DegresToRadian(0),
+                        MouseAndKeyboardEvents.DegresToRadian(0)),
+                    new Vector3(0, 0, 0));
+
+                spCursore.Draw(
+                    tex[1],
+                    new Rectangle(256 - 16, 0, 16, 16),
+                    new Vector3(8, 8, 0),
+                    new Vector3(Scene.ActiveForm.ClientSize.Width / 2, Scene.ActiveForm.ClientSize.Height / 2, 0),
+                    Color.White.ToArgb());
+
                 //spCursore.Transform = Matrix.Transformation(
                 //    new Vector3(),
                 //    Quaternion.Identity,
@@ -136,33 +154,17 @@ namespace WindowsFormsApp1
 
                 //spCursore.Draw(
                 //    tex[1],
-                //    new Rectangle(256 - 16, 0, 16, 16),
-                //    new Vector3(8, 8, 0),
-                //    new Vector3(Scene.ActiveForm.ClientSize.Width / 2 / 2, Scene.ActiveForm.ClientSize.Height / 2 / 2, 0),
+                //    new Rectangle(0, 0, 256, 256),
+                //    new Vector3(0, 0, 0),
+                //    new Vector3(0, 0, 0),
                 //    Color.White.ToArgb());
-
-                spCursore.Transform = Matrix.Transformation(
-                    new Vector3(),
-                    Quaternion.Identity,
-                    new Vector3(2, 2, 2),
-                    new Vector3(),
-                    Quaternion.RotationYawPitchRoll(
-                        MouseAndKeyboardEvents.DegresToRadian(0),
-                        MouseAndKeyboardEvents.DegresToRadian(0),
-                        MouseAndKeyboardEvents.DegresToRadian(0)),
-                    new Vector3(0, 0, 0));
-
-                spCursore.Draw(
-                    tex[1],
-                    new Rectangle(0, 0, 256, 256),
-                    new Vector3(0, 0, 0),
-                    new Vector3(0, 0, 0),
-                    Color.White.ToArgb());
 
                 spCursore.End();
             }
         }
 
+        public static Mesh pointCollision = Mesh.Sphere(Render.dx, 0.1f, 10, 10);
+        public static Vector3 pointPosition = new Vector3();
         public static void RenderScene()
         {
             Render.SetRenderStateParametrs();
@@ -178,6 +180,13 @@ namespace WindowsFormsApp1
 
             ModelRotate(0, 0, 0, 0, 0, 0);
             Collisions.testMesh.DrawSubset(0);
+
+            ModelRotate(
+                pointPosition.X,
+                pointPosition.Y,
+                pointPosition.Z,
+                0, 0, 0);
+            pointCollision.DrawSubset(0);
 
             Collisions.CheckPlayerGrounCollision();
             Collisions.CheckCameraRayCollision();

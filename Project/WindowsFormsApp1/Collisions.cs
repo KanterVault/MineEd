@@ -114,6 +114,11 @@ namespace WindowsFormsApp1
                 "U: " + triesCollisionInfo.U.ToString() + "\n" +
                 "V: " + triesCollisionInfo.V.ToString();
 
+                RenderLineScene.pointPosition = PlayerMoving.playerWorldPosition +
+                    new Vector3(0, 1.75f + 0.5f, 0) +
+                    viewDirection *
+                    triesCollisionInfo.Dist;
+
                 vrt[0] = new CustomVertex.PositionColoredTextured(
                     MeshBuilder.vt[(triesCollisionInfo.FaceIndex * 3)].Position,
                     Color.Red.ToArgb(),
@@ -129,27 +134,13 @@ namespace WindowsFormsApp1
                     Color.Red.ToArgb(),
                     0.0f, 0.0f);
 
-                intersectionsUV[0] = triesCollisionInfo.U;
-                intersectionsUV[1] = triesCollisionInfo.V;
-
                 using (VertexBuffer vb = testMesh.VertexBuffer)
                 {
                     using (GraphicsStream gs = vb.Lock(0, 0, Microsoft.DirectX.Direct3D.LockFlags.None))
                     {
                         gs.Write(vrt[0]);
-
-                        CustomVertex.PositionColoredTextured U = new CustomVertex.PositionColoredTextured(
-                            vrt[1].Position + new Vector3(intersectionsUV[0], 0, 0),
-                            Color.White.ToArgb(),
-                            vrt[1].Tu, vrt[1].Tv);
-
-                        CustomVertex.PositionColoredTextured V = new CustomVertex.PositionColoredTextured(
-                            vrt[2].Position + new Vector3(intersectionsUV[1], 0, 0),
-                            Color.White.ToArgb(),
-                            vrt[2].Tu, vrt[2].Tv);
-
-                        gs.Write(U);
-                        gs.Write(V);
+                        gs.Write(vrt[1]);
+                        gs.Write(vrt[2]);
                     }
                     vb.Unlock();
                 }
