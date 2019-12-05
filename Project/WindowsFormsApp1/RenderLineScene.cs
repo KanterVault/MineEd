@@ -164,7 +164,7 @@ namespace WindowsFormsApp1
         }
 
         public static Mesh pointCollision = Mesh.Sphere(Render.dx, 0.1f, 10, 10);
-        public static Mesh boxSelect = Mesh.Box(Render.dx, 1.1f, 1.1f, 1.1f);
+        public static Mesh boxSelect = Mesh.Box(Render.dx, 1.0f, 1.0f, 1.0f);
         public static void RenderScene()
         {
             Render.SetRenderStateParametrs();
@@ -190,9 +190,9 @@ namespace WindowsFormsApp1
 
 
             ModelRotate(
-                0,
-                0,
-                0,
+                Collisions.boxSelectionPositionRound.X,
+                Collisions.boxSelectionPositionRound.Y,
+                Collisions.boxSelectionPositionRound.Z,
                 0, 0, 0);
             boxSelect.DrawSubset(0);
 

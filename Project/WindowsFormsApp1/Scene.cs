@@ -115,6 +115,14 @@ namespace WindowsFormsApp1
         private void MouseDownScene(object sender, MouseEventArgs e)
         {
             if (MouseAndKeyboardEvents.mouseLook == 0) MouseAndKeyboardEvents.mouseLook++;
+            if (e.Button == MouseButtons.Left)
+            {
+
+            }
+            else if (e.Button == MouseButtons.Right)
+            {
+
+            }
         }
 
         private void KeyboardDown(object sender, KeyEventArgs e)
