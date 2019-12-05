@@ -164,6 +164,7 @@ namespace WindowsFormsApp1
         }
 
         public static Mesh pointCollision = Mesh.Sphere(Render.dx, 0.1f, 10, 10);
+        //public static Mesh boxSelect = Mesh.Box(Render.dx, 1.1f, 1.1f, 1.1f);
         public static Vector3 pointPosition = new Vector3();
         public static void RenderScene()
         {
