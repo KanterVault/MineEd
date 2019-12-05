@@ -92,6 +92,20 @@ namespace WindowsFormsApp1
         public static float Lerp(float a, float b, float t) { return a + (b - a) / t; }
         public static float DegresToRadian(float degres) { return (float)Math.PI / 180.0f * degres; }
 
+        public static Vector3 boxSelectionPositionRound = new Vector3();
+        public static void GetPlaneVectorToPasteCubeSelection()
+        {
+            //Up & Down
+            if (vrt[0].Position.Y == vrt[1].Position.Y && vrt[0].Position.Y == vrt[2].Position.Y)
+            {
+                //Up
+                if (vrt[0].Position.Z < vrt[1].Position.Z &&
+                    ((vrt[1].Position.X < vrt[2].Position.X) || (vrt[1].Position.Z > vrt[2].Position.Z)))
+                {
+                    Scene.physDebag = "up";
+                }
+            }
+        }
 
         public static Vector3 viewDirection = new Vector3();
         public static IntersectInformation triesCollisionInfo;
@@ -121,6 +135,18 @@ namespace WindowsFormsApp1
                     viewDirection *
                     triesCollisionInfo.Dist;
 
+                for (int y = 0; y < ChankGenerator.CHANK_MAX_UP_BLOCKS; y++)
+                {
+                    for (int z = 0; z < 16; z++)
+                    {
+                        for (int x = 0; x < 16; x++)
+                        {
+                            int block = ((ChankGenerator.Chank)ChankGenerator.chanks[0]).chankArray[y][z][x];
+                            //TODO:
+                        }
+                    }
+                }
+
                 vrt[0] = new CustomVertex.PositionColoredTextured(
                     MeshBuilder.vt[(triesCollisionInfo.FaceIndex * 3)].Position,
                     Color.Red.ToArgb(),
@@ -135,6 +161,8 @@ namespace WindowsFormsApp1
                     MeshBuilder.vt[(triesCollisionInfo.FaceIndex * 3) + 2].Position,
                     Color.Red.ToArgb(),
                     0.0f, 0.0f);
+
+                GetPlaneVectorToPasteCubeSelection();
 
                 using (VertexBuffer vb = testMesh.VertexBuffer)
                 {
