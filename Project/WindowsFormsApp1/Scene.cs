@@ -117,11 +117,11 @@ namespace WindowsFormsApp1
             if (MouseAndKeyboardEvents.mouseLook == 0) MouseAndKeyboardEvents.mouseLook++;
             if (e.Button == MouseButtons.Left)
             {
-
+                Collisions.mouseButtonDown = 2;
             }
             else if (e.Button == MouseButtons.Right)
             {
-
+                Collisions.mouseButtonDown = 1;
             }
         }
 

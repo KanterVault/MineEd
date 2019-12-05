@@ -108,7 +108,7 @@ namespace WindowsFormsApp1
             dx.RenderState.Lighting = false;
             dx.RenderState.FillMode = FillMode.Solid;
             dx.RenderState.ZBufferEnable = true;
-            dx.RenderState.CullMode = Cull.None; //Cull.CounterClockwise;
+            dx.RenderState.CullMode = Cull.CounterClockwise;
             Render.dx.VertexFormat = CustomVertex.PositionColoredTextured.Format;
 
             dx.Lights[0].Diffuse = Color.White;

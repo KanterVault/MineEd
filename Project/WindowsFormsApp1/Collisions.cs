@@ -52,13 +52,17 @@ namespace WindowsFormsApp1
                     ib.SetData(ind, 0, Microsoft.DirectX.Direct3D.LockFlags.None);
                 }
 
-
-
                 playerMesh = Mesh.Cylinder(Render.dx, 0.4f, 0.4f, 1.7f, 16, 1);
 
-                short[] indices = new short[MeshBuilder.vt.Length];
-                for (int i = 0; i < indices.Length; i++) indices[i] = (short)i;
+                ReInitializeChankMesh();
+            }
+            catch (Exception ex) { MessageBox.Show(ex.ToString()); }
+        }
 
+        public static void ReInitializeChankMesh()
+        {
+            try
+            {
                 chankMesh = new Mesh(
                     MeshBuilder.vt.Length / 3,
                     MeshBuilder.vt.Length,
@@ -73,12 +77,13 @@ namespace WindowsFormsApp1
                     vb.Unlock();
                 }
 
+                short[] indices = new short[MeshBuilder.vt.Length];
+                for (int i = 0; i < indices.Length; i++) indices[i] = (short)i;
+
                 using (IndexBuffer ib = chankMesh.IndexBuffer)
                     ib.SetData(indices, 0, Microsoft.DirectX.Direct3D.LockFlags.None);
-
-                
             }
-            catch (Exception ex) { MessageBox.Show(ex.ToString()); }
+            catch { }
         }
 
 
@@ -92,9 +97,28 @@ namespace WindowsFormsApp1
         public static float Lerp(float a, float b, float t) { return a + (b - a) / t; }
         public static float DegresToRadian(float degres) { return (float)Math.PI / 180.0f * degres; }
 
+
+        public static int mouseButtonDown = 0;
         public static Vector3 boxSelectionPositionRound = new Vector3();
+        public static float negativeInt = 1.0f;
+        public static bool blockPasteOrBreakEvent = false;
+        public static bool intersectionAviable = false;
         public static void GetPlaneVectorToPasteCubeSelection()
         {
+            switch (mouseButtonDown)
+            {
+                case 1:
+                    negativeInt = 1.0f;
+                    blockPasteOrBreakEvent = true;
+                    mouseButtonDown = 0;
+                    break;
+                case 2:
+                    negativeInt = -1.0f;
+                    blockPasteOrBreakEvent = true;
+                    mouseButtonDown = 0;
+                    break;
+            }
+
             //Up & Down
             if (vrt[0].Position.Y == vrt[1].Position.Y && vrt[0].Position.Y == vrt[2].Position.Y)
             {
@@ -109,19 +133,37 @@ namespace WindowsFormsApp1
                             for (int x = 0; x < 16; x++)
                             {
                                 int block = ((ChankGenerator.Chank)ChankGenerator.chanks[0]).chankArray[y][z][x];
-                                Vector3 modifedPointPosition = pointPosition + new Vector3(0, -0.1f, 0);
+                                Vector3 modifedPointPosition = pointPosition + new Vector3(0, 0.1f * negativeInt, 0);
                                 if ((modifedPointPosition.X > (float)x - 0.5f) && (modifedPointPosition.X < (float)x + 0.5f) &&
                                     (modifedPointPosition.Z > (float)z - 0.5f) && (modifedPointPosition.Z < (float)z + 0.5f) &&
                                     (modifedPointPosition.Y > (float)y - 0.5f) && (modifedPointPosition.Y < (float)y + 0.5f))
                                 {
-                                    boxSelectionPositionRound = new Vector3(x, y, z);
-                                    Scene.physDebag = "blockpasteevent";
+                                    if (blockPasteOrBreakEvent && intersectionAviable)
+                                    {
+                                        if (negativeInt > 0)
+                                        {
+                                            boxSelectionPositionRound = new Vector3(x, y, z);
+                                            ((ChankGenerator.Chank)ChankGenerator.chanks[0]).chankArray[y][z][x] = 3;
+                                            MeshBuilder.CreateChankMesh((ChankGenerator.Chank)ChankGenerator.chanks[0]);
+                                            ReInitializeChankMesh();
+                                            blockPasteOrBreakEvent = false;
+                                        }
+                                        else
+                                        {
+                                            boxSelectionPositionRound = new Vector3(x, y, z);
+                                            ((ChankGenerator.Chank)ChankGenerator.chanks[0]).chankArray[y][z][x] = 0;
+                                            MeshBuilder.CreateChankMesh((ChankGenerator.Chank)ChankGenerator.chanks[0]);
+                                            ReInitializeChankMesh();
+                                            blockPasteOrBreakEvent = false;
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
+            blockPasteOrBreakEvent = false;
         }
 
         public static Vector3 viewDirection = new Vector3();
@@ -139,18 +181,24 @@ namespace WindowsFormsApp1
                     (float)Math.Sin(DegresToRadian(MouseAndKeyboardEvents.mainYrot)),
                     (float)Math.Cos(DegresToRadian(MouseAndKeyboardEvents.mainXrot)) * (float)Math.Cos(DegresToRadian(MouseAndKeyboardEvents.mainYrot)));
 
-                chankMesh.Intersect(PlayerMoving.playerWorldPosition + new Vector3(0, 1.75f + 0.5f, 0), viewDirection, out triesCollisionInfo);
+                if (chankMesh.Intersect(PlayerMoving.playerWorldPosition + new Vector3(0, 1.75f + 0.5f, 0), viewDirection, out triesCollisionInfo))
+                {
+                    intersectionAviable = true;
+                    Scene.physDebag = "\n" +
+                       "FaceIndex: " + triesCollisionInfo.FaceIndex.ToString() + "\n" +
+                       "Dist: " + triesCollisionInfo.Dist.ToString() + "\n" +
+                       "U: " + triesCollisionInfo.U.ToString() + "\n" +
+                       "V: " + triesCollisionInfo.V.ToString();
 
-                Scene.physDebag = "\n" +
-                "FaceIndex: " + triesCollisionInfo.FaceIndex.ToString() + "\n" +
-                "Dist: " + triesCollisionInfo.Dist.ToString() + "\n" +
-                "U: " + triesCollisionInfo.U.ToString() + "\n" +
-                "V: " + triesCollisionInfo.V.ToString();
-
-                pointPosition = PlayerMoving.playerWorldPosition +
-                    new Vector3(0, 1.75f + 0.5f, 0) +
-                    viewDirection *
-                    triesCollisionInfo.Dist;
+                    pointPosition = PlayerMoving.playerWorldPosition +
+                        new Vector3(0, 1.75f + 0.5f, 0) +
+                        viewDirection *
+                        triesCollisionInfo.Dist;
+                } else
+                {
+                    intersectionAviable = false;
+                    boxSelectionPositionRound = new Vector3();
+                }
 
                 vrt[0] = new CustomVertex.PositionColoredTextured(
                     MeshBuilder.vt[(triesCollisionInfo.FaceIndex * 3)].Position,

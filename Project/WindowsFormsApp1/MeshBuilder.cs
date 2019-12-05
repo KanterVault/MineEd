@@ -39,22 +39,22 @@ namespace WindowsFormsApp1
                         {
                             if (chankToView.chankArray[y][z][x - 1] == (byte)0)
                             {
-                                color = Color.FromArgb(200, 200, 200);
+                                color = Color.FromArgb(175, 175, 175);
                                 CreateLeftFace(x, y, z, new Vector2(1, 5));
                             }
                             if (chankToView.chankArray[y][z][x + 1] == (byte)0)
                             {
-                                color = Color.FromArgb(200, 200, 200);
+                                color = Color.FromArgb(175, 175, 175);
                                 CreateRightFace(x, y, z, new Vector2(1, 5));
                             }
                             if (chankToView.chankArray[y][z - 1][x] == (byte)0)
                             {
-                                color = Color.FromArgb(200, 200, 200);
+                                color = Color.FromArgb(175, 175, 175);
                                 CreateFrontFace(x, y, z, new Vector2(1, 5));
                             }
                             if (chankToView.chankArray[y][z + 1][x] == (byte)0)
                             {
-                                color = Color.FromArgb(200, 200, 200);
+                                color = Color.FromArgb(175, 175, 175);
                                 CreateBackFace(x, y, z, new Vector2(1, 5));
                             }
                             if (chankToView.chankArray[y + 1][z][x] == (byte)0)
@@ -73,22 +73,22 @@ namespace WindowsFormsApp1
                         {
                             if (chankToView.chankArray[y][z][x - 1] == (byte)0)
                             {
-                                color = Color.FromArgb(200, 200, 200);
+                                color = Color.FromArgb(175, 175, 175);
                                 CreateLeftFace(x, y, z, new Vector2(0, 3));
                             }
                             if (chankToView.chankArray[y][z][x + 1] == (byte)0)
                             {
-                                color = Color.FromArgb(200, 200, 200);
+                                color = Color.FromArgb(175, 175, 175);
                                 CreateRightFace(x, y, z, new Vector2(0, 3));
                             }
                             if (chankToView.chankArray[y][z - 1][x] == (byte)0)
                             {
-                                color = Color.FromArgb(200, 200, 200);
+                                color = Color.FromArgb(175, 175, 175);
                                 CreateFrontFace(x, y, z, new Vector2(0, 3));
                             }
                             if (chankToView.chankArray[y][z + 1][x] == (byte)0)
                             {
-                                color = Color.FromArgb(200, 200, 200);
+                                color = Color.FromArgb(175, 175, 175);
                                 CreateBackFace(x, y, z, new Vector2(0, 3));
                             }
                             if (chankToView.chankArray[y + 1][z][x] == (byte)0)
@@ -222,13 +222,6 @@ namespace WindowsFormsApp1
 
             vt = new CustomVertex.PositionColoredTextured[vertexes.Count];
             for (int i = 0; i < vt.Length; i++) vt[i] = (CustomVertex.PositionColoredTextured)vertexes[i];
-
-            //vt = new CustomVertex.PositionColoredTextured[3]
-            //{
-            //    new CustomVertex.PositionColoredTextured(new Vector3(0, 0, 0), Color.Red.ToArgb(), 0.0f, 0.0f),
-            //    new CustomVertex.PositionColoredTextured(new Vector3(0, 1, 0), Color.Red.ToArgb(), 0.0f, 1.0f),
-            //    new CustomVertex.PositionColoredTextured(new Vector3(1, 1, 0), Color.Red.ToArgb(), 1.0f, 1.0f)
-            //};
         }
     }
 }
