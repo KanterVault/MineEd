@@ -164,8 +164,7 @@ namespace WindowsFormsApp1
         }
 
         public static Mesh pointCollision = Mesh.Sphere(Render.dx, 0.1f, 10, 10);
-        //public static Mesh boxSelect = Mesh.Box(Render.dx, 1.1f, 1.1f, 1.1f);
-        public static Vector3 pointPosition = new Vector3();
+        public static Mesh boxSelect = Mesh.Box(Render.dx, 1.1f, 1.1f, 1.1f);
         public static void RenderScene()
         {
             Render.SetRenderStateParametrs();
@@ -183,11 +182,19 @@ namespace WindowsFormsApp1
             Collisions.testMesh.DrawSubset(0);
 
             ModelRotate(
-                pointPosition.X,
-                pointPosition.Y,
-                pointPosition.Z,
+                Collisions.pointPosition.X,
+                Collisions.pointPosition.Y,
+                Collisions.pointPosition.Z,
                 0, 0, 0);
             pointCollision.DrawSubset(0);
+
+
+            ModelRotate(
+                0,
+                0,
+                0,
+                0, 0, 0);
+            boxSelect.DrawSubset(0);
 
             Collisions.CheckPlayerGrounCollision();
             Collisions.CheckCameraRayCollision();

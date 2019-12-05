@@ -97,6 +97,8 @@ namespace WindowsFormsApp1
         public static IntersectInformation triesCollisionInfo;
 
         public static float[] intersectionsUV = new float[2];
+
+        public static Vector3 pointPosition = new Vector3();
         public static void CheckCameraRayCollision()
         {
             try
@@ -114,7 +116,7 @@ namespace WindowsFormsApp1
                 "U: " + triesCollisionInfo.U.ToString() + "\n" +
                 "V: " + triesCollisionInfo.V.ToString();
 
-                RenderLineScene.pointPosition = PlayerMoving.playerWorldPosition +
+                pointPosition = PlayerMoving.playerWorldPosition +
                     new Vector3(0, 1.75f + 0.5f, 0) +
                     viewDirection *
                     triesCollisionInfo.Dist;
