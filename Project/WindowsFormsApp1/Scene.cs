@@ -21,11 +21,13 @@ namespace WindowsFormsApp1
             SetStyle(ControlStyles.AllPaintingInWmPaint, true);
             SetStyle(ControlStyles.UserPaint, true);
             SetStyle(ControlStyles.Opaque, true);
-        #if DEBUG
+#if DEBUG
             this.TopMost = true;
-        #else
+            //this.WindowState = FormWindowState.Maximized;
+#else
             this.TopMost = false;
-        #endif
+            this.WindowState = FormWindowState.Maximized;
+#endif
         }
 
         public static string ERRORMESSAGE = "";

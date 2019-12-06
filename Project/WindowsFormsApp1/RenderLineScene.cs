@@ -33,8 +33,8 @@ namespace WindowsFormsApp1
             Render.dx.Transform.Projection = Matrix.PerspectiveFovLH(
                 DegresToRadian(60.0f),                                              //fov
                 (float)form.ClientSize.Width / (float)form.ClientSize.Height,       //aspectRatio
-                0.01f,                                                              //zNear
-                1000f);                                                             //zFar
+                0.1f,                                                              //zNear
+                100f);                                                             //zFar
 
             translationsBefore = Vector3.Lerp(
                 translationsBefore,
@@ -164,7 +164,7 @@ namespace WindowsFormsApp1
         }
 
         public static Mesh pointCollision = Mesh.Sphere(Render.dx, 0.1f, 10, 10);
-        public static Mesh boxSelect = Mesh.Box(Render.dx, 1.02f, 1.02f, 1.02f);
+        public static Mesh boxSelect = Mesh.Box(Render.dx, 1.005f, 1.005f, 1.005f);
         public static void RenderScene()
         {
             Render.SetRenderStateParametrs();
@@ -178,15 +178,15 @@ namespace WindowsFormsApp1
             ModelRotate(0, 0, 0, 0, 0, 0);
             Collisions.chankMesh.DrawSubset(0);
 
-            ModelRotate(0, 0, 0, 0, 0, 0);
-            Collisions.testMesh.DrawSubset(0);
+            //ModelRotate(0, 0, 0, 0, 0, 0);
+            //Collisions.testMesh.DrawSubset(0);
 
-            ModelRotate(
-                Collisions.pointPosition.X,
-                Collisions.pointPosition.Y,
-                Collisions.pointPosition.Z,
-                0, 0, 0);
-            pointCollision.DrawSubset(0);
+            //ModelRotate(
+            //    Collisions.pointPosition.X,
+            //    Collisions.pointPosition.Y,
+            //    Collisions.pointPosition.Z,
+            //    0, 0, 0);
+            //pointCollision.DrawSubset(0);
 
 
             Render.dx.RenderState.FillMode = FillMode.WireFrame;

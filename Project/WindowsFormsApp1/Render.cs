@@ -41,14 +41,14 @@ namespace WindowsFormsApp1
 
             pp = new PresentParameters();
             pp.Windowed = true;
-            pp.SwapEffect = SwapEffect.Discard;
+            pp.SwapEffect = SwapEffect.Copy;
             pp.DeviceWindow = form;
             pp.BackBufferCount = 0;
             pp.BackBufferFormat = Format.A8R8G8B8;
             pp.PresentationInterval = PresentInterval.Default;
             pp.PresentFlag = PresentFlag.None;
             pp.AutoDepthStencilFormat = DepthFormat.D24S8;
-            pp.MultiSample = MultiSampleType.None; //MultiSampleType.FourSamples;
+            pp.MultiSample = MultiSampleType.None; //MultiSampleType.FourSamples; 
             pp.MultiSampleQuality = 0;
             pp.EnableAutoDepthStencil = true;
         }
@@ -122,7 +122,7 @@ namespace WindowsFormsApp1
             dx.RenderState.AlphaBlendOperation = BlendOperation.Add;
             dx.RenderState.SourceBlend = Blend.SourceAlpha;
             dx.RenderState.DestinationBlend = Blend.InvSourceAlpha;
-            //dx.RenderState.BlendFactor = Color.FromArgb(0, 0, 0, 0);
+            //dx.RenderState.BlendFactor = Color.Azure;
 
             dx.SamplerState[0].MagFilter = TextureFilter.Point;
             dx.SamplerState[0].MipFilter = TextureFilter.Point;
