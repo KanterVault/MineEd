@@ -180,7 +180,7 @@ namespace WindowsFormsApp1
                             {
                                 //Left
                                 if (vrt[0].Position.Y < vrt[1].Position.Y &&
-                                    ((vrt[1].Position.Z > vrt[2].Position.Z) || (vrt[1].Position.Y > vrt[2].Position.Y)))
+                                    ((vrt[0].Position.Z > vrt[2].Position.Z) || (vrt[0].Position.Y > vrt[1].Position.Y)))
                                 {
                                     int block = ((ChankGenerator.Chank)ChankGenerator.chanks[0]).chankArray[y][z][x];
                                     Vector3 modifedPointPosition = pointPosition + new Vector3(-0.1f * negativeInt, 0, 0);
@@ -201,7 +201,7 @@ namespace WindowsFormsApp1
                                 }
                                 //Right
                                 if (vrt[0].Position.Y < vrt[1].Position.Y &&
-                                    ((vrt[1].Position.Z < vrt[2].Position.Z) || (vrt[1].Position.Y > vrt[2].Position.Y)))
+                                    ((vrt[0].Position.Z < vrt[2].Position.Z) || (vrt[0].Position.Z < vrt[1].Position.Z)))
                                 {
                                     int block = (byte)((ChankGenerator.Chank)ChankGenerator.chanks[0]).chankArray[y][z][x];
                                     Vector3 modifedPointPosition = pointPosition + new Vector3(0.1f * negativeInt, 0, 0);

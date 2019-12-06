@@ -178,8 +178,8 @@ namespace WindowsFormsApp1
             ModelRotate(0, 0, 0, 0, 0, 0);
             EditBlocksCollisions.chankMesh.DrawSubset(0);
 
-            ModelRotate(0, 0, 0, 0, 0, 0);
-            EditBlocksCollisions.testMesh.DrawSubset(0);
+            //ModelRotate(0, 0, 0, 0, 0, 0);
+            //EditBlocksCollisions.testMesh.DrawSubset(0);
 
             //ModelRotate(
             //    Collisions.pointPosition.X,
@@ -190,12 +190,14 @@ namespace WindowsFormsApp1
 
 
             Render.dx.RenderState.FillMode = FillMode.WireFrame;
+            Render.dx.RenderState.Lighting = true;
             ModelRotate(
                 EditBlocksCollisions.boxSelectionPositionRound.X,
                 EditBlocksCollisions.boxSelectionPositionRound.Y,
                 EditBlocksCollisions.boxSelectionPositionRound.Z,
                 0, 0, 0);
             boxSelect.DrawSubset(0);
+            Render.dx.RenderState.Lighting = false;
             Render.dx.RenderState.FillMode = FillMode.Solid;
 
             EditBlocksCollisions.CheckPlayerGrounCollision();
