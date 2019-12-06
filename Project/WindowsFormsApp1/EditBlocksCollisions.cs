@@ -179,7 +179,7 @@ namespace WindowsFormsApp1
                             if (vrt[0].Position.X == vrt[1].Position.X && vrt[0].Position.X == vrt[2].Position.X)
                             {
                                 //Left
-                                if (vrt[0].Position.Z > vrt[1].Position.Z &&
+                                if (vrt[0].Position.Y < vrt[1].Position.Y &&
                                     ((vrt[1].Position.Z > vrt[2].Position.Z) || (vrt[1].Position.Y > vrt[2].Position.Y)))
                                 {
                                     int block = ((ChankGenerator.Chank)ChankGenerator.chanks[0]).chankArray[y][z][x];
@@ -205,6 +205,52 @@ namespace WindowsFormsApp1
                                 {
                                     int block = (byte)((ChankGenerator.Chank)ChankGenerator.chanks[0]).chankArray[y][z][x];
                                     Vector3 modifedPointPosition = pointPosition + new Vector3(0.1f * negativeInt, 0, 0);
+                                    if ((modifedPointPosition.X > (float)x - 0.5f) && (modifedPointPosition.X < (float)x + 0.5f) &&
+                                        (modifedPointPosition.Z > (float)z - 0.5f) && (modifedPointPosition.Z < (float)z + 0.5f) &&
+                                        (modifedPointPosition.Y > (float)y - 0.5f) && (modifedPointPosition.Y < (float)y + 0.5f))
+                                    {
+                                        boxSelectionPositionRound = new Vector3(x, y, z);
+                                        if (blockPasteOrBreakEvent && intersectionAviable)
+                                        {
+                                            ((ChankGenerator.Chank)ChankGenerator.chanks[0]).chankArray[y][z][x] =
+                                                negativeInt > 0 ? (byte)blockForCreate : (byte)0;
+                                            MeshBuilder.CreateChankMesh((ChankGenerator.Chank)ChankGenerator.chanks[0]);
+                                            ReInitializeChankMesh();
+                                            blockPasteOrBreakEvent = false;
+                                        }
+                                    }
+                                }
+                            }
+                            //Front & Back
+                            if (vrt[0].Position.Z == vrt[1].Position.Z && vrt[0].Position.Z == vrt[2].Position.Z)
+                            {
+                                //Front
+                                if (vrt[0].Position.Y < vrt[1].Position.Y &&
+                                    ((vrt[0].Position.X < vrt[2].Position.X) || (vrt[0].Position.X < vrt[1].Position.X)))
+                                {
+                                    int block = ((ChankGenerator.Chank)ChankGenerator.chanks[0]).chankArray[y][z][x];
+                                    Vector3 modifedPointPosition = pointPosition + new Vector3(0, 0, -0.1f * negativeInt);
+                                    if ((modifedPointPosition.X > (float)x - 0.5f) && (modifedPointPosition.X < (float)x + 0.5f) &&
+                                        (modifedPointPosition.Z > (float)z - 0.5f) && (modifedPointPosition.Z < (float)z + 0.5f) &&
+                                        (modifedPointPosition.Y > (float)y - 0.5f) && (modifedPointPosition.Y < (float)y + 0.5f))
+                                    {
+                                        boxSelectionPositionRound = new Vector3(x, y, z);
+                                        if (blockPasteOrBreakEvent && intersectionAviable)
+                                        {
+                                            ((ChankGenerator.Chank)ChankGenerator.chanks[0]).chankArray[y][z][x] =
+                                                negativeInt > 0 ? (byte)blockForCreate : (byte)0;
+                                            MeshBuilder.CreateChankMesh((ChankGenerator.Chank)ChankGenerator.chanks[0]);
+                                            ReInitializeChankMesh();
+                                            blockPasteOrBreakEvent = false;
+                                        }
+                                    }
+                                }
+                                //Back
+                                if (vrt[0].Position.Y < vrt[1].Position.Y &&
+                                    ((vrt[0].Position.X > vrt[2].Position.X) || (vrt[0].Position.X < vrt[1].Position.X)))
+                                {
+                                    int block = (byte)((ChankGenerator.Chank)ChankGenerator.chanks[0]).chankArray[y][z][x];
+                                    Vector3 modifedPointPosition = pointPosition + new Vector3(0, 0, 0.1f * negativeInt);
                                     if ((modifedPointPosition.X > (float)x - 0.5f) && (modifedPointPosition.X < (float)x + 0.5f) &&
                                         (modifedPointPosition.Z > (float)z - 0.5f) && (modifedPointPosition.Z < (float)z + 0.5f) &&
                                         (modifedPointPosition.Y > (float)y - 0.5f) && (modifedPointPosition.Y < (float)y + 0.5f))
