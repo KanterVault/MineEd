@@ -121,19 +121,20 @@ namespace WindowsFormsApp1
 
             if (intersectionAviable)
             {
-                //Up & Down
-                if (vrt[0].Position.Y == vrt[1].Position.Y && vrt[0].Position.Y == vrt[2].Position.Y)
+                for (int y = 0; y < ChankGenerator.CHANK_MAX_UP_BLOCKS; y++)
                 {
-                    //Up
-                    if (vrt[0].Position.Z < vrt[1].Position.Z &&
-                        ((vrt[1].Position.X < vrt[2].Position.X) || (vrt[1].Position.Z > vrt[2].Position.Z)))
+                    for (int z = 0; z < 16; z++)
                     {
-                        for (int y = 0; y < ChankGenerator.CHANK_MAX_UP_BLOCKS; y++)
+                        for (int x = 0; x < 16; x++)
                         {
-                            for (int z = 0; z < 16; z++)
+                            //Up & Down
+                            if (vrt[0].Position.Y == vrt[1].Position.Y && vrt[0].Position.Y == vrt[2].Position.Y)
                             {
-                                for (int x = 0; x < 16; x++)
+                                //Up
+                                if (vrt[0].Position.Z < vrt[1].Position.Z &&
+                                    ((vrt[1].Position.X < vrt[2].Position.X) || (vrt[1].Position.Z > vrt[2].Position.Z)))
                                 {
+                        
                                     int block = ((ChankGenerator.Chank)ChankGenerator.chanks[0]).chankArray[y][z][x];
                                     Vector3 modifedPointPosition = pointPosition + new Vector3(0, 0.1f * negativeInt, 0);
                                     if ((modifedPointPosition.X > (float)x - 0.5f) && (modifedPointPosition.X < (float)x + 0.5f) &&
@@ -160,18 +161,9 @@ namespace WindowsFormsApp1
                                         }
                                     }
                                 }
-                            }
-                        }
-                    }
-                    //Down
-                    if (vrt[0].Position.Z > vrt[1].Position.Z &&
-                        ((vrt[1].Position.X < vrt[2].Position.X) || (vrt[1].Position.Z < vrt[2].Position.Z)))
-                    {
-                        for (int y = 0; y < ChankGenerator.CHANK_MAX_UP_BLOCKS; y++)
-                        {
-                            for (int z = 0; z < 16; z++)
-                            {
-                                for (int x = 0; x < 16; x++)
+                                //Down
+                                if (vrt[0].Position.Z > vrt[1].Position.Z &&
+                                    ((vrt[1].Position.X < vrt[2].Position.X) || (vrt[1].Position.Z < vrt[2].Position.Z)))
                                 {
                                     int block = (byte)((ChankGenerator.Chank)ChankGenerator.chanks[0]).chankArray[y][z][x];
                                     Vector3 modifedPointPosition = pointPosition + new Vector3(0, -0.1f * negativeInt, 0);
@@ -199,6 +191,7 @@ namespace WindowsFormsApp1
                                         }
                                     }
                                 }
+
                             }
                         }
                     }
