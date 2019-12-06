@@ -99,7 +99,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChankGenerator.cs" />
-    <Compile Include="Collisions.cs" />
+    <Compile Include="EditBlocksCollisions.cs" />
     <Compile Include="MeshBuilder.cs" />
     <Compile Include="PlayerMoving.cs" />
     <Compile Include="Scene.cs">

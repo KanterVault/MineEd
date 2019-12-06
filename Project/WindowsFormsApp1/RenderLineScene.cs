@@ -176,7 +176,7 @@ namespace WindowsFormsApp1
             Render.dx.SetTexture(0, tex[0]);
 
             ModelRotate(0, 0, 0, 0, 0, 0);
-            Collisions.chankMesh.DrawSubset(0);
+            EditBlocksCollisions.chankMesh.DrawSubset(0);
 
             //ModelRotate(0, 0, 0, 0, 0, 0);
             //Collisions.testMesh.DrawSubset(0);
@@ -191,15 +191,15 @@ namespace WindowsFormsApp1
 
             Render.dx.RenderState.FillMode = FillMode.WireFrame;
             ModelRotate(
-                Collisions.boxSelectionPositionRound.X,
-                Collisions.boxSelectionPositionRound.Y,
-                Collisions.boxSelectionPositionRound.Z,
+                EditBlocksCollisions.boxSelectionPositionRound.X,
+                EditBlocksCollisions.boxSelectionPositionRound.Y,
+                EditBlocksCollisions.boxSelectionPositionRound.Z,
                 0, 0, 0);
             boxSelect.DrawSubset(0);
             Render.dx.RenderState.FillMode = FillMode.Solid;
 
-            Collisions.CheckPlayerGrounCollision();
-            Collisions.CheckCameraRayCollision();
+            EditBlocksCollisions.CheckPlayerGrounCollision();
+            EditBlocksCollisions.CheckCameraRayCollision();
         }
 
         public static void DisposeAllTextures()

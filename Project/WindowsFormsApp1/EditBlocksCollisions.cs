@@ -14,7 +14,7 @@ using Microsoft.DirectX.DirectInput;
 
 namespace WindowsFormsApp1
 {
-    public static class Collisions
+    public static class EditBlocksCollisions
     {
         public static Vector3 comparePosition = new Vector3();
         public static float bortOffset = 0.0f;

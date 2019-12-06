@@ -59,7 +59,7 @@ namespace WindowsFormsApp1
             chanks.Add(chank);
 
             MeshBuilder.CreateChankMesh(chank);
-            Collisions.InitializeCollisions();
+            EditBlocksCollisions.InitializeCollisions();
 
             //MessageBox.Show("Чанк создан!");
 

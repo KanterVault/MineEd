@@ -102,8 +102,8 @@ namespace WindowsFormsApp1
             ViewInLogLabel();
             SetCursoreVisible();
 
-            Collisions.dis = (float)trackBar1.Value;
-            Collisions.xoffset = (float)trackBar2.Value / 200.0f;
+            EditBlocksCollisions.dis = (float)trackBar1.Value;
+            EditBlocksCollisions.xoffset = (float)trackBar2.Value / 200.0f;
         }
 
         private void Quit(object sender, FormClosingEventArgs e)
@@ -119,11 +119,11 @@ namespace WindowsFormsApp1
             if (MouseAndKeyboardEvents.mouseLook == 0) MouseAndKeyboardEvents.mouseLook++;
             if (e.Button == MouseButtons.Left)
             {
-                Collisions.mouseButtonDown = 2;
+                EditBlocksCollisions.mouseButtonDown = 2;
             }
             else if (e.Button == MouseButtons.Right)
             {
-                Collisions.mouseButtonDown = 1;
+                EditBlocksCollisions.mouseButtonDown = 1;
             }
         }
 

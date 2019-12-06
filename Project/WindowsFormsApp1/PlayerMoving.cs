@@ -38,7 +38,7 @@ namespace WindowsFormsApp1
         public static bool spaceButton = false;
         public static void OnGravityTimerUpdate(Object sender, ElapsedEventArgs e)
         {
-            Collisions.CheckPlayerGrounCollision();
+            EditBlocksCollisions.CheckPlayerGrounCollision();
         }
 
         public static void InitializeMoveTimer()
