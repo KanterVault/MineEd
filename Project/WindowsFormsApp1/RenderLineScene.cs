@@ -178,8 +178,8 @@ namespace WindowsFormsApp1
             ModelRotate(0, 0, 0, 0, 0, 0);
             EditBlocksCollisions.chankMesh.DrawSubset(0);
 
-            //ModelRotate(0, 0, 0, 0, 0, 0);
-            //Collisions.testMesh.DrawSubset(0);
+            ModelRotate(0, 0, 0, 0, 0, 0);
+            EditBlocksCollisions.testMesh.DrawSubset(0);
 
             //ModelRotate(
             //    Collisions.pointPosition.X,

@@ -11,6 +11,7 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectDraw;
 using Microsoft.DirectX.DirectInput;
+using System.Diagnostics;
 
 namespace WindowsFormsApp1
 {
@@ -103,6 +104,7 @@ namespace WindowsFormsApp1
         public static float negativeInt = 1.0f;
         public static bool blockPasteOrBreakEvent = false;
         public static bool intersectionAviable = false;
+        public static int blockForCreate = 4;
         public static void GetPlaneVectorToPasteCubeSelection()
         {
             switch (mouseButtonDown)
@@ -134,7 +136,6 @@ namespace WindowsFormsApp1
                                 if (vrt[0].Position.Z < vrt[1].Position.Z &&
                                     ((vrt[1].Position.X < vrt[2].Position.X) || (vrt[1].Position.Z > vrt[2].Position.Z)))
                                 {
-                        
                                     int block = ((ChankGenerator.Chank)ChankGenerator.chanks[0]).chankArray[y][z][x];
                                     Vector3 modifedPointPosition = pointPosition + new Vector3(0, 0.1f * negativeInt, 0);
                                     if ((modifedPointPosition.X > (float)x - 0.5f) && (modifedPointPosition.X < (float)x + 0.5f) &&
@@ -144,20 +145,11 @@ namespace WindowsFormsApp1
                                         boxSelectionPositionRound = new Vector3(x, y, z);
                                         if (blockPasteOrBreakEvent && intersectionAviable)
                                         {
-                                            if (negativeInt > 0)
-                                            {
-                                                ((ChankGenerator.Chank)ChankGenerator.chanks[0]).chankArray[y][z][x] = 2;
-                                                MeshBuilder.CreateChankMesh((ChankGenerator.Chank)ChankGenerator.chanks[0]);
-                                                ReInitializeChankMesh();
-                                                blockPasteOrBreakEvent = false;
-                                            }
-                                            else
-                                            {
-                                                ((ChankGenerator.Chank)ChankGenerator.chanks[0]).chankArray[y][z][x] = 0;
-                                                MeshBuilder.CreateChankMesh((ChankGenerator.Chank)ChankGenerator.chanks[0]);
-                                                ReInitializeChankMesh();
-                                                blockPasteOrBreakEvent = false;
-                                            }
+                                            ((ChankGenerator.Chank)ChankGenerator.chanks[0]).chankArray[y][z][x] =
+                                                negativeInt > 0 ? (byte)blockForCreate : (byte)0;
+                                            MeshBuilder.CreateChankMesh((ChankGenerator.Chank)ChankGenerator.chanks[0]);
+                                            ReInitializeChankMesh();
+                                            blockPasteOrBreakEvent = false;
                                         }
                                     }
                                 }
@@ -174,24 +166,60 @@ namespace WindowsFormsApp1
                                         boxSelectionPositionRound = new Vector3(x, y, z);
                                         if (blockPasteOrBreakEvent && intersectionAviable)
                                         {
-                                            if (negativeInt > 0)
-                                            {
-                                                ((ChankGenerator.Chank)ChankGenerator.chanks[0]).chankArray[y][z][x] = (byte)2;
-                                                MeshBuilder.CreateChankMesh((ChankGenerator.Chank)ChankGenerator.chanks[0]);
-                                                ReInitializeChankMesh();
-                                                blockPasteOrBreakEvent = false;
-                                            }
-                                            else
-                                            {
-                                                ((ChankGenerator.Chank)ChankGenerator.chanks[0]).chankArray[y][z][x] = (byte)0;
-                                                MeshBuilder.CreateChankMesh((ChankGenerator.Chank)ChankGenerator.chanks[0]);
-                                                ReInitializeChankMesh();
-                                                blockPasteOrBreakEvent = false;
-                                            }
+                                            ((ChankGenerator.Chank)ChankGenerator.chanks[0]).chankArray[y][z][x] =
+                                                negativeInt > 0 ? (byte)blockForCreate : (byte)0;
+                                            MeshBuilder.CreateChankMesh((ChankGenerator.Chank)ChankGenerator.chanks[0]);
+                                            ReInitializeChankMesh();
+                                            blockPasteOrBreakEvent = false;
                                         }
                                     }
                                 }
-
+                            }
+                            //Left & Right
+                            if (vrt[0].Position.X == vrt[1].Position.X && vrt[0].Position.X == vrt[2].Position.X)
+                            {
+                                //Left
+                                if (vrt[0].Position.Z > vrt[1].Position.Z &&
+                                    ((vrt[1].Position.Z > vrt[2].Position.Z) || (vrt[1].Position.Y > vrt[2].Position.Y)))
+                                {
+                                    int block = ((ChankGenerator.Chank)ChankGenerator.chanks[0]).chankArray[y][z][x];
+                                    Vector3 modifedPointPosition = pointPosition + new Vector3(-0.1f * negativeInt, 0, 0);
+                                    if ((modifedPointPosition.X > (float)x - 0.5f) && (modifedPointPosition.X < (float)x + 0.5f) &&
+                                        (modifedPointPosition.Z > (float)z - 0.5f) && (modifedPointPosition.Z < (float)z + 0.5f) &&
+                                        (modifedPointPosition.Y > (float)y - 0.5f) && (modifedPointPosition.Y < (float)y + 0.5f))
+                                    {
+                                        boxSelectionPositionRound = new Vector3(x, y, z);
+                                        if (blockPasteOrBreakEvent && intersectionAviable)
+                                        {
+                                            ((ChankGenerator.Chank)ChankGenerator.chanks[0]).chankArray[y][z][x] =
+                                                negativeInt > 0 ? (byte)blockForCreate : (byte)0;
+                                            MeshBuilder.CreateChankMesh((ChankGenerator.Chank)ChankGenerator.chanks[0]);
+                                            ReInitializeChankMesh();
+                                            blockPasteOrBreakEvent = false;
+                                        }
+                                    }
+                                }
+                                //Right
+                                if (vrt[0].Position.Y < vrt[1].Position.Y &&
+                                    ((vrt[1].Position.Z < vrt[2].Position.Z) || (vrt[1].Position.Y > vrt[2].Position.Y)))
+                                {
+                                    int block = (byte)((ChankGenerator.Chank)ChankGenerator.chanks[0]).chankArray[y][z][x];
+                                    Vector3 modifedPointPosition = pointPosition + new Vector3(0.1f * negativeInt, 0, 0);
+                                    if ((modifedPointPosition.X > (float)x - 0.5f) && (modifedPointPosition.X < (float)x + 0.5f) &&
+                                        (modifedPointPosition.Z > (float)z - 0.5f) && (modifedPointPosition.Z < (float)z + 0.5f) &&
+                                        (modifedPointPosition.Y > (float)y - 0.5f) && (modifedPointPosition.Y < (float)y + 0.5f))
+                                    {
+                                        boxSelectionPositionRound = new Vector3(x, y, z);
+                                        if (blockPasteOrBreakEvent && intersectionAviable)
+                                        {
+                                            ((ChankGenerator.Chank)ChankGenerator.chanks[0]).chankArray[y][z][x] =
+                                                negativeInt > 0 ? (byte)blockForCreate : (byte)0;
+                                            MeshBuilder.CreateChankMesh((ChankGenerator.Chank)ChankGenerator.chanks[0]);
+                                            ReInitializeChankMesh();
+                                            blockPasteOrBreakEvent = false;
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
