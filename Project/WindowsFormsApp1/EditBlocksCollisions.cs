@@ -91,9 +91,6 @@ namespace WindowsFormsApp1
         public static IntersectInformation rayInfo;
         public static float dis = 0.0f;
         public static float xoffset = 0.0f;
-        public static void CheckPlayerGrounCollision()
-        {
-        }
 
         public static float Lerp(float a, float b, float t) { return a + (b - a) / t; }
         public static float DegresToRadian(float degres) { return (float)Math.PI / 180.0f * degres; }

@@ -200,7 +200,6 @@ namespace WindowsFormsApp1
             Render.dx.RenderState.Lighting = false;
             Render.dx.RenderState.FillMode = FillMode.Solid;
 
-            EditBlocksCollisions.CheckPlayerGrounCollision();
             EditBlocksCollisions.CheckCameraRayCollision();
         }
 
