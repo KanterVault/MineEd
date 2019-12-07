@@ -89,6 +89,11 @@ namespace WindowsFormsApp1
                 if (keys[a] == Key.Escape) if (mouseLook == 2) mouseLook++;
                 if (keys[a] == Key.Space) movePlayerDirections.Y = 1;
                 if (keys[a] == Key.LeftShift) movePlayerDirections.Y = -1;
+                if (keys[a] == Key.D1) Thread.Sleep(10);
+                if (keys[a] == Key.D2) Thread.Sleep(50);
+                if (keys[a] == Key.D3) Thread.Sleep(100);
+                if (keys[a] == Key.D4) Thread.Sleep(250);
+                if (keys[a] == Key.D5) Thread.Sleep(600);
                 //if (keys[a] == Key.R) PlayerMoving.playerWorldPosition = new Vector3(8, 256, 8);
                 //if (keys[a] == Key.Space) PlayerMoving.spaceButton = true;
             }

@@ -32,6 +32,7 @@ namespace WindowsFormsApp1
 
         public static string ERRORMESSAGE = "";
         public static string physDebag = "";
+        public static float deltaTimerStr = 0.0f;
 
         private void ViewInLogLabel()
         {
@@ -60,7 +61,7 @@ namespace WindowsFormsApp1
             sb.Append("\n   y: " + PlayerMoving.playerWorldPosition.Y);
             sb.Append("\n   z: " + PlayerMoving.playerWorldPosition.Z);
             sb.Append("\nКоллизия: " + physDebag);
-
+            sb.Append("\nDeltatime" + deltaTimerStr);
 
             label_Info.Text = sb.ToString();
         }
@@ -102,8 +103,7 @@ namespace WindowsFormsApp1
             ViewInLogLabel();
             SetCursoreVisible();
 
-            EditBlocksCollisions.dis = (float)trackBar1.Value;
-            EditBlocksCollisions.xoffset = (float)trackBar2.Value / 200.0f;
+            PlayerMoving.DeltaTimeFixedUpdate();
         }
 
         private void Quit(object sender, FormClosingEventArgs e)
