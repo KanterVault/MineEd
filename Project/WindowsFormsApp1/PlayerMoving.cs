@@ -20,7 +20,7 @@ namespace WindowsFormsApp1
         public static Vector3 playerWorldPosition = new Vector3(8, 63, 8); //new Vector3(-2, 7, -2);
         public static Vector3 directionMove = new Vector3();
         public static bool onMove = false;
-        public static float speedMove = 0.3f;
+        public static float speedMove = 0.2f;
         private static Stopwatch sw;
         
 
@@ -46,9 +46,9 @@ namespace WindowsFormsApp1
                 IntersectInformation collisionInfo = new IntersectInformation();
 
                 if (EditBlocksCollisions.chankMesh.Intersect(
-                    playerWorldPosition + new Vector3(0, 0.5f, 0),
-                    new Vector3(directionMove.X, directionMove.Y, directionMove.Z) * 100.0f,
-                    out collisionInfo) && collisionInfo.Dist < 0.1f)
+                    playerWorldPosition + new Vector3(0, 0.5f, 0) - directionMove * 0.3f,
+                    new Vector3(directionMove.X, directionMove.Y, directionMove.Z) * 10.0f,
+                    out collisionInfo) && collisionInfo.Dist < 0.065f)
                 {
                     Vector3 A = MeshBuilder.vt[collisionInfo.FaceIndex * 3].Position;
                     Vector3 B = MeshBuilder.vt[collisionInfo.FaceIndex * 3 + 1].Position;
@@ -60,7 +60,8 @@ namespace WindowsFormsApp1
                         (B.X-A.X)*(C.Y-A.Y)-(B.Y-A.Y)*(C.X-A.X));
                     normalTriangle.Normalize();
 
-                    directionMove.Add(normalTriangle * 2.0f);
+                    directionMove.Add(normalTriangle);
+                    playerWorldPosition.Add(new Vector3(directionMove.X, directionMove.Y, directionMove.Z) * deltatime);
 
                     Scene.physDebag = "\n" +
                        "FaceIndex: " + collisionInfo.FaceIndex.ToString() + "\n" +
@@ -70,8 +71,7 @@ namespace WindowsFormsApp1
                        "c:\n" + MeshBuilder.vt[collisionInfo.FaceIndex * 3 + 2].Position.ToString() + "\n\n" +
                        "Normal:\n" + normalTriangle.ToString();
                 }
-
-                playerWorldPosition.Add(new Vector3(directionMove.X, directionMove.Y, directionMove.Z) * deltatime);
+                else playerWorldPosition.Add(new Vector3(directionMove.X, directionMove.Y, directionMove.Z) * deltatime);
 
                 onMove = false;
             }
