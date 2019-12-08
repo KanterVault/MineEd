@@ -45,10 +45,6 @@ namespace WindowsFormsApp1
                 float distanceMove = Vector3.Length(directionMove * deltatime);
                 IntersectInformation collisionInfo = new IntersectInformation();
 
-                void Add() {
-                    
-                }
-
                 if (EditBlocksCollisions.chankMesh.Intersect(
                     playerWorldPosition + new Vector3(0, -0.5f, 0),
                     new Vector3(directionMove.X, directionMove.Y, directionMove.Z) * 100.0f,
