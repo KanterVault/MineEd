@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -33,6 +34,8 @@ namespace WindowsFormsApp1
         public static string ERRORMESSAGE = "";
         public static string physDebag = "";
         public static float deltaTimerStr = 0.0f;
+
+        public static PrivateFontCollection pfc = new PrivateFontCollection();
 
         private void ViewInLogLabel()
         {
@@ -74,6 +77,9 @@ namespace WindowsFormsApp1
             Render.CreateDeviceAndRenderthread();
             PlayerMoving.InitializeMoveTimer();
 
+            pfc.AddFontFile(@"fonts/SFPixelate.ttf");//orange kid.ttf");
+            label_Info.Font = new System.Drawing.Font(pfc.Families[0], 15);
+
             timerUpdate.Enabled = true;
         }
 
@@ -111,6 +117,7 @@ namespace WindowsFormsApp1
             Render.DisposeAll();
             MouseAndKeyboardEvents.DisposeAll();
             PlayerMoving.DisposeMoveTimer();
+            pfc.Dispose();
         }
 
         private void MouseDownScene(object sender, MouseEventArgs e)
