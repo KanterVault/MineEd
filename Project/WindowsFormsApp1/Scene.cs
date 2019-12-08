@@ -62,6 +62,7 @@ namespace WindowsFormsApp1
             sb.Append("\n   z: " + PlayerMoving.playerWorldPosition.Z);
             sb.Append("\nКоллизия: " + physDebag);
             sb.Append("\nDeltatime" + deltaTimerStr);
+            sb.Append("");
 
             label_Info.Text = sb.ToString();
         }
@@ -102,8 +103,6 @@ namespace WindowsFormsApp1
 
             ViewInLogLabel();
             SetCursoreVisible();
-
-            PlayerMoving.DeltaTimeFixedUpdate();
         }
 
         private void Quit(object sender, FormClosingEventArgs e)

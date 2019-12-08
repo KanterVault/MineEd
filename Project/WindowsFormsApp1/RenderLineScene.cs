@@ -201,6 +201,7 @@ namespace WindowsFormsApp1
             Render.dx.RenderState.FillMode = FillMode.Solid;
 
             EditBlocksCollisions.CheckCameraRayCollision();
+            PlayerMoving.DeltaTimeFixedUpdate();
         }
 
         public static void DisposeAllTextures()

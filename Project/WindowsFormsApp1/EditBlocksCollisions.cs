@@ -296,11 +296,11 @@ namespace WindowsFormsApp1
                 if (chankMesh.Intersect(PlayerMoving.playerWorldPosition + new Vector3(0, 1.75f + 0.5f, 0), viewDirection, out triesCollisionInfo))
                 {
                     intersectionAviable = true;
-                    Scene.physDebag = "\n" +
-                       "FaceIndex: " + triesCollisionInfo.FaceIndex.ToString() + "\n" +
-                       "Dist: " + triesCollisionInfo.Dist.ToString() + "\n" +
-                       "U: " + triesCollisionInfo.U.ToString() + "\n" +
-                       "V: " + triesCollisionInfo.V.ToString();
+                    //Scene.physDebag = "\n" +
+                    //   "FaceIndex: " + triesCollisionInfo.FaceIndex.ToString() + "\n" +
+                    //   "Dist: " + triesCollisionInfo.Dist.ToString() + "\n" +
+                    //   "U: " + triesCollisionInfo.U.ToString() + "\n" +
+                    //   "V: " + triesCollisionInfo.V.ToString();
 
                     pointPosition = PlayerMoving.playerWorldPosition +
                         new Vector3(0, 1.75f + 0.5f, 0) +

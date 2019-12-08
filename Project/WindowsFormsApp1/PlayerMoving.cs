@@ -21,19 +21,18 @@ namespace WindowsFormsApp1
         public static Vector3 directionMove = new Vector3();
         public static bool onMove = false;
         public static float speedMove = 0.3f;
-        public static Stopwatch sw;
+        private static Stopwatch sw;
         
 
         public static void PlayerMoveToDirection(Vector3 direction)
         {
             directionMove = direction;
-            directionMove.Normalize();
             onMove = true;
         }
 
-        public static long beforeTicks = 0;
-        public static long afterTicks = 0;
-        public static float deltatime = 0.0f;
+        private static long beforeTicks = 0;
+        private static long afterTicks = 0;
+        private static float deltatime = 0.0f;
         public static void DeltaTimeFixedUpdate()
         {
             afterTicks = sw.ElapsedTicks;
@@ -43,7 +42,26 @@ namespace WindowsFormsApp1
 
             if (onMove)
             {
-                playerWorldPosition.Add(directionMove * deltatime);
+                float distanceMove = Vector3.Length(directionMove * deltatime);
+                IntersectInformation collisionInfo = new IntersectInformation();
+
+                void Add() {
+                    playerWorldPosition.Add(new Vector3(directionMove.X, directionMove.Y, directionMove.Z) * deltatime);
+                }
+
+                if (!(EditBlocksCollisions.chankMesh.Intersect(
+                    playerWorldPosition + new Vector3(0, -0.5f, 0),
+                    new Vector3(directionMove.X, directionMove.Y, directionMove.Z) * deltatime,
+                    out collisionInfo) && collisionInfo.Dist < 2f))
+                    Add();
+                //else playerWorldPosition.Add(new Vector3(directionMove.X, directionMove.Y, directionMove.Z) * -deltatime);
+
+                Scene.physDebag = "\n" +
+                       "FaceIndex: " + collisionInfo.FaceIndex.ToString() + "\n" +
+                       "Dist: " + collisionInfo.Dist.ToString() + "\n" +
+                       "U: " + collisionInfo.U.ToString() + "\n" +
+                       "V: " + collisionInfo.V.ToString();
+
                 onMove = false;
             }
 
