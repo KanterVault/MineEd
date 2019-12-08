@@ -55,7 +55,7 @@ namespace WindowsFormsApp1
             sb.Append("\nPlayer direction: ");
             sb.Append("\n   z: " + MouseAndKeyboardEvents.movePlayerDirections.Z);
             sb.Append("\n   x: " + MouseAndKeyboardEvents.movePlayerDirections.X);
-            if (ERRORMESSAGE.Length > 20) sb.Append("\n" + ERRORMESSAGE.PadLeft(ERRORMESSAGE.Length - 20));
+            //if (ERRORMESSAGE.Length > 20) sb.Append("\n" + ERRORMESSAGE.PadLeft(ERRORMESSAGE.Length - 20));
             sb.Append("\nPlayer World position:");
             sb.Append("\n   x: " + PlayerMoving.playerWorldPosition.X);
             sb.Append("\n   y: " + PlayerMoving.playerWorldPosition.Y);
