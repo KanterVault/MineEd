@@ -17,6 +17,8 @@ namespace WindowsFormsApp1
 {
     public static class PlayerMoving
     {
+        public const float PLAYER_COLLISION_RADIUS = 0.3f;
+
         public static Vector3 playerWorldPosition = new Vector3(8, 63, 8); //new Vector3(-2, 7, -2);
         public static Vector3 directionMove = new Vector3();
         public static bool onMove = false;
@@ -40,42 +42,54 @@ namespace WindowsFormsApp1
             //begincode:
             Scene.deltaTimerStr = deltatime;
 
+            Vector3 copyPlayerWorldPosition = playerWorldPosition;
+
             if (onMove)
             {
                 float distanceMove = Vector3.Length(directionMove * deltatime);
                 IntersectInformation collisionInfo = new IntersectInformation();
 
-                for (int i = 0; i < 100; i++)
+                for (int d = 0; d < 360 / 45; d++)
                 {
-                    if (EditBlocksCollisions.chankMesh.Intersect(
-                    playerWorldPosition + new Vector3(0, 0.5f, 0) - directionMove * 0.3f,
-                    new Vector3(directionMove.X, directionMove.Y, directionMove.Z) * 10.0f,
-                    out collisionInfo) && collisionInfo.Dist < 0.065f)
+                    for (int i = 0; i < 100; i++)
                     {
-                        Vector3 A = MeshBuilder.vt[collisionInfo.FaceIndex * 3].Position;
-                        Vector3 B = MeshBuilder.vt[collisionInfo.FaceIndex * 3 + 1].Position;
-                        Vector3 C = MeshBuilder.vt[collisionInfo.FaceIndex * 3 + 2].Position;
-                        //Вычисление нормали треугольника по формуле.
-                        Vector3 normalTriangle = new Vector3(
-                            (B.Y - A.Y) * (C.Z - A.Z) - (B.Z - A.Z) * (C.Y - A.Y),
-                            (B.X - A.X) * (C.Z - A.Z) - (B.Z - A.Z) * (C.X - A.X),
-                            (B.X - A.X) * (C.Y - A.Y) - (B.Y - A.Y) * (C.X - A.X));
-                        normalTriangle.Normalize();
+                        Vector3 rayDirection = new Vector3(
+                            (float)Math.Sin(DegresToRadian(d * 45)),
+                            0,
+                            (float)Math.Sin(DegresToRadian(d * 45)));
 
-                        directionMove.Add(normalTriangle);
+                        if (EditBlocksCollisions.chankMesh.Intersect(
+                            copyPlayerWorldPosition + new Vector3(0, 0.5f, 0) - rayDirection * PLAYER_COLLISION_RADIUS,
+                            rayDirection * 5.0f,
+                            out collisionInfo) && collisionInfo.Dist < 0.06225f)
+                        {
+                            Vector3 A = MeshBuilder.vt[collisionInfo.FaceIndex * 3].Position;
+                            Vector3 B = MeshBuilder.vt[collisionInfo.FaceIndex * 3 + 1].Position;
+                            Vector3 C = MeshBuilder.vt[collisionInfo.FaceIndex * 3 + 2].Position;
+                            //Вычисление нормали треугольника по формуле.
+                            Vector3 normalTriangle = new Vector3(
+                                (B.Y - A.Y) * (C.Z - A.Z) - (B.Z - A.Z) * (C.Y - A.Y),
+                                (B.X - A.X) * (C.Z - A.Z) - (B.Z - A.Z) * (C.X - A.X),
+                                (B.X - A.X) * (C.Y - A.Y) - (B.Y - A.Y) * (C.X - A.X));
+                            normalTriangle.Normalize();
+
+                            directionMove.Add(normalTriangle * 0.01f);
+                        }
+                        onMove = false;
+                        copyPlayerWorldPosition.Add(new Vector3(
+                            directionMove.X / 100 / 8,
+                            directionMove.Y / 100 / 8,
+                            directionMove.Z / 100 / 8) * deltatime);
                     }
-                    onMove = false;
-
-                    playerWorldPosition.Add(new Vector3(
-                        directionMove.X / 100.0f,
-                        directionMove.Y / 100.0f,
-                        directionMove.Z / 100.0f) * deltatime);
                 }
             }
+            playerWorldPosition = copyPlayerWorldPosition;
 
             //edncode
             beforeTicks = sw.ElapsedTicks;
         }
+
+        public static float DegresToRadian(float degres) { return (float)Math.PI / 180.0f * degres; }
 
         public static void InitializeMoveTimer()
         {
