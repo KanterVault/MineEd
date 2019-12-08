@@ -20,7 +20,7 @@ namespace WindowsFormsApp1
         public static Vector3 playerWorldPosition = new Vector3(8, 63, 8); //new Vector3(-2, 7, -2);
         public static Vector3 directionMove = new Vector3();
         public static bool onMove = false;
-        public static float speedMove = 3.0f;
+        public static float speedMove = 0.3f;
         public static Stopwatch sw;
         
 
