@@ -45,35 +45,32 @@ namespace WindowsFormsApp1
                 float distanceMove = Vector3.Length(directionMove * deltatime);
                 IntersectInformation collisionInfo = new IntersectInformation();
 
-                if (EditBlocksCollisions.chankMesh.Intersect(
+                for (int i = 0; i < 100; i++)
+                {
+                    if (EditBlocksCollisions.chankMesh.Intersect(
                     playerWorldPosition + new Vector3(0, 0.5f, 0) - directionMove * 0.3f,
                     new Vector3(directionMove.X, directionMove.Y, directionMove.Z) * 10.0f,
                     out collisionInfo) && collisionInfo.Dist < 0.065f)
-                {
-                    Vector3 A = MeshBuilder.vt[collisionInfo.FaceIndex * 3].Position;
-                    Vector3 B = MeshBuilder.vt[collisionInfo.FaceIndex * 3 + 1].Position;
-                    Vector3 C = MeshBuilder.vt[collisionInfo.FaceIndex * 3 + 2].Position;
-                    //Вычисление нормали треугольника по формуле.
-                    Vector3 normalTriangle = new Vector3(
-                        (B.Y-A.Y)*(C.Z-A.Z)-(B.Z-A.Z)*(C.Y-A.Y),
-                        (B.X-A.X)*(C.Z-A.Z)-(B.Z-A.Z)*(C.X-A.X),
-                        (B.X-A.X)*(C.Y-A.Y)-(B.Y-A.Y)*(C.X-A.X));
-                    normalTriangle.Normalize();
+                    {
+                        Vector3 A = MeshBuilder.vt[collisionInfo.FaceIndex * 3].Position;
+                        Vector3 B = MeshBuilder.vt[collisionInfo.FaceIndex * 3 + 1].Position;
+                        Vector3 C = MeshBuilder.vt[collisionInfo.FaceIndex * 3 + 2].Position;
+                        //Вычисление нормали треугольника по формуле.
+                        Vector3 normalTriangle = new Vector3(
+                            (B.Y - A.Y) * (C.Z - A.Z) - (B.Z - A.Z) * (C.Y - A.Y),
+                            (B.X - A.X) * (C.Z - A.Z) - (B.Z - A.Z) * (C.X - A.X),
+                            (B.X - A.X) * (C.Y - A.Y) - (B.Y - A.Y) * (C.X - A.X));
+                        normalTriangle.Normalize();
 
-                    directionMove.Add(normalTriangle);
-                    playerWorldPosition.Add(new Vector3(directionMove.X, directionMove.Y, directionMove.Z) * deltatime);
+                        directionMove.Add(normalTriangle);
+                    }
+                    onMove = false;
 
-                    Scene.physDebag = "\n" +
-                       "FaceIndex: " + collisionInfo.FaceIndex.ToString() + "\n" +
-                       "Dist: " + collisionInfo.Dist.ToString() + "\n" +
-                       "a:\n" + MeshBuilder.vt[collisionInfo.FaceIndex * 3].Position.ToString() + "\n\n" +
-                       "b:\n" + MeshBuilder.vt[collisionInfo.FaceIndex * 3 + 1].Position.ToString() + "\n\n" +
-                       "c:\n" + MeshBuilder.vt[collisionInfo.FaceIndex * 3 + 2].Position.ToString() + "\n\n" +
-                       "Normal:\n" + normalTriangle.ToString();
+                    playerWorldPosition.Add(new Vector3(
+                        directionMove.X / 100.0f,
+                        directionMove.Y / 100.0f,
+                        directionMove.Z / 100.0f) * deltatime);
                 }
-                else playerWorldPosition.Add(new Vector3(directionMove.X, directionMove.Y, directionMove.Z) * deltatime);
-
-                onMove = false;
             }
 
             //edncode
