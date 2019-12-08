@@ -46,21 +46,25 @@ namespace WindowsFormsApp1
                 IntersectInformation collisionInfo = new IntersectInformation();
 
                 void Add() {
-                    playerWorldPosition.Add(new Vector3(directionMove.X, directionMove.Y, directionMove.Z) * deltatime);
+                    
                 }
 
-                if (!(EditBlocksCollisions.chankMesh.Intersect(
+                if (EditBlocksCollisions.chankMesh.Intersect(
                     playerWorldPosition + new Vector3(0, -0.5f, 0),
-                    new Vector3(directionMove.X, directionMove.Y, directionMove.Z) * deltatime,
-                    out collisionInfo) && collisionInfo.Dist < 2f))
-                    Add();
-                //else playerWorldPosition.Add(new Vector3(directionMove.X, directionMove.Y, directionMove.Z) * -deltatime);
-
-                Scene.physDebag = "\n" +
+                    new Vector3(directionMove.X, directionMove.Y, directionMove.Z) * 100.0f,
+                    out collisionInfo))
+                {
+                    Scene.physDebag = "\n" +
                        "FaceIndex: " + collisionInfo.FaceIndex.ToString() + "\n" +
                        "Dist: " + collisionInfo.Dist.ToString() + "\n" +
                        "U: " + collisionInfo.U.ToString() + "\n" +
-                       "V: " + collisionInfo.V.ToString();
+                       "V: " + collisionInfo.V.ToString() + "\n\n" +
+                       "a:\n" + MeshBuilder.vt[collisionInfo.FaceIndex * 3].Position.ToString() + "\n\n" +
+                       "b:\n" + MeshBuilder.vt[collisionInfo.FaceIndex * 3 + 1].Position.ToString() + "\n\n" +
+                       "c:\n" + MeshBuilder.vt[collisionInfo.FaceIndex * 3 + 2].Position.ToString();
+                }
+
+                playerWorldPosition.Add(new Vector3(directionMove.X, directionMove.Y, directionMove.Z) * deltatime);
 
                 onMove = false;
             }

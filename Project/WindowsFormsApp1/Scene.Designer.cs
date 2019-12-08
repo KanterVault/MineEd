@@ -43,11 +43,12 @@
             // 
             this.label_Info.AutoEllipsis = true;
             this.label_Info.BackColor = System.Drawing.SystemColors.Control;
+            this.label_Info.Dock = System.Windows.Forms.DockStyle.Left;
             this.label_Info.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.label_Info.ImageAlign = System.Drawing.ContentAlignment.BottomLeft;
-            this.label_Info.Location = new System.Drawing.Point(3, 3);
+            this.label_Info.Location = new System.Drawing.Point(0, 0);
             this.label_Info.Name = "label_Info";
-            this.label_Info.Size = new System.Drawing.Size(162, 444);
+            this.label_Info.Size = new System.Drawing.Size(169, 456);
             this.label_Info.TabIndex = 0;
             this.label_Info.Text = "label1";
             // 
