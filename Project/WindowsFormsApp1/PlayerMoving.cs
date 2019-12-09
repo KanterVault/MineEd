@@ -36,7 +36,11 @@ namespace WindowsFormsApp1
         private static float deltatime = 0.0f;
 
         private static IntersectInformation hitInfo = new IntersectInformation();
-        private static Vector3[] points = new Vector3[3];
+        
+        private static Vector3 A = new Vector3();
+        private static Vector3 B = new Vector3();
+        private static Vector3 C = new Vector3();
+        
         private static Vector3 normalVector = new Vector3();
         public static void DeltaTimeFixedUpdate()
         {
@@ -58,11 +62,16 @@ namespace WindowsFormsApp1
                     out hitInfo))
                 {
                     //Запись трёх точек треугольника на который указывает луч.
-                    points[0] = MeshBuilder.vt[hitInfo.FaceIndex * 3 + 0].Position;
-                    points[0] = MeshBuilder.vt[hitInfo.FaceIndex * 3 + 1].Position;
-                    points[0] = MeshBuilder.vt[hitInfo.FaceIndex * 3 + 2].Position;
+                    A = MeshBuilder.vt[hitInfo.FaceIndex * 3 + 0].Position;
+                    B = MeshBuilder.vt[hitInfo.FaceIndex * 3 + 1].Position;
+                    C = MeshBuilder.vt[hitInfo.FaceIndex * 3 + 2].Position;
 
-                    
+                    //Вычисление вектора нормали по формуле нормали для плоскости через три точки.
+                    normalVector = new Vector3(
+                        (B.Y - A.Y) * (C.Z - A.Z) - (B.Z - A.Z) * (C.Y - A.Y),
+                        (B.X - A.X) * (C.Z - A.Z) - (B.Z - A.Z) * (C.X - A.X),
+                        (B.X - A.X) * (C.Y - A.Y) - (B.Y - A.Y) * (C.X - A.X));
+                    normalVector.Normalize();
                 }
                 else playerWorldPosition += directionMove * speedMove * deltatime;
                 onMove = false;
