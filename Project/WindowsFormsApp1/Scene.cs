@@ -63,8 +63,8 @@ namespace WindowsFormsApp1
             sb.Append("\n   x: " + PlayerMoving.playerWorldPosition.X);
             sb.Append("\n   y: " + PlayerMoving.playerWorldPosition.Y);
             sb.Append("\n   z: " + PlayerMoving.playerWorldPosition.Z);
-            sb.Append("\nКоллизия: " + physDebag);
-            sb.Append("\nDeltatime" + deltaTimerStr);
+            sb.Append("\nCollision: " + physDebag);
+            sb.Append("\nDeltatime: " + deltaTimerStr);
             sb.Append("");
 
             label_Info.Text = sb.ToString();
@@ -77,8 +77,8 @@ namespace WindowsFormsApp1
             Render.CreateDeviceAndRenderthread();
             PlayerMoving.InitializeMoveTimer();
 
-            pfc.AddFontFile(@"fonts/SFPixelate.ttf");//orange kid.ttf");
-            label_Info.Font = new System.Drawing.Font(pfc.Families[0], 15);
+            //pfc.AddFontFile(@"fonts/SFPixelate.ttf");//orange kid.ttf");
+            //label_Info.Font = new System.Drawing.Font(pfc.Families[0], 15);
 
             timerUpdate.Enabled = true;
         }

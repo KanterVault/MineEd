@@ -45,7 +45,7 @@
             this.label_Info.BackColor = System.Drawing.SystemColors.Control;
             this.label_Info.Dock = System.Windows.Forms.DockStyle.Left;
             this.label_Info.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.label_Info.Font = new System.Drawing.Font("Segoe UI", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label_Info.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label_Info.ImageAlign = System.Drawing.ContentAlignment.BottomLeft;
             this.label_Info.Location = new System.Drawing.Point(0, 0);
             this.label_Info.Name = "label_Info";

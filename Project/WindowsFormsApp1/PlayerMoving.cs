@@ -22,7 +22,7 @@ namespace WindowsFormsApp1
         public static Vector3 playerWorldPosition = new Vector3(8, 64, 8); //new Vector3(-2, 7, -2);
         public static Vector3 directionMove = new Vector3();
         public static bool onMove = false;
-        public static float speedMove = 1.0f;
+        public static float speedMove = 0.2f;
         private static Stopwatch sw;
 
         public static void PlayerMoveToDirection(Vector3 direction)
@@ -42,38 +42,48 @@ namespace WindowsFormsApp1
         private static Vector3 C = new Vector3();
         
         private static Vector3 normalVector = new Vector3();
+        private static Vector3 currentPosition = new Vector3();
         public static void DeltaTimeFixedUpdate()
         {
             afterTicks = sw.ElapsedTicks;
             deltatime = ((float)afterTicks - (float)beforeTicks) / 1000000.0f;
             //begincode:
+            Scene.deltaTimerStr = deltatime;
 
             // 1) Проверка на коллизию с треугольником.
             // 2) Если коллизия есть, то двигаемся только до точки соприкосновения.
-
             if (onMove)
             {
-                if (EditBlocksCollisions.chankMesh.Intersect(
-                    playerWorldPosition,
-                    new Vector3(
-                        (float)Math.Sin(DegresToRadian(MouseAndKeyboardEvents.mainXrot)),
-                        0,
-                        (float)Math.Cos(DegresToRadian(MouseAndKeyboardEvents.mainXrot))),
-                    out hitInfo))
+                for (int round = 0; round < 10; round++)
                 {
-                    //Запись трёх точек треугольника на который указывает луч.
-                    A = MeshBuilder.vt[hitInfo.FaceIndex * 3 + 0].Position;
-                    B = MeshBuilder.vt[hitInfo.FaceIndex * 3 + 1].Position;
-                    C = MeshBuilder.vt[hitInfo.FaceIndex * 3 + 2].Position;
+                    if (EditBlocksCollisions.chankMesh.Intersect(
+                    playerWorldPosition - new Vector3(0, -0.5f, 0),
+                    new Vector3(
+                        (float)Math.Sin(DegresToRadian(round * (360 / 10))),
+                        0,
+                        (float)Math.Cos(DegresToRadian(round * (360 / 10)))),
+                    out hitInfo))
+                    {
+                        Scene.physDebag = hitInfo.Dist.ToString();
+                        //Запись трёх точек треугольника на который указывает луч.
+                        A = MeshBuilder.vt[hitInfo.FaceIndex * 3 + 0].Position;
+                        B = MeshBuilder.vt[hitInfo.FaceIndex * 3 + 1].Position;
+                        C = MeshBuilder.vt[hitInfo.FaceIndex * 3 + 2].Position;
 
-                    //Вычисление вектора нормали по формуле нормали для плоскости через три точки.
-                    normalVector = new Vector3(
-                        (B.Y - A.Y) * (C.Z - A.Z) - (B.Z - A.Z) * (C.Y - A.Y),
-                        (B.X - A.X) * (C.Z - A.Z) - (B.Z - A.Z) * (C.X - A.X),
-                        (B.X - A.X) * (C.Y - A.Y) - (B.Y - A.Y) * (C.X - A.X));
-                    normalVector.Normalize();
+                        //Вычисление вектора нормали по формуле нормали для плоскости через три точки.
+                        normalVector = new Vector3(
+                            (B.Y - A.Y) * (C.Z - A.Z) - (B.Z - A.Z) * (C.Y - A.Y),
+                            (B.X - A.X) * (C.Z - A.Z) - (B.Z - A.Z) * (C.X - A.X),
+                            (B.X - A.X) * (C.Y - A.Y) - (B.Y - A.Y) * (C.X - A.X));
+                        normalVector.Normalize();
+
+                        currentPosition = playerWorldPosition + directionMove * speedMove * deltatime;
+                        if (hitInfo.Dist < 0.1f) currentPosition += normalVector * 0.1f;
+                    }
+                    currentPosition = playerWorldPosition + directionMove * speedMove * deltatime;
                 }
-                else playerWorldPosition += directionMove * speedMove * deltatime;
+                //playerWorldPosition += directionMove * speedMove * deltatime;
+                playerWorldPosition = currentPosition;
                 onMove = false;
             }
 
