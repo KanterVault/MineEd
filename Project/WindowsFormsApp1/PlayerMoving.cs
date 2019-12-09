@@ -19,7 +19,7 @@ namespace WindowsFormsApp1
     {
         public const float PLAYER_COLLISION_RADIUS = 0.3f;
 
-        public static Vector3 playerWorldPosition = new Vector3(8, 64, 8); //new Vector3(-2, 7, -2);
+        public static Vector3 playerWorldPosition = new Vector3(8, 64, 8);
         public static Vector3 directionMove = new Vector3();
         public static bool onMove = false;
         public static float speedMove = 1.0f;
@@ -78,7 +78,7 @@ namespace WindowsFormsApp1
                         normalVector.Normalize();
 
                         currentPosition = playerWorldPosition + directionMove * speedMove * deltatime;
-                        if (hitInfo.Dist < 0.3f) currentPosition += normalVector * 10.0f;
+                        if (hitInfo.Dist < 0.3f) currentPosition += normalVector * 1000.0f;
                     }
                     currentPosition = playerWorldPosition + directionMove * speedMove * deltatime;
                 }
