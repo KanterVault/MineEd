@@ -67,7 +67,8 @@ namespace WindowsFormsApp1
             sb.Append("\nDeltatime: " + deltaTimerStr);
             sb.Append("");
 
-            label_Info.Text = sb.ToString();
+            //label_Info.Text = sb.ToString();
+            Program.message = sb.ToString();
         }
 
         private void Start(object sender, EventArgs e)

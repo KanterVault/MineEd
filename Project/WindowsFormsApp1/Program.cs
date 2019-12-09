@@ -1,20 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace WindowsFormsApp1
 {
     static class Program
     {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
+        public static bool exit = false;
+        public static string message = "";
+
         [STAThread]
+        public static void Thr()
+        {
+            Application.Run(new Scene());
+            exit = true;
+        }
+
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Scene());
+            Thread th = new Thread(Thr);
+            th.Start();
+            while (true)
+            {
+                if (exit) break;
+                Thread.Sleep(10);
+                Console.Clear();
+                try { Console.Write(message); } catch { }
+            }
+            th.Abort();
         }
     }
 }
