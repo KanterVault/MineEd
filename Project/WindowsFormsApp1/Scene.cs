@@ -53,9 +53,9 @@ namespace WindowsFormsApp1
             sb.Append(MouseAndKeyboardEvents.xdir);
             sb.Append(" | ");
             sb.Append(MouseAndKeyboardEvents.ydir);
-            sb.Append("\nCos: ");
+            sb.Append("\n   Cos: ");
             sb.Append(Math.Cos(MouseAndKeyboardEvents.DegresToRadian(MouseAndKeyboardEvents.mainXrot)).ToString());
-            sb.Append("\nSin: ");
+            sb.Append("\n   Sin: ");
             sb.Append(Math.Cos(MouseAndKeyboardEvents.DegresToRadian(MouseAndKeyboardEvents.mainXrot)).ToString());
             sb.Append("\nPlayer direction: ");
             sb.Append("\n   z: " + MouseAndKeyboardEvents.movePlayerDirections.Z);
@@ -68,6 +68,10 @@ namespace WindowsFormsApp1
             sb.Append("\nCollision: " + physDebag);
             sb.Append("\nDeltatime: " + deltaTimerStr);
             sb.Append("\nMouseLock: " + MouseAndKeyboardEvents.mouseLook);
+            sb.Append("\nLerpCameraPosition:");
+            sb.Append("\n   x: " + RenderLineScene.translationsBefore.X);
+            sb.Append("\n   y: " + RenderLineScene.translationsBefore.Y);
+            sb.Append("\n   z: " + RenderLineScene.translationsBefore.Z);
 
             //label_Info.Text = sb.ToString();
             Program.message = sb.ToString();
@@ -125,9 +129,6 @@ namespace WindowsFormsApp1
                 MouseAndKeyboardEvents.KeysMouseEvents();
             }
             if (MouseAndKeyboardEvents.mouseLook == 2) MouseAndKeyboardEvents.mouseLook = 0;
-
-            Program.windowXY[0] = this.Location.X;
-            Program.windowXY[1] = this.Location.Y;
 
             ViewInLogLabel();
             SetCursoreVisible();

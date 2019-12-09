@@ -39,7 +39,7 @@ namespace WindowsFormsApp1
             translationsBefore = Vector3.Lerp(
                 translationsBefore,
                 -PlayerMoving.playerWorldPosition + new Vector3(0, -0.75f - 0.5f, 0),
-                0.3f);
+                0.2f);
 
             Render.dx.Transform.View =
                 Matrix.Translation(translationsBefore) *
@@ -182,9 +182,9 @@ namespace WindowsFormsApp1
             //EditBlocksCollisions.testMesh.DrawSubset(0);
 
             //ModelRotate(
-            //    Collisions.pointPosition.X,
-            //    Collisions.pointPosition.Y,
-            //    Collisions.pointPosition.Z,
+            //    EditBlocksCollisions.pointPosition.X,
+            //    EditBlocksCollisions.pointPosition.Y,
+            //    EditBlocksCollisions.pointPosition.Z,
             //    0, 0, 0);
             //pointCollision.DrawSubset(0);
 

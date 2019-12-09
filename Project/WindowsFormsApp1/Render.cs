@@ -85,13 +85,16 @@ namespace WindowsFormsApp1
             {
                 try
                 {
-                    dx.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Aqua, 1.0f, 0);
-                    dx.BeginScene();
+                    if (MouseAndKeyboardEvents.mouseLook == 0)
+                    {
+                        dx.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Aqua, 1.0f, 0);
+                        dx.BeginScene();
 
-                    RenderLineScene.RenderScene();
+                        RenderLineScene.RenderScene();
 
-                    dx.EndScene();
-                    dx.Present();
+                        dx.EndScene();
+                        dx.Present();
+                    }
                 }
                 catch (Exception ex)
                 {

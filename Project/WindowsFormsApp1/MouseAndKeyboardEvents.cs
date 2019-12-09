@@ -80,6 +80,7 @@ namespace WindowsFormsApp1
             keys = dvK.GetPressedKeys();
             xdir = 0;
             ydir = 0;
+
             for (int a = 0; a < keys.Length; a++)
             {
                 if (keys[a] == Key.W) ydir += 1;
@@ -94,6 +95,7 @@ namespace WindowsFormsApp1
                 if (keys[a] == Key.D3) Thread.Sleep(100);
                 if (keys[a] == Key.D4) Thread.Sleep(250);
                 if (keys[a] == Key.D5) Thread.Sleep(600);
+
                 //if (keys[a] == Key.R) PlayerMoving.playerWorldPosition = new Vector3(8, 256, 8);
                 //if (keys[a] == Key.Space) PlayerMoving.spaceButton = true;
             }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Threading;
 
@@ -9,7 +8,6 @@ namespace WindowsFormsApp1
     {
         public static bool exit = false;
         public static string message = "";
-        public static int[] windowXY = new int[2] { 100, 100 };
 
         [STAThread]
         public static void Thr()
@@ -34,7 +32,6 @@ namespace WindowsFormsApp1
                 Thread.Sleep(10);
                 Console.Clear();
                 try { Console.Write(message); } catch { }
-                Console.SetWindowPosition(0, 0);
             }
             th.Abort();
         }
