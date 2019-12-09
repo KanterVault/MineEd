@@ -78,7 +78,7 @@ namespace WindowsFormsApp1
                         normalVector.Normalize();
 
                         currentPosition = playerWorldPosition + directionMove * speedMove * deltatime;
-                        if (hitInfo.Dist < 0.1f) currentPosition += normalVector * 0.1f;
+                        if (hitInfo.Dist < 0.3f) currentPosition += normalVector * 10.0f;
                     }
                     currentPosition = playerWorldPosition + directionMove * speedMove * deltatime;
                 }
