@@ -22,7 +22,7 @@ namespace WindowsFormsApp1
         public static Vector3 playerWorldPosition = new Vector3(8, 64, 8); //new Vector3(-2, 7, -2);
         public static Vector3 directionMove = new Vector3();
         public static bool onMove = false;
-        public static float speedMove = 0.6f;
+        public static float speedMove = 1.0f;
         private static Stopwatch sw;
 
         public static void PlayerMoveToDirection(Vector3 direction)
@@ -36,6 +36,7 @@ namespace WindowsFormsApp1
         private static float deltatime = 0.0f;
 
         private static IntersectInformation hitInfo = new IntersectInformation();
+        private static Vector3[] points = new Vector3[3];
         public static void DeltaTimeFixedUpdate()
         {
             afterTicks = sw.ElapsedTicks;
@@ -55,6 +56,11 @@ namespace WindowsFormsApp1
                         (float)Math.Cos(DegresToRadian(MouseAndKeyboardEvents.mainXrot))),
                     out hitInfo))
                 {
+                    //Запись трёх точек треугольника на который указывает луч.
+                    points[0] = MeshBuilder.vt[hitInfo.FaceIndex * 3 + 0].Position;
+                    points[0] = MeshBuilder.vt[hitInfo.FaceIndex * 3 + 1].Position;
+                    points[0] = MeshBuilder.vt[hitInfo.FaceIndex * 3 + 2].Position;
+
                     
                 }
                 else playerWorldPosition += directionMove * speedMove * deltatime;
