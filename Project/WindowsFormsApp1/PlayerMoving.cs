@@ -19,12 +19,11 @@ namespace WindowsFormsApp1
     {
         public const float PLAYER_COLLISION_RADIUS = 0.3f;
 
-        public static Vector3 playerWorldPosition = new Vector3(8, 63, 8); //new Vector3(-2, 7, -2);
+        public static Vector3 playerWorldPosition = new Vector3(8, 64, 8); //new Vector3(-2, 7, -2);
         public static Vector3 directionMove = new Vector3();
         public static bool onMove = false;
-        public static float speedMove = 0.2f;
+        public static float speedMove = 0.6f;
         private static Stopwatch sw;
-        
 
         public static void PlayerMoveToDirection(Vector3 direction)
         {
@@ -35,13 +34,32 @@ namespace WindowsFormsApp1
         private static long beforeTicks = 0;
         private static long afterTicks = 0;
         private static float deltatime = 0.0f;
+
+        private static IntersectInformation hitInfo = new IntersectInformation();
         public static void DeltaTimeFixedUpdate()
         {
             afterTicks = sw.ElapsedTicks;
             deltatime = ((float)afterTicks - (float)beforeTicks) / 1000000.0f;
             //begincode:
 
+            // 1) Проверка на коллизию с треугольником.
+            // 2) Если коллизия есть, то двигаемся только до точки соприкосновения.
 
+            if (onMove)
+            {
+                if (EditBlocksCollisions.chankMesh.Intersect(
+                    playerWorldPosition,
+                    new Vector3(
+                        (float)Math.Sin(DegresToRadian(MouseAndKeyboardEvents.mainXrot)),
+                        0,
+                        (float)Math.Cos(DegresToRadian(MouseAndKeyboardEvents.mainXrot))),
+                    out hitInfo))
+                {
+                    
+                }
+                else playerWorldPosition += directionMove * speedMove * deltatime;
+                onMove = false;
+            }
 
             //edncode
             beforeTicks = sw.ElapsedTicks;

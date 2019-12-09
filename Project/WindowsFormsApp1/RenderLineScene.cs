@@ -38,7 +38,7 @@ namespace WindowsFormsApp1
 
             translationsBefore = Vector3.Lerp(
                 translationsBefore,
-                -PlayerMoving.playerWorldPosition + new Vector3(0, -1.75f - 0.5f, 0),
+                -PlayerMoving.playerWorldPosition + new Vector3(0, -0.75f - 0.5f, 0),
                 0.3f);
 
             Render.dx.Transform.View =

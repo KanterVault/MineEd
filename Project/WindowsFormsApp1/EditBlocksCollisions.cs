@@ -293,7 +293,7 @@ namespace WindowsFormsApp1
                     (float)Math.Sin(DegresToRadian(MouseAndKeyboardEvents.mainYrot)),
                     (float)Math.Cos(DegresToRadian(MouseAndKeyboardEvents.mainXrot)) * (float)Math.Cos(DegresToRadian(MouseAndKeyboardEvents.mainYrot)));
 
-                if (chankMesh.Intersect(PlayerMoving.playerWorldPosition + new Vector3(0, 1.75f + 0.5f, 0), viewDirection, out triesCollisionInfo))
+                if (chankMesh.Intersect(PlayerMoving.playerWorldPosition + new Vector3(0, 0.75f + 0.5f, 0), viewDirection, out triesCollisionInfo))
                 {
                     intersectionAviable = true;
                     //Scene.physDebag = "\n" +
@@ -303,7 +303,7 @@ namespace WindowsFormsApp1
                     //   "V: " + triesCollisionInfo.V.ToString();
 
                     pointPosition = PlayerMoving.playerWorldPosition +
-                        new Vector3(0, 1.75f + 0.5f, 0) +
+                        new Vector3(0, 0.75f + 0.5f, 0) +
                         viewDirection *
                         triesCollisionInfo.Dist;
 
