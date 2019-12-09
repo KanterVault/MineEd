@@ -36,7 +36,7 @@ namespace WindowsFormsApp1
 
         public static Key[] keys = new Key[0];
 
-        public static int mouseLook = 1;
+        public static int mouseLook = 0;
 
         public static void CreateGuidDevices()
         {
@@ -86,7 +86,7 @@ namespace WindowsFormsApp1
                 if (keys[a] == Key.S) ydir -= 1;
                 if (keys[a] == Key.A) xdir -= 1;
                 if (keys[a] == Key.D) xdir += 1;
-                if (keys[a] == Key.Escape) if (mouseLook == 2) mouseLook++;
+                if (keys[a] == Key.Escape) if (mouseLook == 0) mouseLook++;
                 if (keys[a] == Key.Space) movePlayerDirections.Y = 1;
                 if (keys[a] == Key.LeftShift) movePlayerDirections.Y = -1;
                 if (keys[a] == Key.D1) Thread.Sleep(26);

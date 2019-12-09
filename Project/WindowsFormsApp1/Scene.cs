@@ -23,10 +23,12 @@ namespace WindowsFormsApp1
             SetStyle(ControlStyles.UserPaint, true);
             SetStyle(ControlStyles.Opaque, true);
 #if DEBUG
-            this.TopMost = true;
+            //this.TopMost = true;
+            this.Show();
             //this.WindowState = FormWindowState.Maximized;
 #else
             this.TopMost = false;
+            this.Show();
             this.WindowState = FormWindowState.Maximized;
 #endif
         }
@@ -65,7 +67,7 @@ namespace WindowsFormsApp1
             sb.Append("\n   z: " + PlayerMoving.playerWorldPosition.Z);
             sb.Append("\nCollision: " + physDebag);
             sb.Append("\nDeltatime: " + deltaTimerStr);
-            sb.Append("");
+            sb.Append("\nMouseLock: " + MouseAndKeyboardEvents.mouseLook);
 
             //label_Info.Text = sb.ToString();
             Program.message = sb.ToString();
@@ -84,29 +86,48 @@ namespace WindowsFormsApp1
             timerUpdate.Enabled = true;
         }
 
+        private int state1 = 0;
+        private int state2 = 0;
         private void SetCursoreVisible()
         {
-            if (MouseAndKeyboardEvents.mouseLook == 1 || MouseAndKeyboardEvents.mouseLook == 2)
+            if (MouseAndKeyboardEvents.mouseLook == 0)
+            {
                 Cursor.Position = PointToScreen(new Point(ClientSize.Width / 2, ClientSize.Height / 2));
-            if (MouseAndKeyboardEvents.mouseLook == 1)
-            {
-                Cursor.Hide();
-                MouseAndKeyboardEvents.mouseLook++;
+                if (state1 == 0)
+                {
+                    MouseAndKeyboardEvents.dvX.Acquire();
+                    MouseAndKeyboardEvents.dvY.Acquire();
+                    MouseAndKeyboardEvents.dvK.Acquire();
+                    Cursor.Hide();
+                    state2 = 0;
+                }
+                state1++;
             }
-            else if (MouseAndKeyboardEvents.mouseLook == 3)
+            else if (MouseAndKeyboardEvents.mouseLook == 1)
             {
-                Cursor.Show();
-                MouseAndKeyboardEvents.mouseLook = 0;
+                if (state2 == 0)
+                {
+                    MouseAndKeyboardEvents.dvX.Unacquire();
+                    MouseAndKeyboardEvents.dvY.Unacquire();
+                    MouseAndKeyboardEvents.dvK.Unacquire();
+                    Cursor.Show();
+                    state1 = 0;
+                }
+                state2++;
             }
         }
 
         private void Update(object sender, EventArgs e)
         {
-            if (MouseAndKeyboardEvents.mouseLook == 1 || MouseAndKeyboardEvents.mouseLook == 2)
+            if (MouseAndKeyboardEvents.mouseLook == 0)
             {
                 MouseAndKeyboardEvents.SetDirections();
                 MouseAndKeyboardEvents.KeysMouseEvents();
             }
+            if (MouseAndKeyboardEvents.mouseLook == 2) MouseAndKeyboardEvents.mouseLook = 0;
+
+            Program.windowXY[0] = this.Location.X;
+            Program.windowXY[1] = this.Location.Y;
 
             ViewInLogLabel();
             SetCursoreVisible();
@@ -123,14 +144,18 @@ namespace WindowsFormsApp1
 
         private void MouseDownScene(object sender, MouseEventArgs e)
         {
-            if (MouseAndKeyboardEvents.mouseLook == 0) MouseAndKeyboardEvents.mouseLook++;
-            if (e.Button == MouseButtons.Left)
+            if (MouseAndKeyboardEvents.mouseLook == 1) MouseAndKeyboardEvents.mouseLook++;
+            
+            if (MouseAndKeyboardEvents.mouseLook == 0)
             {
-                EditBlocksCollisions.mouseButtonDown = 2;
-            }
-            else if (e.Button == MouseButtons.Right)
-            {
-                EditBlocksCollisions.mouseButtonDown = 1;
+                if (e.Button == MouseButtons.Left)
+                {
+                    EditBlocksCollisions.mouseButtonDown = 2;
+                }
+                else if (e.Button == MouseButtons.Right)
+                {
+                    EditBlocksCollisions.mouseButtonDown = 1;
+                }
             }
         }
 
