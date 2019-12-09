@@ -37,6 +37,7 @@ namespace WindowsFormsApp1
 
         private static IntersectInformation hitInfo = new IntersectInformation();
         private static Vector3[] points = new Vector3[3];
+        private static Vector3 normalVector = new Vector3();
         public static void DeltaTimeFixedUpdate()
         {
             afterTicks = sw.ElapsedTicks;
