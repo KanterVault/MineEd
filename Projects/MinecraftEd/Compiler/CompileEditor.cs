@@ -61,10 +61,14 @@ namespace Compiler
                 cp.ReferencedAssemblies.Add("System.Windows.Forms.dll");
                 cp.ReferencedAssemblies.Add("System.Xml.dll");
 
+                //cp.LinkedResources.Add(");
+
                 cp.GenerateExecutable = true;
                 cp.GenerateInMemory = false;
                 cp.OutputAssembly = "test.exe";
                 cp.TreatWarningsAsErrors = false;
+                cp.WarningLevel = 4;
+                cp.CompilerOptions = "-platform:x86 /unsafe";
 
                 cr = cscp.CompileAssemblyFromSource(cp, code);
 
