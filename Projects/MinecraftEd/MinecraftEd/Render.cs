@@ -11,12 +11,10 @@ using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectDraw;
 using Microsoft.DirectX.DirectInput;
 
-namespace WindowsFormsApp1
+namespace MinecraftEd
 {
     public static class Render
     {
-        public static Form form = Scene.ActiveForm;
-
         public static Microsoft.DirectX.Direct3D.Device dx = null;
 
         public static PresentParameters pp = null;
@@ -42,7 +40,7 @@ namespace WindowsFormsApp1
             pp = new PresentParameters();
             pp.Windowed = true;
             pp.SwapEffect = SwapEffect.Copy;
-            pp.DeviceWindow = form;
+            pp.DeviceWindow = Program.scene;
             pp.BackBufferCount = 0;
             pp.BackBufferFormat = Format.A8R8G8B8;
             pp.PresentationInterval = PresentInterval.Default;
@@ -62,7 +60,7 @@ namespace WindowsFormsApp1
                 dx = new Microsoft.DirectX.Direct3D.Device(
                     0,
                     Microsoft.DirectX.Direct3D.DeviceType.Hardware,
-                    form,
+                    Program.scene,
                     Microsoft.DirectX.Direct3D.CreateFlags.HardwareVertexProcessing,
                     pp);
                 return true;
@@ -70,7 +68,7 @@ namespace WindowsFormsApp1
             catch (Exception ex)
             {
                 MessageBox.Show("Error: " + ex.ToString());
-                Scene.ERRORMESSAGE = ex.ToString();
+                SceneProgram.ERRORMESSAGE = ex.ToString();
                 return false;
             }
         }
@@ -99,7 +97,7 @@ namespace WindowsFormsApp1
                 catch (Exception ex)
                 {
                     Thread.Sleep(1000);
-                    Scene.ERRORMESSAGE = ex.ToString();
+                    SceneProgram.ERRORMESSAGE = ex.ToString();
 
                     //RenderLineScene.LoadTexture();
                 }

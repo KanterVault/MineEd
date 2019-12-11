@@ -11,7 +11,7 @@ using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectDraw;
 using Microsoft.DirectX.DirectInput;
 
-namespace WindowsFormsApp1
+namespace MinecraftEd
 {
     public static class MouseAndKeyboardEvents
     {

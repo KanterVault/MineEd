@@ -12,34 +12,17 @@ using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectDraw;
 using Microsoft.DirectX.DirectInput;
 
-namespace WindowsFormsApp1
+namespace MinecraftEd
 {
-    public partial class Scene : Form
+    public static class SceneProgram
     {
-        public Scene()
-        {
-            InitializeComponent();
-            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-            SetStyle(ControlStyles.UserPaint, true);
-            SetStyle(ControlStyles.Opaque, true);
-#if DEBUG
-            //this.TopMost = true;
-            this.Show();
-            //this.WindowState = FormWindowState.Maximized;
-#else
-            this.TopMost = false;
-            this.Show();
-            this.WindowState = FormWindowState.Maximized;
-#endif
-        }
-
         public static string ERRORMESSAGE = "";
         public static string physDebag = "";
         public static float deltaTimerStr = 0.0f;
 
-        public static PrivateFontCollection pfc = new PrivateFontCollection();
+        private static System.Windows.Forms.Timer timerUpdate = new System.Windows.Forms.Timer();
 
-        private void ViewInLogLabel()
+        private static void ViewInLogLabel()
         {
             StringBuilder sb = new StringBuilder();
 
@@ -77,8 +60,12 @@ namespace WindowsFormsApp1
             Program.message = sb.ToString();
         }
 
-        private void Start(object sender, EventArgs e)
+        public static void Start(object sender, EventArgs arg)
         {
+            timerUpdate.Tick += Update;
+            timerUpdate.Interval = 1;
+            timerUpdate.Enabled = true;
+
             MouseAndKeyboardEvents.CreateGuidDevices();
             MouseAndKeyboardEvents.SetCooperativeLevels();
             Render.CreateDeviceAndRenderthread();
@@ -90,13 +77,13 @@ namespace WindowsFormsApp1
             timerUpdate.Enabled = true;
         }
 
-        private int state1 = 0;
-        private int state2 = 0;
-        private void SetCursoreVisible()
+        private static int state1 = 0;
+        private static int state2 = 0;
+        private static void SetCursoreVisible()
         {
             if (MouseAndKeyboardEvents.mouseLook == 0)
             {
-                Cursor.Position = PointToScreen(new Point(ClientSize.Width / 2, ClientSize.Height / 2));
+                //Cursor.Position = PointToScreen(new Point(ClientSize.Width / 2, ClientSize.Height / 2));
                 if (state1 == 0)
                 {
                     MouseAndKeyboardEvents.dvX.Acquire();
@@ -121,7 +108,7 @@ namespace WindowsFormsApp1
             }
         }
 
-        private void Update(object sender, EventArgs e)
+        private static void Update(object sender, EventArgs e)
         {
             if (MouseAndKeyboardEvents.mouseLook == 0)
             {
@@ -134,24 +121,23 @@ namespace WindowsFormsApp1
             SetCursoreVisible();
         }
 
-        private void DisposeAll()
+        private static void DisposeAll()
         {
             timerUpdate.Enabled = false;
             Render.DisposeAll();
             MouseAndKeyboardEvents.DisposeAll();
             PlayerMoving.DisposeMoveTimer();
-            pfc.Dispose();
         }
 
-        private void Quit(object sender, FormClosingEventArgs e)
+        public static void Quit(object sender, FormClosingEventArgs e)
         {
             DisposeAll();
         }
 
-        private void MouseDownScene(object sender, MouseEventArgs e)
+        public static void MouseDownScene(object sender, MouseEventArgs e)
         {
             if (MouseAndKeyboardEvents.mouseLook == 1) MouseAndKeyboardEvents.mouseLook++;
-            
+
             if (MouseAndKeyboardEvents.mouseLook == 0)
             {
                 if (e.Button == MouseButtons.Left)
@@ -163,22 +149,6 @@ namespace WindowsFormsApp1
                     EditBlocksCollisions.mouseButtonDown = 1;
                 }
             }
-        }
-
-        private void KeyboardDown(object sender, KeyEventArgs e)
-        {
-
-        }
-
-        private void KeyboardPress(object sender, KeyPressEventArgs e)
-        {
-
-        }
-
-        private void выходToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            DisposeAll();
-            Application.Exit();
         }
     }
 }

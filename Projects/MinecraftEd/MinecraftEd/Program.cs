@@ -2,19 +2,20 @@
 using System.Windows.Forms;
 using System.Threading;
 
-namespace WindowsFormsApp1
+namespace MinecraftEd
 {
     static class Program
     {
         public static bool exit = false;
         public static string message = "";
+        public static Form scene = new Form();
 
         [STAThread]
         public static void Thr()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Scene());
+            Application.Run(scene);
             exit = true;
         }
 
@@ -26,6 +27,11 @@ namespace WindowsFormsApp1
 
             Thread th = new Thread(Thr);
             th.Start();
+
+            scene.Shown += SceneProgram.Start;
+            scene.FormClosing += SceneProgram.Quit;
+            scene.MouseDown += SceneProgram.MouseDownScene;
+
             while (true)
             {
                 if (exit) break;

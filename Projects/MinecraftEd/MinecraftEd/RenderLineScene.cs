@@ -11,12 +11,10 @@ using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectDraw;
 using Microsoft.DirectX.DirectInput;
 
-namespace WindowsFormsApp1
+namespace MinecraftEd
 {
     public static class RenderLineScene
     {
-        public static Form form = Scene.ActiveForm;
-
         public static Texture[] tex = null;
         public static Material mat = new Material();
 
@@ -32,7 +30,7 @@ namespace WindowsFormsApp1
         {
             Render.dx.Transform.Projection = Matrix.PerspectiveFovLH(
                 DegresToRadian(60.0f),                                              //fov
-                (float)form.ClientSize.Width / (float)form.ClientSize.Height,       //aspectRatio
+                (float)Program.scene.ClientSize.Width / (float)Program.scene.ClientSize.Height,       //aspectRatio
                 0.1f,                                                              //zNear
                 10000f);                                                             //zFar
 
@@ -138,7 +136,7 @@ namespace WindowsFormsApp1
                     tex[1],
                     new Rectangle(256 - 16, 0, 16, 16),
                     new Vector3(8, 8, 0),
-                    new Vector3(Scene.ActiveForm.ClientSize.Width / 2, Scene.ActiveForm.ClientSize.Height / 2, 0),
+                    new Vector3(Program.scene.ClientSize.Width / 2, Program.scene.ClientSize.Height / 2, 0),
                     Color.White.ToArgb());
 
                 //spCursore.Transform = Matrix.Transformation(

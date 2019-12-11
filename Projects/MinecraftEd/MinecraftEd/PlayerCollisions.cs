@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace WindowsFormsApp1
+namespace MinecraftEd
 {
     public static class PlayerCollisions
     {

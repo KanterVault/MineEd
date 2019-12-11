@@ -13,7 +13,7 @@ using Microsoft.DirectX.DirectDraw;
 using Microsoft.DirectX.DirectInput;
 using System.Diagnostics;
 
-namespace WindowsFormsApp1
+namespace MinecraftEd
 {
     public static class EditBlocksCollisions
     {
@@ -272,7 +272,7 @@ namespace WindowsFormsApp1
             {
                 boxSelectionPositionRound = new Vector3(0, -1000, 0);
                 pointPosition = new Vector3(0, -1000, 0);
-                Scene.physDebag = "message";
+                SceneProgram.physDebag = "message";
             }
             blockPasteOrBreakEvent = false;
             negativeInt = -1.0f;

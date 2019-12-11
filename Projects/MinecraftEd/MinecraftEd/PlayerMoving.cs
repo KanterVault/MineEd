@@ -13,7 +13,7 @@ using Microsoft.DirectX.DirectDraw;
 using Microsoft.DirectX.DirectInput;
 using System.Diagnostics;
 
-namespace WindowsFormsApp1
+namespace MinecraftEd
 {
     public static class PlayerMoving
     {
@@ -48,7 +48,7 @@ namespace WindowsFormsApp1
             afterTicks = sw.ElapsedTicks;
             deltatime = ((float)afterTicks - (float)beforeTicks) / 1000000.0f;
             //begincode:
-            Scene.deltaTimerStr = deltatime;
+            SceneProgram.deltaTimerStr = deltatime;
 
             // 1) Проверка на коллизию с треугольником.
             // 2) Если коллизия есть, то двигаемся только до точки соприкосновения.
@@ -64,7 +64,7 @@ namespace WindowsFormsApp1
                         (float)Math.Cos(DegresToRadian(round * (360 / 10)))),
                     out hitInfo))
                     {
-                        Scene.physDebag = hitInfo.Dist.ToString();
+                        SceneProgram.physDebag = hitInfo.Dist.ToString();
                         //Запись трёх точек треугольника на который указывает луч.
                         A = MeshBuilder.vt[hitInfo.FaceIndex * 3 + 0].Position;
                         B = MeshBuilder.vt[hitInfo.FaceIndex * 3 + 1].Position;
