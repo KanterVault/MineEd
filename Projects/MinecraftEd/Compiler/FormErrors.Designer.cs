@@ -35,6 +35,7 @@
             // 
             this.listBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listBox1.FormattingEnabled = true;
+            this.listBox1.HorizontalScrollbar = true;
             this.listBox1.Location = new System.Drawing.Point(0, 0);
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(267, 422);
@@ -47,7 +48,7 @@
             this.ClientSize = new System.Drawing.Size(267, 422);
             this.Controls.Add(this.listBox1);
             this.Name = "FormErrors";
-            this.Text = "Form_Errors";
+            this.Text = "Errors list";
             this.ResumeLayout(false);
 
         }

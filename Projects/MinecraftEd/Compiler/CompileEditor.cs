@@ -9,6 +9,7 @@ using System.CodeDom;
 using System.CodeDom.Compiler;
 using Microsoft.CSharp;
 using Microsoft.VisualBasic;
+using System.IO;
 
 namespace Compiler
 {
@@ -41,10 +42,29 @@ namespace Compiler
                 CompilerParameters cp = new CompilerParameters();
                 TempFileCollection tfc = new TempFileCollection(@"\Temp");
                 CompilerResults cr = new CompilerResults(tfc);
+                CodeNamespace cn = new CodeNamespace("WindowsFormsApp1");
+
+                cp.ReferencedAssemblies.Add("Microsoft.DirectX.AudioVideoPlayback.dll");
+                cp.ReferencedAssemblies.Add("Microsoft.DirectX.Diagnostics.dll");
+                cp.ReferencedAssemblies.Add("Microsoft.DirectX.Direct3D.dll");
+                cp.ReferencedAssemblies.Add("Microsoft.DirectX.Direct3DX.dll");
+                cp.ReferencedAssemblies.Add("Microsoft.DirectX.DirectDraw.dll");
+                cp.ReferencedAssemblies.Add("Microsoft.DirectX.DirectInput.dll");
+                cp.ReferencedAssemblies.Add("Microsoft.DirectX.DirectPlay.dll");
+                cp.ReferencedAssemblies.Add("Microsoft.DirectX.DirectSound.dll");
+                cp.ReferencedAssemblies.Add("Microsoft.DirectX.dll");
+                cp.ReferencedAssemblies.Add("Microsoft.VisualC.dll");
+                cp.ReferencedAssemblies.Add("System.dll");
+                cp.ReferencedAssemblies.Add("System.Data.dll");
+                cp.ReferencedAssemblies.Add("System.Deployment.dll");
+                cp.ReferencedAssemblies.Add("System.Drawing.dll");
+                cp.ReferencedAssemblies.Add("System.Windows.Forms.dll");
+                cp.ReferencedAssemblies.Add("System.Xml.dll");
 
                 cp.GenerateExecutable = true;
                 cp.GenerateInMemory = false;
                 cp.OutputAssembly = "test.exe";
+                cp.TreatWarningsAsErrors = false;
 
                 cr = cscp.CompileAssemblyFromSource(cp, code);
 
@@ -53,10 +73,16 @@ namespace Compiler
                     ce.listBox1.Items.Add("Error: " +
                         " (File Name) " + cr.Errors[a].FileName +
                         " (Error Message) " + cr.Errors[a].ErrorText +
+                        " (Error Assembly) " + cr.PathToAssembly +
                         " (Error Line) " + cr.Errors[a].ErrorNumber);
 
                 ce.Show();
             }
+        }
+
+        private void toolMenu_Quit_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
     }
 }

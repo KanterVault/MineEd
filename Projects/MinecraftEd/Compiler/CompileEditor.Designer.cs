@@ -50,9 +50,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.программаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolMenu_Compile = new System.Windows.Forms.ToolStripMenuItem();
-            this.выходToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.сохранитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.открытьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolMenu_Quit = new System.Windows.Forms.ToolStripMenuItem();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.editBlocksCollisions = new System.Windows.Forms.TabPage();
             this.panel1.SuspendLayout();
@@ -281,9 +279,7 @@
             // 
             this.программаToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolMenu_Compile,
-            this.сохранитьToolStripMenuItem,
-            this.открытьToolStripMenuItem,
-            this.выходToolStripMenuItem});
+            this.toolMenu_Quit});
             this.программаToolStripMenuItem.Name = "программаToolStripMenuItem";
             this.программаToolStripMenuItem.Size = new System.Drawing.Size(84, 20);
             this.программаToolStripMenuItem.Text = "Программа";
@@ -295,23 +291,12 @@
             this.toolMenu_Compile.Text = "Компилировать";
             this.toolMenu_Compile.Click += new System.EventHandler(this.toolMenu_Compile_Click);
             // 
-            // выходToolStripMenuItem
+            // toolMenu_Quit
             // 
-            this.выходToolStripMenuItem.Name = "выходToolStripMenuItem";
-            this.выходToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.выходToolStripMenuItem.Text = "Выход";
-            // 
-            // сохранитьToolStripMenuItem
-            // 
-            this.сохранитьToolStripMenuItem.Name = "сохранитьToolStripMenuItem";
-            this.сохранитьToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.сохранитьToolStripMenuItem.Text = "Сохранить";
-            // 
-            // открытьToolStripMenuItem
-            // 
-            this.открытьToolStripMenuItem.Name = "открытьToolStripMenuItem";
-            this.открытьToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.открытьToolStripMenuItem.Text = "Открыть";
+            this.toolMenu_Quit.Name = "toolMenu_Quit";
+            this.toolMenu_Quit.Size = new System.Drawing.Size(180, 22);
+            this.toolMenu_Quit.Text = "Выход";
+            this.toolMenu_Quit.Click += new System.EventHandler(this.toolMenu_Quit_Click);
             // 
             // textBox2
             // 
@@ -395,9 +380,7 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem программаToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolMenu_Compile;
-        private System.Windows.Forms.ToolStripMenuItem выходToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem сохранитьToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem открытьToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolMenu_Quit;
         private System.Windows.Forms.TabPage editBlocksCollisions;
         private System.Windows.Forms.TextBox textBox2;
     }
