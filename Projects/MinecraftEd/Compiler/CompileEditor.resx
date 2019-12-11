@@ -117,4 +117,1465 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="textBox1.Text" xml:space="preserve">
+    <value>using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Text;
+using System.Threading;
+using System.Windows.Forms;
+using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
+using Microsoft.DirectX.DirectDraw;
+using Microsoft.DirectX.DirectInput;
+
+namespace WindowsFormsApp1
+{
+    public static class ChankGenerator
+    {
+        public const int CHANK_MAX_UP_BLOCKS = 256;
+
+        public enum GeneratorKey
+        {
+            Flat = 0
+        };
+
+        public static ArrayList chanks = new ArrayList();
+        public static Vector2[][] chanksRootToPlayer = null;
+        public static int chankCount = 0;
+
+        public class Chank
+        {
+            public int chankID = 0;
+            public string chankName = "chank_0";
+            public Vector2 chankWorldPosition = new Vector2();
+            public byte[][][] chankArray = null;
+        }
+
+        public static float Distance(float a, float b) { return Math.Abs(b - a); }
+        public static float VectorDistance(Vector3 a, Vector3 b) {
+            return (float)Math.Sqrt((b.X - a.X) * (b.X - a.X) + (b.Y - a.Y) * (b.Y - a.Y) + (b.Z - a.Z) * (b.Z - a.Z)); }
+        public static void CreateChanksAroundArray()
+        {
+            for (int i = 0; i &lt; chanks.Count; i++)
+            {
+                //if (((Chank)chanks[i]).chankWorldPosition)
+            }
+            //PlayerMoving.playerWorldPosition;
+        }
+
+        public static void CreateChank(Vector2 chankWorldPosition, GeneratorKey generatorKey)
+        {
+            Chank chank = new Chank();
+            chank.chankID = chankCount; chankCount++;
+            chank.chankName = "chank_" + chank.chankID;
+            chank.chankWorldPosition = chankWorldPosition;
+
+            InitializeArray();
+            PasteBlocksToArray();
+            chanks.Add(chank);
+
+            MeshBuilder.CreateChankMesh(chank);
+            EditBlocksCollisions.InitializeCollisions();
+
+            //MessageBox.Show("Чанк создан!");
+
+            void PasteBlocksToArray()
+            {
+                if (generatorKey == GeneratorKey.Flat)
+                {
+                    for (int Y = 0; Y &lt; CHANK_MAX_UP_BLOCKS / 4; Y++) //to 64 plane
+                    {
+                        if (Y &lt; 64)
+                            for (int Z = 0; Z &lt; 16; Z++)
+                                for (int X = 0; X &lt; 16; X++) chank.chankArray[Y][Z][X] = (byte)4;
+                        if (Y &gt; 59 &amp;&amp; Y &lt; 63)
+                            for (int Z = 0; Z &lt; 16; Z++)
+                                for (int X = 0; X &lt; 16; X++) chank.chankArray[Y][Z][X] = (byte)3;
+                        if (Y == 63)
+                            for (int Z = 0; Z &lt; 16; Z++)
+                                for (int X = 0; X &lt; 16; X++) chank.chankArray[Y][Z][X] = (byte)2;
+                    }
+                }
+            }
+
+            void InitializeArray()
+            {
+                chank.chankArray = new byte[CHANK_MAX_UP_BLOCKS][][];
+                for (int Y = 0; Y &lt; CHANK_MAX_UP_BLOCKS; Y++)
+                {
+                    chank.chankArray[Y] = new byte[16][];
+                    for (int Z = 0; Z &lt; 16; Z++)
+                    {
+                        chank.chankArray[Y][Z] = new byte[16];
+                        for (int X = 0; X &lt; 16; X++) chank.chankArray[Y][Z][X] = (byte)0;
+                    }
+                }
+            }
+
+        }
+    }
+}
+</value>
+  </data>
+  <data name="textBox3.Text" xml:space="preserve">
+    <value>using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Text;
+using System.Threading;
+using System.Windows.Forms;
+using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
+using Microsoft.DirectX.DirectDraw;
+using Microsoft.DirectX.DirectInput;
+
+namespace WindowsFormsApp1
+{
+    public static class MeshBuilder
+    {
+        public const float MAP_WIDTH = 32.0f;
+        public const float MAP_HEIGHT = 16.0f;
+        public const float START_WIDTH = 1.0f / 32.0f;
+        public const float START_HEIGHT = 1.0f / 16.0f;
+
+        public static Color color = new Color();
+        public static CustomVertex.PositionColoredTextured[] vt = null;
+
+        public static void CreateChankMesh(ChankGenerator.Chank chankToView)
+        {
+            ArrayList vertexes = new ArrayList();
+
+            for (int y = 1; y &lt; ChankGenerator.CHANK_MAX_UP_BLOCKS - 1; y++)
+            {
+                for (int z = 1; z &lt; 15; z++)
+                {
+                    for (int x = 1; x &lt; 15; x++)
+                    {
+                        switch (chankToView.chankArray[y][z][x])
+                        {
+                            case 0:
+                                break;
+                            case 1:
+                                break;
+                            case 2: //grass
+                                if (chankToView.chankArray[y][z][x - 1] == (byte)0)
+                                {
+                                    color = Color.FromArgb(175, 175, 175);
+                                    CreateLeftFace(x, y, z, new Vector2(0, 3));
+                                }
+                                if (chankToView.chankArray[y][z][x + 1] == (byte)0)
+                                {
+                                    color = Color.FromArgb(175, 175, 175);
+                                    CreateRightFace(x, y, z, new Vector2(0, 3));
+                                }
+                                if (chankToView.chankArray[y][z - 1][x] == (byte)0)
+                                {
+                                    color = Color.FromArgb(175, 175, 175);
+                                    CreateFrontFace(x, y, z, new Vector2(0, 3));
+                                }
+                                if (chankToView.chankArray[y][z + 1][x] == (byte)0)
+                                {
+                                    color = Color.FromArgb(175, 175, 175);
+                                    CreateBackFace(x, y, z, new Vector2(0, 3));
+                                }
+                                if (chankToView.chankArray[y + 1][z][x] == (byte)0)
+                                {
+                                    color = Color.FromArgb(100, 255, 100);
+                                    CreateTopFace(x, y, z, new Vector2(2, 3));
+                                }
+                                if (chankToView.chankArray[y - 1][z][x] == (byte)0)
+                                {
+                                    color = Color.FromArgb(100, 100, 100);
+                                    CreateBottomFace(x, y, z, new Vector2(1, 5));
+                                }
+                                break;
+                            case 3: //dirt
+                                if (chankToView.chankArray[y][z][x - 1] == (byte)0)
+                                {
+                                    color = Color.FromArgb(175, 175, 175);
+                                    CreateLeftFace(x, y, z, new Vector2(1, 5));
+                                }
+                                if (chankToView.chankArray[y][z][x + 1] == (byte)0)
+                                {
+                                    color = Color.FromArgb(175, 175, 175);
+                                    CreateRightFace(x, y, z, new Vector2(1, 5));
+                                }
+                                if (chankToView.chankArray[y][z - 1][x] == (byte)0)
+                                {
+                                    color = Color.FromArgb(175, 175, 175);
+                                    CreateFrontFace(x, y, z, new Vector2(1, 5));
+                                }
+                                if (chankToView.chankArray[y][z + 1][x] == (byte)0)
+                                {
+                                    color = Color.FromArgb(175, 175, 175);
+                                    CreateBackFace(x, y, z, new Vector2(1, 5));
+                                }
+                                if (chankToView.chankArray[y + 1][z][x] == (byte)0)
+                                {
+                                    color = Color.FromArgb(255, 255, 255);
+                                    CreateTopFace(x, y, z, new Vector2(1, 5));
+                                }
+                                if (chankToView.chankArray[y - 1][z][x] == (byte)0)
+                                {
+                                    color = Color.FromArgb(100, 100, 100);
+                                    CreateBottomFace(x, y, z, new Vector2(1, 5));
+                                }
+                                break;
+                            case 4: //stone
+                                if (chankToView.chankArray[y][z][x - 1] == (byte)0)
+                                {
+                                    color = Color.FromArgb(175, 175, 175);
+                                    CreateLeftFace(x, y, z, new Vector2(18, 14));
+                                }
+                                if (chankToView.chankArray[y][z][x + 1] == (byte)0)
+                                {
+                                    color = Color.FromArgb(175, 175, 175);
+                                    CreateRightFace(x, y, z, new Vector2(18, 14));
+                                }
+                                if (chankToView.chankArray[y][z - 1][x] == (byte)0)
+                                {
+                                    color = Color.FromArgb(175, 175, 175);
+                                    CreateFrontFace(x, y, z, new Vector2(18, 14));
+                                }
+                                if (chankToView.chankArray[y][z + 1][x] == (byte)0)
+                                {
+                                    color = Color.FromArgb(175, 175, 175);
+                                    CreateBackFace(x, y, z, new Vector2(18, 14));
+                                }
+                                if (chankToView.chankArray[y + 1][z][x] == (byte)0)
+                                {
+                                    color = Color.FromArgb(255, 255, 255);
+                                    CreateTopFace(x, y, z, new Vector2(18, 14));
+                                }
+                                if (chankToView.chankArray[y - 1][z][x] == (byte)0)
+                                {
+                                    color = Color.FromArgb(100, 100, 100);
+                                    CreateBottomFace(x, y, z, new Vector2(18, 14));
+                                }
+                                break;
+                        }
+                    }
+                }
+            }
+
+
+            //void CreateBlockMesh(int blockX, int blockY, int blockZ, Vector2 mapPosition)
+            //{
+            //    color = Color.FromArgb(200, 200, 200);
+            //    CreateFrontFace(blockX, blockY, blockZ, mapPosition);
+            //    color = Color.FromArgb(200, 200, 200);
+            //    CreateBackFace(blockX, blockY, blockZ, mapPosition);
+            //    color = Color.FromArgb(255, 255, 255);
+            //    CreateTopFace(blockX, blockY, blockZ, mapPosition);
+            //    color = Color.FromArgb(100, 100, 100);
+            //    CreateBottomFace(blockX, blockY, blockZ, mapPosition);
+            //    color = Color.FromArgb(200, 200, 200);
+            //    CreateLeftFace(blockX, blockY, blockZ, mapPosition);
+            //    color = Color.FromArgb(200, 200, 200);
+            //    CreateRightFace(blockX, blockY, blockZ, mapPosition);
+            //}
+
+            void CreateFrontFace(int blockX, int blockY, int blockZ, Vector2 mapPosition)
+            {
+                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, -0.5f + blockY, -0.5f + blockZ),
+                    color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, 0.5f + blockY, -0.5f + blockZ),
+                    color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, 0.5f + blockY, -0.5f + blockZ),
+                    color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+
+                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, -0.5f + blockY, -0.5f + blockZ),
+                    color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, 0.5f + blockY, -0.5f + blockZ),
+                    color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, -0.5f + blockY, -0.5f + blockZ),
+                    color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+            }
+            void CreateBackFace(int blockX, int blockY, int blockZ, Vector2 mapPosition)
+            {
+                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, -0.5f + blockY, 0.5f + blockZ),
+                    color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, 0.5f + blockY, 0.5f + blockZ),
+                    color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, 0.5f + blockY, 0.5f + blockZ),
+                    color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+
+                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, -0.5f + blockY, 0.5f + blockZ),
+                    color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, 0.5f + blockY, 0.5f + blockZ),
+                    color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, -0.5f + blockY, 0.5f + blockZ),
+                    color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+            }
+            void CreateTopFace(int blockX, int blockY, int blockZ, Vector2 mapPosition)
+            {
+                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, 0.5f + blockY, -0.5f + blockZ),
+                    color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, 0.5f + blockY, 0.5f + blockZ),
+                    color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, 0.5f + blockY, 0.5f + blockZ),
+                    color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+
+                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, 0.5f + blockY, -0.5f + blockZ),
+                    color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, 0.5f + blockY, 0.5f + blockZ),
+                    color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, 0.5f + blockY, -0.5f + blockZ),
+                    color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+            }
+            void CreateBottomFace(int blockX, int blockY, int blockZ, Vector2 mapPosition)
+            {
+                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, -0.5f + blockY, 0.5f + blockZ),
+                    color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, -0.5f + blockY, -0.5f + blockZ),
+                    color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, -0.5f + blockY, -0.5f + blockZ),
+                    color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+
+                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, -0.5f + blockY, 0.5f + blockZ),
+                    color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, -0.5f + blockY, -0.5f + blockZ),
+                    color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, -0.5f + blockY, 0.5f + blockZ),
+                    color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+            }
+            void CreateLeftFace(int blockX, int blockY, int blockZ, Vector2 mapPosition)
+            {
+                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, -0.5f + blockY, 0.5f + blockZ),
+                    color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, 0.5f + blockY, 0.5f + blockZ),
+                    color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, 0.5f + blockY, -0.5f + blockZ),
+                    color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+
+                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, -0.5f + blockY, 0.5f + blockZ),
+                    color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, 0.5f + blockY, -0.5f + blockZ),
+                    color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, -0.5f + blockY, -0.5f + blockZ),
+                    color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+            }
+            void CreateRightFace(int blockX, int blockY, int blockZ, Vector2 mapPosition)
+            {
+                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, -0.5f + blockY, -0.5f + blockZ),
+                    color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, 0.5f + blockY, -0.5f + blockZ),
+                    color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, 0.5f + blockY, 0.5f + blockZ),
+                    color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+
+                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, -0.5f + blockY, -0.5f + blockZ),
+                    color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, 0.5f + blockY, 0.5f + blockZ),
+                    color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, -0.5f + blockY, 0.5f + blockZ),
+                    color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+            }
+
+            vt = new CustomVertex.PositionColoredTextured[vertexes.Count];
+            for (int i = 0; i &lt; vt.Length; i++) vt[i] = (CustomVertex.PositionColoredTextured)vertexes[i];
+        }
+    }
+}</value>
+  </data>
+  <data name="textBox4.Text" xml:space="preserve">
+    <value>using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Text;
+using System.Threading;
+using System.Windows.Forms;
+using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
+using Microsoft.DirectX.DirectDraw;
+using Microsoft.DirectX.DirectInput;
+
+namespace WindowsFormsApp1
+{
+    public static class MouseAndKeyboardEvents
+    {
+        public static Form handleForm = null;
+
+        public static bool live = true;
+
+        public static Microsoft.DirectX.DirectInput.Device dvX = null;
+        public static Microsoft.DirectX.DirectInput.Device dvY = null;
+        public static Microsoft.DirectX.DirectInput.Device dvK = null;
+
+        public static float xrot = 0.0f;
+        public static float yrot = 180.0f;
+        public static float mainXrot = 0.0f;
+        public static float mainYrot = 0.0f;
+
+        public static int xdir = 0;
+        public static int ydir = 0;
+
+        public static Vector3 movePlayerDirections = new Vector3();
+        public static float angleToPlayerDirection = 0.0f;
+
+        public static Key[] keys = new Key[0];
+
+        public static int mouseLook = 0;
+
+        public static void CreateGuidDevices()
+        {
+            dvX = new Microsoft.DirectX.DirectInput.Device(SystemGuid.Mouse);
+            dvY = new Microsoft.DirectX.DirectInput.Device(SystemGuid.Mouse);
+            dvK = new Microsoft.DirectX.DirectInput.Device(SystemGuid.Keyboard);
+        }
+
+        public static void SetCooperativeLevels()
+        {
+            dvX.SetCooperativeLevel(
+                handleForm,
+                Microsoft.DirectX.DirectInput.CooperativeLevelFlags.Background |
+                Microsoft.DirectX.DirectInput.CooperativeLevelFlags.NonExclusive);
+            dvX.Acquire();
+
+            dvY.SetCooperativeLevel(
+                handleForm,
+                Microsoft.DirectX.DirectInput.CooperativeLevelFlags.Background |
+                Microsoft.DirectX.DirectInput.CooperativeLevelFlags.NonExclusive);
+            dvY.Acquire();
+
+            dvK.SetCooperativeLevel(
+                handleForm,
+                Microsoft.DirectX.DirectInput.CooperativeLevelFlags.Background |
+                Microsoft.DirectX.DirectInput.CooperativeLevelFlags.NonExclusive);
+            dvK.Acquire();
+        }
+
+        public static void KeysMouseEvents()
+        {
+            xrot += (float)dvX.CurrentMouseState.X / 3.0f;
+            yrot -= (float)dvY.CurrentMouseState.Y / 3.0f;
+
+            //Clamping 180.0f = 0.0f (y axis)
+            yrot = yrot &lt; 90.0f ? 90.0f : (yrot &gt; 270.0f ? 270.0f : (yrot - (float)dvY.CurrentMouseState.Y / 4.0f));
+
+            mainXrot = Lerp(mainXrot, xrot, 3f);
+            mainYrot = Lerp(mainYrot, yrot - 180.0f, 3f);
+
+            keys = dvK.GetPressedKeys();
+            xdir = 0;
+            ydir = 0;
+
+            for (int a = 0; a &lt; keys.Length; a++)
+            {
+                if (keys[a] == Key.W) ydir += 1;
+                if (keys[a] == Key.S) ydir -= 1;
+                if (keys[a] == Key.A) xdir -= 1;
+                if (keys[a] == Key.D) xdir += 1;
+                if (keys[a] == Key.Escape) if (mouseLook == 0) mouseLook++;
+                if (keys[a] == Key.Space) movePlayerDirections.Y = 1;
+                if (keys[a] == Key.LeftShift) movePlayerDirections.Y = -1;
+                if (keys[a] == Key.D1) Thread.Sleep(26);
+                if (keys[a] == Key.D2) Thread.Sleep(50);
+                if (keys[a] == Key.D3) Thread.Sleep(100);
+                if (keys[a] == Key.D4) Thread.Sleep(250);
+                if (keys[a] == Key.D5) Thread.Sleep(600);
+
+                //if (keys[a] == Key.R) PlayerMoving.playerWorldPosition = new Vector3(8, 256, 8);
+                //if (keys[a] == Key.Space) PlayerMoving.spaceButton = true;
+            }
+        }
+
+        public static void SetDirections()
+        {
+            if (xdir == 0 &amp;&amp; ydir == 1) angleToPlayerDirection = 0.0f;
+            if (xdir == 0 &amp;&amp; ydir == -1) angleToPlayerDirection = 180.0f;
+            if (xdir == 1 &amp;&amp; ydir == 0) angleToPlayerDirection = 90.0f;
+            if (xdir == -1 &amp;&amp; ydir == 0) angleToPlayerDirection = -90.0f;
+
+            if (xdir == -1 &amp;&amp; ydir == 1) angleToPlayerDirection = -45.0f;
+            if (xdir == 1 &amp;&amp; ydir == -1) angleToPlayerDirection = 180.0f - 45.0f;
+            if (xdir == 1 &amp;&amp; ydir == 1) angleToPlayerDirection = 45.0f;
+            if (xdir == -1 &amp;&amp; ydir == -1) angleToPlayerDirection = 180.0f + 45.0f;
+
+            if (xdir != 0 || ydir != 0 || movePlayerDirections.Y != 0) PlayerMoving.PlayerMoveToDirection(movePlayerDirections);
+            if (xdir == 0 &amp;&amp; ydir == 0)
+            {
+                movePlayerDirections.Z = 0;
+                movePlayerDirections.X = 0;
+            }
+            else
+            {
+                movePlayerDirections.Z = (float)Math.Cos(DegresToRadian(angleToPlayerDirection + mainXrot));
+                movePlayerDirections.X = (float)Math.Sin(DegresToRadian(angleToPlayerDirection + mainXrot));
+            }
+            
+            movePlayerDirections.Y = 0;
+        }
+
+        public static float Lerp(float a, float b, float t) { return a + (b - a) / t; }
+        public static float DegresToRadian(float degres) { return (float)Math.PI / 180.0f * degres; }
+
+        public static void DisposeAll()
+        {
+            live = false;
+            Thread.Sleep(500);
+            try { dvX.Unacquire(); } catch { }
+            try { dvY.Unacquire(); } catch { }
+            try { dvK.Unacquire(); } catch { }
+            dvX.Dispose();
+            dvY.Dispose();
+            dvK.Dispose();
+        }
+    }
+}
+</value>
+  </data>
+  <data name="textBox6.Text" xml:space="preserve">
+    <value>using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Timers;
+using System.Drawing;
+using System.Text;
+using System.Threading;
+using System.Windows.Forms;
+using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
+using Microsoft.DirectX.DirectDraw;
+using Microsoft.DirectX.DirectInput;
+using System.Diagnostics;
+
+namespace WindowsFormsApp1
+{
+    public static class PlayerMoving
+    {
+        public const float PLAYER_COLLISION_RADIUS = 0.3f;
+
+        public static Vector3 playerWorldPosition = new Vector3(8, 64, 8);
+        public static Vector3 directionMove = new Vector3();
+        public static bool onMove = false;
+        public static float speedMove = 1.0f;
+        private static Stopwatch sw;
+
+        public static void PlayerMoveToDirection(Vector3 direction)
+        {
+            directionMove = direction;
+            onMove = true;
+        }
+
+        private static long beforeTicks = 0;
+        private static long afterTicks = 0;
+        private static float deltatime = 0.0f;
+
+        private static IntersectInformation hitInfo = new IntersectInformation();
+        
+        private static Vector3 A = new Vector3();
+        private static Vector3 B = new Vector3();
+        private static Vector3 C = new Vector3();
+        
+        private static Vector3 normalVector = new Vector3();
+        private static Vector3 currentPosition = new Vector3();
+        public static void DeltaTimeFixedUpdate()
+        {
+            afterTicks = sw.ElapsedTicks;
+            deltatime = ((float)afterTicks - (float)beforeTicks) / 1000000.0f;
+            //begincode:
+            Scene.deltaTimerStr = deltatime;
+
+            // 1) Проверка на коллизию с треугольником.
+            // 2) Если коллизия есть, то двигаемся только до точки соприкосновения.
+            if (onMove)
+            {
+                for (int round = 0; round &lt; 10; round++)
+                {
+                    if (EditBlocksCollisions.chankMesh.Intersect(
+                    playerWorldPosition - new Vector3(0, -0.5f, 0),
+                    new Vector3(
+                        (float)Math.Sin(DegresToRadian(round * (360 / 10))),
+                        0,
+                        (float)Math.Cos(DegresToRadian(round * (360 / 10)))),
+                    out hitInfo))
+                    {
+                        Scene.physDebag = hitInfo.Dist.ToString();
+                        //Запись трёх точек треугольника на который указывает луч.
+                        A = MeshBuilder.vt[hitInfo.FaceIndex * 3 + 0].Position;
+                        B = MeshBuilder.vt[hitInfo.FaceIndex * 3 + 1].Position;
+                        C = MeshBuilder.vt[hitInfo.FaceIndex * 3 + 2].Position;
+
+                        //Вычисление вектора нормали по формуле нормали для плоскости через три точки.
+                        normalVector = new Vector3(
+                            (B.Y - A.Y) * (C.Z - A.Z) - (B.Z - A.Z) * (C.Y - A.Y),
+                            (B.X - A.X) * (C.Z - A.Z) - (B.Z - A.Z) * (C.X - A.X),
+                            (B.X - A.X) * (C.Y - A.Y) - (B.Y - A.Y) * (C.X - A.X));
+                        normalVector.Normalize();
+
+                        currentPosition = playerWorldPosition + directionMove * speedMove * deltatime;
+                        if (hitInfo.Dist &lt; 0.3f) currentPosition += normalVector * 1000.0f;
+                    }
+                    currentPosition = playerWorldPosition + directionMove * speedMove * deltatime;
+                }
+                //playerWorldPosition += directionMove * speedMove * deltatime;
+                playerWorldPosition = currentPosition;
+                onMove = false;
+            }
+
+            //edncode
+            beforeTicks = sw.ElapsedTicks;
+        }
+
+        public static float DegresToRadian(float degres) { return (float)Math.PI / 180.0f * degres; }
+
+        public static void InitializeMoveTimer()
+        {
+            sw = new Stopwatch();
+            sw.Start();
+            beforeTicks = sw.ElapsedTicks;
+            afterTicks = sw.ElapsedTicks;
+            sw.Start();
+        }
+
+        public static void DisposeMoveTimer()
+        {
+            sw.Stop();
+        }
+    }
+}
+
+//Scene.deltaTimerStr = deltatime;
+
+//Vector3 copyPlayerWorldPosition = playerWorldPosition;
+
+//if (onMove)
+//{
+//    float distanceMove = Vector3.Length(directionMove * deltatime);
+//    IntersectInformation collisionInfo = new IntersectInformation();
+
+//    for (int d = 0; d &lt; 360 / 45; d++)
+//    {
+//        for (int i = 0; i &lt; 100; i++)
+//        {
+//            Vector3 rayDirection = new Vector3(
+//                (float)Math.Sin(DegresToRadian(d * 45)),
+//                0,
+//                (float)Math.Sin(DegresToRadian(d * 45)));
+
+//            if (EditBlocksCollisions.chankMesh.Intersect(
+//                copyPlayerWorldPosition + new Vector3(0, 0.5f, 0) - rayDirection * PLAYER_COLLISION_RADIUS,
+//                rayDirection * 5.0f,
+//                out collisionInfo) &amp;&amp; collisionInfo.Dist &lt; 0.06225f)
+//            {
+//                Vector3 A = MeshBuilder.vt[collisionInfo.FaceIndex * 3].Position;
+//                Vector3 B = MeshBuilder.vt[collisionInfo.FaceIndex * 3 + 1].Position;
+//                Vector3 C = MeshBuilder.vt[collisionInfo.FaceIndex * 3 + 2].Position;
+//                //Вычисление нормали треугольника по формуле.
+//                Vector3 normalTriangle = new Vector3(
+//                    (B.Y - A.Y) * (C.Z - A.Z) - (B.Z - A.Z) * (C.Y - A.Y),
+//                    (B.X - A.X) * (C.Z - A.Z) - (B.Z - A.Z) * (C.X - A.X),
+//                    (B.X - A.X) * (C.Y - A.Y) - (B.Y - A.Y) * (C.X - A.X));
+//                normalTriangle.Normalize();
+
+//                directionMove.Add(normalTriangle * 0.01f);
+//            }
+//            onMove = false;
+//            copyPlayerWorldPosition.Add(new Vector3(
+//                directionMove.X / 100 / 8,
+//                directionMove.Y / 100 / 8,
+//                directionMove.Z / 100 / 8) * deltatime);
+//        }
+//    }
+//}
+//playerWorldPosition = copyPlayerWorldPosition;
+</value>
+  </data>
+  <data name="textBox7.Text" xml:space="preserve">
+    <value>using System;
+using System.Windows.Forms;
+using System.Threading;
+
+namespace WindowsFormsApp1
+{
+    static class Program
+    {
+        public static bool exit = false;
+        public static string message = "";
+
+        [STAThread]
+        public static void Thr()
+        {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new Scene());
+            exit = true;
+        }
+
+        static void Main()
+        {
+            Console.SetWindowSize(1, 1);
+            Console.SetBufferSize(40, 20);
+            Console.SetWindowSize(40, 20);
+
+            Thread th = new Thread(Thr);
+            th.Start();
+            while (true)
+            {
+                if (exit) break;
+                Thread.Sleep(10);
+                Console.Clear();
+                try { Console.Write(message); } catch { }
+            }
+            th.Abort();
+        }
+    }
+}
+</value>
+  </data>
+  <data name="textBox8.Text" xml:space="preserve">
+    <value>using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Text;
+using System.Threading;
+using System.Windows.Forms;
+using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
+using Microsoft.DirectX.DirectDraw;
+using Microsoft.DirectX.DirectInput;
+
+namespace WindowsFormsApp1
+{
+    public static class RenderLineScene
+    {
+        public static Form form = Scene.ActiveForm;
+
+        public static Texture[] tex = null;
+        public static Material mat = new Material();
+
+        public static Vector3 translationsBefore = new Vector3();
+
+        public static void SetUpMaterial()
+        {
+            mat.Diffuse = Color.Green;
+            mat.Ambient = Color.FromArgb(255, 255, 255);
+        }
+
+        public static void SetProjectionsAndCameras()
+        {
+            Render.dx.Transform.Projection = Matrix.PerspectiveFovLH(
+                DegresToRadian(60.0f),                                              //fov
+                (float)form.ClientSize.Width / (float)form.ClientSize.Height,       //aspectRatio
+                0.1f,                                                              //zNear
+                10000f);                                                             //zFar
+
+            translationsBefore = Vector3.Lerp(
+                translationsBefore,
+                -PlayerMoving.playerWorldPosition + new Vector3(0, -0.75f - 0.5f, 0),
+                0.2f);
+
+            Render.dx.Transform.View =
+                Matrix.Translation(translationsBefore) *
+                Matrix.RotationY(DegresToRadian(-MouseAndKeyboardEvents.mainXrot)) *
+                Matrix.RotationX(DegresToRadian(MouseAndKeyboardEvents.mainYrot));
+        }
+
+        public static float DegresToRadian(float degres) { return (float)Math.PI / 180.0f * degres; }
+
+        public static void ModelRotate(float x, float y, float z, float Yaw, float Pitch, float Roll)
+        {
+            Render.dx.Transform.World = Matrix.Transformation(
+                new Vector3(),
+                Quaternion.Identity,
+                new Vector3(1, 1, 1),
+                new Vector3(),
+                Quaternion.RotationYawPitchRoll(
+                    MouseAndKeyboardEvents.DegresToRadian(Yaw),
+                    MouseAndKeyboardEvents.DegresToRadian(Pitch),
+                    MouseAndKeyboardEvents.DegresToRadian(Roll)),
+                    new Vector3(x, y, z));
+        }
+
+        public static void LoadTexture()
+        {
+            tex = new Texture[2];
+                
+            tex[0] = TextureLoader.FromFile(
+                Render.dx,
+                @"Res\debug.stitched_terrain.png");
+            tex[0].PreLoad();
+
+            tex[1] = TextureLoader.FromFile(
+                Render.dx,
+                @"Res\minecraft\textures\gui\widgets.png");
+            tex[1].PreLoad();
+
+            //tex[1] = TextureLoader.FromFile(
+            //    Render.dx,
+            //    @"Res\minecraft\textures\gui\widgets.png",
+            //    256,
+            //    256,
+            //    0,
+            //    Usage.None,
+            //    Format.A8R8G8B8,
+            //    Pool.Managed,
+            //    Filter.Point,
+            //    Filter.Point,
+            //    Color.White.ToArgb());
+            //tex[1].PreLoad();
+
+            if (tex[1] == null) MessageBox.Show("Fack!"); 
+        }
+
+        public static void DrawSprite()
+        {
+            using (Sprite sp = new Sprite(Render.dx))
+            {
+                sp.Begin(SpriteFlags.AlphaBlend | SpriteFlags.SortTexture);
+
+                sp.Transform = Matrix.Transformation(
+                new Vector3(),
+                Quaternion.Identity,
+                new Vector3(2, 2, 2),
+                new Vector3(),
+                Quaternion.RotationYawPitchRoll(
+                    MouseAndKeyboardEvents.DegresToRadian(0),
+                    MouseAndKeyboardEvents.DegresToRadian(0),
+                    MouseAndKeyboardEvents.DegresToRadian(0)),
+                    new Vector3(0, 0, 0));
+
+                sp.Draw(tex[0], new Vector3(), new Vector3(), Color.White.ToArgb());
+
+                sp.End();
+            }
+        }
+
+        public static void DrawUISprite()
+        {
+            using (Sprite spCursore = new Sprite(Render.dx))
+            {
+                spCursore.Begin(SpriteFlags.AlphaBlend | SpriteFlags.SortTexture);
+
+                spCursore.Transform = Matrix.Transformation(
+                    new Vector3(),
+                    Quaternion.Identity,
+                    new Vector3(1, 1, 1),
+                    new Vector3(),
+                    Quaternion.RotationYawPitchRoll(
+                        MouseAndKeyboardEvents.DegresToRadian(0),
+                        MouseAndKeyboardEvents.DegresToRadian(0),
+                        MouseAndKeyboardEvents.DegresToRadian(0)),
+                    new Vector3(0, 0, 0));
+
+                spCursore.Draw(
+                    tex[1],
+                    new Rectangle(256 - 16, 0, 16, 16),
+                    new Vector3(8, 8, 0),
+                    new Vector3(Scene.ActiveForm.ClientSize.Width / 2, Scene.ActiveForm.ClientSize.Height / 2, 0),
+                    Color.White.ToArgb());
+
+                //spCursore.Transform = Matrix.Transformation(
+                //    new Vector3(),
+                //    Quaternion.Identity,
+                //    new Vector3(2, 2, 2),
+                //    new Vector3(),
+                //    Quaternion.RotationYawPitchRoll(
+                //        MouseAndKeyboardEvents.DegresToRadian(0),
+                //        MouseAndKeyboardEvents.DegresToRadian(0),
+                //        MouseAndKeyboardEvents.DegresToRadian(0)),
+                //    new Vector3(0, 0, 0));
+
+                //spCursore.Draw(
+                //    tex[1],
+                //    new Rectangle(0, 0, 256, 256),
+                //    new Vector3(0, 0, 0),
+                //    new Vector3(0, 0, 0),
+                //    Color.White.ToArgb());
+
+                spCursore.End();
+            }
+        }
+
+        public static Mesh pointCollision = Mesh.Sphere(Render.dx, 0.1f, 10, 10);
+        public static Mesh boxSelect = Mesh.Box(Render.dx, 1.005f, 1.005f, 1.005f);
+        public static void RenderScene()
+        {
+            Render.SetRenderStateParametrs();
+            SetProjectionsAndCameras();
+
+            DrawUISprite();
+
+            Render.dx.Material = mat;
+            Render.dx.SetTexture(0, tex[0]);
+
+
+            for (int z = 0; z &lt; 10; z++)
+            {
+                for (int x = 0; x &lt; 10; x++)
+                {
+                    ModelRotate(x * 14, 0, z * 14, 0, 0, 0);
+                    EditBlocksCollisions.chankMesh.DrawSubset(0);
+                }
+            }
+
+            //ModelRotate(0, 0, 0, 0, 0, 0);
+            //EditBlocksCollisions.testMesh.DrawSubset(0);
+
+            //ModelRotate(
+            //    EditBlocksCollisions.pointPosition.X,
+            //    EditBlocksCollisions.pointPosition.Y,
+            //    EditBlocksCollisions.pointPosition.Z,
+            //    0, 0, 0);
+            //pointCollision.DrawSubset(0);
+
+
+            Render.dx.RenderState.FillMode = FillMode.WireFrame;
+            Render.dx.RenderState.Lighting = true;
+            ModelRotate(
+                EditBlocksCollisions.boxSelectionPositionRound.X,
+                EditBlocksCollisions.boxSelectionPositionRound.Y,
+                EditBlocksCollisions.boxSelectionPositionRound.Z,
+                0, 0, 0);
+            boxSelect.DrawSubset(0);
+            Render.dx.RenderState.Lighting = false;
+            Render.dx.RenderState.FillMode = FillMode.Solid;
+
+            EditBlocksCollisions.CheckCameraRayCollision();
+            PlayerMoving.DeltaTimeFixedUpdate();
+        }
+
+        public static void DisposeAllTextures()
+        {
+            for (int i = 0; i &lt; tex.Length; i++)
+            {
+                try { tex[i].Dispose(); } catch { }
+            }
+        }
+    }
+}
+</value>
+  </data>
+  <data name="textBox9.Text" xml:space="preserve">
+    <value>using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Text;
+using System.Threading;
+using System.Windows.Forms;
+using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
+using Microsoft.DirectX.DirectDraw;
+using Microsoft.DirectX.DirectInput;
+
+namespace WindowsFormsApp1
+{
+    public static class Render
+    {
+        public static Form form = Scene.ActiveForm;
+
+        public static Microsoft.DirectX.Direct3D.Device dx = null;
+
+        public static PresentParameters pp = null;
+
+        public static bool live = true;
+        public static Thread renderThread = null;
+
+        public static void SetUpPresentParametrs()
+        {
+            //pp = new PresentParameters();
+            //pp.Windowed = true;
+            //pp.SwapEffect = SwapEffect.Copy;
+            //pp.DeviceWindow = form;
+            //pp.BackBufferCount = 1;
+            //pp.BackBufferFormat = Format.A8R8G8B8;
+            //pp.PresentationInterval = PresentInterval.Default;
+            //pp.PresentFlag = PresentFlag.None;
+            //pp.AutoDepthStencilFormat = DepthFormat.D24S8;
+            //pp.MultiSample = MultiSampleType.None;
+            //pp.MultiSampleQuality = 0;
+            //pp.EnableAutoDepthStencil = true;
+
+            pp = new PresentParameters();
+            pp.Windowed = true;
+            pp.SwapEffect = SwapEffect.Copy;
+            pp.DeviceWindow = form;
+            pp.BackBufferCount = 0;
+            pp.BackBufferFormat = Format.A8R8G8B8;
+            pp.PresentationInterval = PresentInterval.Default;
+            pp.PresentFlag = PresentFlag.None;
+            pp.AutoDepthStencilFormat = DepthFormat.D24S8;
+            pp.MultiSample = MultiSampleType.None; //MultiSampleType.FourSamples; 
+            pp.MultiSampleQuality = 0;
+            pp.EnableAutoDepthStencil = true;
+        }
+
+        public static bool CreateDirectXDevice()
+        {
+            Thread.Sleep(1000);
+            try
+            {
+                live = true;
+                dx = new Microsoft.DirectX.Direct3D.Device(
+                    0,
+                    Microsoft.DirectX.Direct3D.DeviceType.Hardware,
+                    form,
+                    Microsoft.DirectX.Direct3D.CreateFlags.HardwareVertexProcessing,
+                    pp);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.ToString());
+                Scene.ERRORMESSAGE = ex.ToString();
+                return false;
+            }
+        }
+
+        public static void RenderThread()
+        {
+            RenderLineScene.LoadTexture();
+            ChankGenerator.CreateChank(new Vector2(), ChankGenerator.GeneratorKey.Flat);
+            RenderLineScene.SetUpMaterial();
+
+            while (live)
+            {
+                try
+                {
+                    if (MouseAndKeyboardEvents.mouseLook == 0)
+                    {
+                        dx.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Aqua, 1.0f, 0);
+                        dx.BeginScene();
+
+                        RenderLineScene.RenderScene();
+
+                        dx.EndScene();
+                        dx.Present();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Thread.Sleep(1000);
+                    Scene.ERRORMESSAGE = ex.ToString();
+
+                    //RenderLineScene.LoadTexture();
+                }
+            }
+        }
+
+        public static void SetRenderStateParametrs()
+        {
+            dx.RenderState.Lighting = false;
+            dx.RenderState.FillMode = FillMode.Solid;
+            dx.RenderState.ZBufferEnable = true;
+            dx.RenderState.CullMode = Cull.CounterClockwise;
+            Render.dx.VertexFormat = CustomVertex.PositionColoredTextured.Format;
+
+            dx.Lights[0].Diffuse = Color.White;
+            dx.Lights[0].Type = LightType.Directional;
+            dx.Lights[0].Direction = new Vector3(0, -1, 0);
+            dx.Lights[0].Position = new Vector3();
+            dx.Lights[0].Enabled = false;
+            dx.Lights[0].Update();
+
+            dx.RenderState.AlphaBlendEnable = true;
+            dx.RenderState.AlphaBlendOperation = BlendOperation.Add;
+            dx.RenderState.SourceBlend = Blend.SourceAlpha;
+            dx.RenderState.DestinationBlend = Blend.InvSourceAlpha;
+            //dx.RenderState.BlendFactor = Color.Azure;
+
+            dx.SamplerState[0].MagFilter = TextureFilter.Point;
+            dx.SamplerState[0].MipFilter = TextureFilter.Point;
+            dx.SamplerState[0].MinFilter = TextureFilter.Point;
+        }
+
+        public static void StartRenderThread()
+        {
+            live = true;
+            renderThread = new Thread(RenderThread);
+            renderThread.Start();
+        }
+
+        public static void DisposeAll()
+        {
+            live = false;
+            Thread.Sleep(500);
+
+            try { RenderLineScene.DisposeAllTextures(); } catch { }
+
+            try { dx.EndScene(); } catch { }
+            try { dx.Present(); } catch { }
+            try { dx.Dispose(); } catch { }
+            try { renderThread.Abort(); } catch { }
+            dx = null;
+            pp = null;
+            renderThread = null;
+        }
+
+        public static void CreateDeviceAndRenderthread()
+        {
+            SetUpPresentParametrs();
+            if (CreateDirectXDevice()) StartRenderThread();
+            else DisposeAll();
+        }
+    }
+}
+</value>
+  </data>
+  <metadata name="menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <data name="textBox2.Text" xml:space="preserve">
+    <value>using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Text;
+using System.Threading;
+using System.Windows.Forms;
+using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
+using Microsoft.DirectX.DirectDraw;
+using Microsoft.DirectX.DirectInput;
+using System.Diagnostics;
+
+namespace WindowsFormsApp1
+{
+    public static class EditBlocksCollisions
+    {
+        public static Vector3 comparePosition = new Vector3();
+        public static float bortOffset = 0.0f;
+        public static Mesh playerMesh;
+        public static Mesh chankMesh;
+        public static VertexBuffer vbChank;
+        public static IndexBuffer ibChank;
+
+        public static Mesh testMesh;
+        public static short[] ind = { 0, 1, 2 };
+        public static CustomVertex.PositionColoredTextured[] vrt =
+        {
+            new CustomVertex.PositionColoredTextured(new Vector3(-1, -1, 0), Color.Red.ToArgb(), 0.0f, 0.0f),
+            new CustomVertex.PositionColoredTextured(new Vector3(-1, 1, 0), Color.Blue.ToArgb(), 0.0f, 0.0625f),
+            new CustomVertex.PositionColoredTextured(new Vector3(1, 1, 0), Color.Green.ToArgb(), 0.03125f, 0.0625f),
+        };
+
+        public static void InitializeCollisions()
+        {
+            try
+            {
+                testMesh = new Mesh(1, 3, MeshFlags.Managed, CustomVertex.PositionColoredTextured.Format, Render.dx);
+                using (VertexBuffer vb = testMesh.VertexBuffer)
+                {
+                    using (GraphicsStream gs = vb.Lock(0, 0, Microsoft.DirectX.Direct3D.LockFlags.None))
+                    {
+                        gs.Write(vrt[0]);
+                        gs.Write(vrt[1]);
+                        gs.Write(vrt[2]);
+                    }
+                    vb.Unlock();
+                }
+                using (IndexBuffer ib = testMesh.IndexBuffer)
+                {
+                    ib.SetData(ind, 0, Microsoft.DirectX.Direct3D.LockFlags.None);
+                }
+
+                playerMesh = Mesh.Cylinder(Render.dx, 0.4f, 0.4f, 1.7f, 16, 1);
+
+                ReInitializeChankMesh();
+            }
+            catch (Exception ex) { MessageBox.Show(ex.ToString()); }
+        }
+
+        public static void ReInitializeChankMesh()
+        {
+            try
+            {
+                chankMesh = new Mesh(
+                    MeshBuilder.vt.Length / 3,
+                    MeshBuilder.vt.Length,
+                    MeshFlags.Managed,
+                    CustomVertex.PositionColoredTextured.Format,
+                    Render.dx);
+
+                using (VertexBuffer vb = chankMesh.VertexBuffer)
+                {
+                    using (GraphicsStream data = vb.Lock(0, 0, Microsoft.DirectX.Direct3D.LockFlags.None))
+                        for (int i = 0; i &lt; MeshBuilder.vt.Length; i++) data.Write(MeshBuilder.vt[i]);
+                    vb.Unlock();
+                }
+
+                short[] indices = new short[MeshBuilder.vt.Length];
+                for (int i = 0; i &lt; indices.Length; i++) indices[i] = (short)i;
+
+                using (IndexBuffer ib = chankMesh.IndexBuffer)
+                    ib.SetData(indices, 0, Microsoft.DirectX.Direct3D.LockFlags.None);
+            }
+            catch { }
+        }
+
+
+        public static IntersectInformation rayInfo;
+        public static float dis = 0.0f;
+        public static float xoffset = 0.0f;
+
+        public static float Lerp(float a, float b, float t) { return a + (b - a) / t; }
+        public static float DegresToRadian(float degres) { return (float)Math.PI / 180.0f * degres; }
+
+
+        public static int mouseButtonDown = 0;
+        public static Vector3 boxSelectionPositionRound = new Vector3();
+        public static float negativeInt = 1.0f;
+        public static bool blockPasteOrBreakEvent = false;
+        public static bool intersectionAviable = false;
+        public static int blockForCreate = 4;
+        public static void GetPlaneVectorToPasteCubeSelection()
+        {
+            switch (mouseButtonDown)
+            {
+                case 1:
+                    negativeInt = 1.0f;
+                    blockPasteOrBreakEvent = true;
+                    mouseButtonDown = 0;
+                    break;
+                case 2:
+                    negativeInt = -1.0f;
+                    blockPasteOrBreakEvent = true;
+                    mouseButtonDown = 0;
+                    break;
+            }
+
+            if (intersectionAviable)
+            {
+                for (int y = 0; y &lt; ChankGenerator.CHANK_MAX_UP_BLOCKS; y++)
+                {
+                    for (int z = 0; z &lt; 16; z++)
+                    {
+                        for (int x = 0; x &lt; 16; x++)
+                        {
+                            //Up &amp; Down
+                            if (vrt[0].Position.Y == vrt[1].Position.Y &amp;&amp; vrt[0].Position.Y == vrt[2].Position.Y)
+                            {
+                                //Up
+                                if (vrt[0].Position.Z &lt; vrt[1].Position.Z &amp;&amp;
+                                    ((vrt[1].Position.X &lt; vrt[2].Position.X) || (vrt[1].Position.Z &gt; vrt[2].Position.Z)))
+                                {
+                                    int block = ((ChankGenerator.Chank)ChankGenerator.chanks[0]).chankArray[y][z][x];
+                                    Vector3 modifedPointPosition = pointPosition + new Vector3(0, 0.1f * negativeInt, 0);
+                                    if ((modifedPointPosition.X &gt; (float)x - 0.5f) &amp;&amp; (modifedPointPosition.X &lt; (float)x + 0.5f) &amp;&amp;
+                                        (modifedPointPosition.Z &gt; (float)z - 0.5f) &amp;&amp; (modifedPointPosition.Z &lt; (float)z + 0.5f) &amp;&amp;
+                                        (modifedPointPosition.Y &gt; (float)y - 0.5f) &amp;&amp; (modifedPointPosition.Y &lt; (float)y + 0.5f))
+                                    {
+                                        boxSelectionPositionRound = new Vector3(x, y, z);
+                                        if (blockPasteOrBreakEvent &amp;&amp; intersectionAviable)
+                                        {
+                                            ((ChankGenerator.Chank)ChankGenerator.chanks[0]).chankArray[y][z][x] =
+                                                negativeInt &gt; 0 ? (byte)blockForCreate : (byte)0;
+                                            MeshBuilder.CreateChankMesh((ChankGenerator.Chank)ChankGenerator.chanks[0]);
+                                            ReInitializeChankMesh();
+                                            blockPasteOrBreakEvent = false;
+                                        }
+                                    }
+                                }
+                                //Down
+                                if (vrt[0].Position.Z &gt; vrt[1].Position.Z &amp;&amp;
+                                    ((vrt[1].Position.X &lt; vrt[2].Position.X) || (vrt[1].Position.Z &lt; vrt[2].Position.Z)))
+                                {
+                                    int block = (byte)((ChankGenerator.Chank)ChankGenerator.chanks[0]).chankArray[y][z][x];
+                                    Vector3 modifedPointPosition = pointPosition + new Vector3(0, -0.1f * negativeInt, 0);
+                                    if ((modifedPointPosition.X &gt; (float)x - 0.5f) &amp;&amp; (modifedPointPosition.X &lt; (float)x + 0.5f) &amp;&amp;
+                                        (modifedPointPosition.Z &gt; (float)z - 0.5f) &amp;&amp; (modifedPointPosition.Z &lt; (float)z + 0.5f) &amp;&amp;
+                                        (modifedPointPosition.Y &gt; (float)y - 0.5f) &amp;&amp; (modifedPointPosition.Y &lt; (float)y + 0.5f))
+                                    {
+                                        boxSelectionPositionRound = new Vector3(x, y, z);
+                                        if (blockPasteOrBreakEvent &amp;&amp; intersectionAviable)
+                                        {
+                                            ((ChankGenerator.Chank)ChankGenerator.chanks[0]).chankArray[y][z][x] =
+                                                negativeInt &gt; 0 ? (byte)blockForCreate : (byte)0;
+                                            MeshBuilder.CreateChankMesh((ChankGenerator.Chank)ChankGenerator.chanks[0]);
+                                            ReInitializeChankMesh();
+                                            blockPasteOrBreakEvent = false;
+                                        }
+                                    }
+                                }
+                            }
+                            //Left &amp; Right
+                            if (vrt[0].Position.X == vrt[1].Position.X &amp;&amp; vrt[0].Position.X == vrt[2].Position.X)
+                            {
+                                //Left
+                                if (vrt[0].Position.Y &lt; vrt[1].Position.Y &amp;&amp;
+                                    ((vrt[0].Position.Z &gt; vrt[2].Position.Z) || (vrt[0].Position.Y &gt; vrt[1].Position.Y)))
+                                {
+                                    int block = ((ChankGenerator.Chank)ChankGenerator.chanks[0]).chankArray[y][z][x];
+                                    Vector3 modifedPointPosition = pointPosition + new Vector3(-0.1f * negativeInt, 0, 0);
+                                    if ((modifedPointPosition.X &gt; (float)x - 0.5f) &amp;&amp; (modifedPointPosition.X &lt; (float)x + 0.5f) &amp;&amp;
+                                        (modifedPointPosition.Z &gt; (float)z - 0.5f) &amp;&amp; (modifedPointPosition.Z &lt; (float)z + 0.5f) &amp;&amp;
+                                        (modifedPointPosition.Y &gt; (float)y - 0.5f) &amp;&amp; (modifedPointPosition.Y &lt; (float)y + 0.5f))
+                                    {
+                                        boxSelectionPositionRound = new Vector3(x, y, z);
+                                        if (blockPasteOrBreakEvent &amp;&amp; intersectionAviable)
+                                        {
+                                            ((ChankGenerator.Chank)ChankGenerator.chanks[0]).chankArray[y][z][x] =
+                                                negativeInt &gt; 0 ? (byte)blockForCreate : (byte)0;
+                                            MeshBuilder.CreateChankMesh((ChankGenerator.Chank)ChankGenerator.chanks[0]);
+                                            ReInitializeChankMesh();
+                                            blockPasteOrBreakEvent = false;
+                                        }
+                                    }
+                                }
+                                //Right
+                                if (vrt[0].Position.Y &lt; vrt[1].Position.Y &amp;&amp;
+                                    ((vrt[0].Position.Z &lt; vrt[2].Position.Z) || (vrt[0].Position.Z &lt; vrt[1].Position.Z)))
+                                {
+                                    int block = (byte)((ChankGenerator.Chank)ChankGenerator.chanks[0]).chankArray[y][z][x];
+                                    Vector3 modifedPointPosition = pointPosition + new Vector3(0.1f * negativeInt, 0, 0);
+                                    if ((modifedPointPosition.X &gt; (float)x - 0.5f) &amp;&amp; (modifedPointPosition.X &lt; (float)x + 0.5f) &amp;&amp;
+                                        (modifedPointPosition.Z &gt; (float)z - 0.5f) &amp;&amp; (modifedPointPosition.Z &lt; (float)z + 0.5f) &amp;&amp;
+                                        (modifedPointPosition.Y &gt; (float)y - 0.5f) &amp;&amp; (modifedPointPosition.Y &lt; (float)y + 0.5f))
+                                    {
+                                        boxSelectionPositionRound = new Vector3(x, y, z);
+                                        if (blockPasteOrBreakEvent &amp;&amp; intersectionAviable)
+                                        {
+                                            ((ChankGenerator.Chank)ChankGenerator.chanks[0]).chankArray[y][z][x] =
+                                                negativeInt &gt; 0 ? (byte)blockForCreate : (byte)0;
+                                            MeshBuilder.CreateChankMesh((ChankGenerator.Chank)ChankGenerator.chanks[0]);
+                                            ReInitializeChankMesh();
+                                            blockPasteOrBreakEvent = false;
+                                        }
+                                    }
+                                }
+                            }
+                            //Front &amp; Back
+                            if (vrt[0].Position.Z == vrt[1].Position.Z &amp;&amp; vrt[0].Position.Z == vrt[2].Position.Z)
+                            {
+                                //Front
+                                if (vrt[0].Position.Y &lt; vrt[1].Position.Y &amp;&amp;
+                                    ((vrt[0].Position.X &lt; vrt[2].Position.X) || (vrt[0].Position.X &lt; vrt[1].Position.X)))
+                                {
+                                    int block = ((ChankGenerator.Chank)ChankGenerator.chanks[0]).chankArray[y][z][x];
+                                    Vector3 modifedPointPosition = pointPosition + new Vector3(0, 0, -0.1f * negativeInt);
+                                    if ((modifedPointPosition.X &gt; (float)x - 0.5f) &amp;&amp; (modifedPointPosition.X &lt; (float)x + 0.5f) &amp;&amp;
+                                        (modifedPointPosition.Z &gt; (float)z - 0.5f) &amp;&amp; (modifedPointPosition.Z &lt; (float)z + 0.5f) &amp;&amp;
+                                        (modifedPointPosition.Y &gt; (float)y - 0.5f) &amp;&amp; (modifedPointPosition.Y &lt; (float)y + 0.5f))
+                                    {
+                                        boxSelectionPositionRound = new Vector3(x, y, z);
+                                        if (blockPasteOrBreakEvent &amp;&amp; intersectionAviable)
+                                        {
+                                            ((ChankGenerator.Chank)ChankGenerator.chanks[0]).chankArray[y][z][x] =
+                                                negativeInt &gt; 0 ? (byte)blockForCreate : (byte)0;
+                                            MeshBuilder.CreateChankMesh((ChankGenerator.Chank)ChankGenerator.chanks[0]);
+                                            ReInitializeChankMesh();
+                                            blockPasteOrBreakEvent = false;
+                                        }
+                                    }
+                                }
+                                //Back
+                                if (vrt[0].Position.Y &lt; vrt[1].Position.Y &amp;&amp;
+                                    ((vrt[0].Position.X &gt; vrt[2].Position.X) || (vrt[0].Position.X &gt; vrt[1].Position.X)))
+                                {
+                                    int block = (byte)((ChankGenerator.Chank)ChankGenerator.chanks[0]).chankArray[y][z][x];
+                                    Vector3 modifedPointPosition = pointPosition + new Vector3(0, 0, 0.1f * negativeInt);
+                                    if ((modifedPointPosition.X &gt; (float)x - 0.5f) &amp;&amp; (modifedPointPosition.X &lt; (float)x + 0.5f) &amp;&amp;
+                                        (modifedPointPosition.Z &gt; (float)z - 0.5f) &amp;&amp; (modifedPointPosition.Z &lt; (float)z + 0.5f) &amp;&amp;
+                                        (modifedPointPosition.Y &gt; (float)y - 0.5f) &amp;&amp; (modifedPointPosition.Y &lt; (float)y + 0.5f))
+                                    {
+                                        boxSelectionPositionRound = new Vector3(x, y, z);
+                                        if (blockPasteOrBreakEvent &amp;&amp; intersectionAviable)
+                                        {
+                                            ((ChankGenerator.Chank)ChankGenerator.chanks[0]).chankArray[y][z][x] =
+                                                negativeInt &gt; 0 ? (byte)blockForCreate : (byte)0;
+                                            MeshBuilder.CreateChankMesh((ChankGenerator.Chank)ChankGenerator.chanks[0]);
+                                            ReInitializeChankMesh();
+                                            blockPasteOrBreakEvent = false;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                boxSelectionPositionRound = new Vector3(0, -1000, 0);
+                pointPosition = new Vector3(0, -1000, 0);
+                Scene.physDebag = "message";
+            }
+            blockPasteOrBreakEvent = false;
+            negativeInt = -1.0f;
+        }
+
+        public static Vector3 viewDirection = new Vector3();
+        public static IntersectInformation triesCollisionInfo;
+
+        public static float[] intersectionsUV = new float[2];
+
+        public static Vector3 pointPosition = new Vector3();
+        public static void CheckCameraRayCollision()
+        {
+            try
+            {
+                viewDirection = new Vector3(
+                    (float)Math.Sin(DegresToRadian(MouseAndKeyboardEvents.mainXrot)) * (float)Math.Cos(DegresToRadian(MouseAndKeyboardEvents.mainYrot)),
+                    (float)Math.Sin(DegresToRadian(MouseAndKeyboardEvents.mainYrot)),
+                    (float)Math.Cos(DegresToRadian(MouseAndKeyboardEvents.mainXrot)) * (float)Math.Cos(DegresToRadian(MouseAndKeyboardEvents.mainYrot)));
+
+                //if (chankMesh.Intersect(PlayerMoving.playerWorldPosition + new Vector3(0, 0.75f + 0.5f, 0), viewDirection, out triesCollisionInfo))
+                if (chankMesh.Intersect(RenderLineScene.translationsBefore * -1, viewDirection, out triesCollisionInfo))
+                {
+                    intersectionAviable = true;
+                    //Scene.physDebag = "\n" +
+                    //   "FaceIndex: " + triesCollisionInfo.FaceIndex.ToString() + "\n" +
+                    //   "Dist: " + triesCollisionInfo.Dist.ToString() + "\n" +
+                    //   "U: " + triesCollisionInfo.U.ToString() + "\n" +
+                    //   "V: " + triesCollisionInfo.V.ToString();
+
+                    pointPosition =
+                        RenderLineScene.translationsBefore * -1 +
+                        viewDirection *
+                        triesCollisionInfo.Dist;
+
+                    vrt[0] = new CustomVertex.PositionColoredTextured(
+                    MeshBuilder.vt[(triesCollisionInfo.FaceIndex * 3)].Position,
+                    Color.Red.ToArgb(),
+                    0.0f, 0.0f);
+
+                    vrt[1] = new CustomVertex.PositionColoredTextured(
+                        MeshBuilder.vt[(triesCollisionInfo.FaceIndex * 3) + 1].Position,
+                        Color.Red.ToArgb(),
+                        0.0f, 0.0f);
+
+                    vrt[2] = new CustomVertex.PositionColoredTextured(
+                        MeshBuilder.vt[(triesCollisionInfo.FaceIndex * 3) + 2].Position,
+                        Color.Red.ToArgb(),
+                        0.0f, 0.0f);
+                } else
+                {
+                    intersectionAviable = false;
+                }
+
+                GetPlaneVectorToPasteCubeSelection();
+
+                using (VertexBuffer vb = testMesh.VertexBuffer)
+                {
+                    using (GraphicsStream gs = vb.Lock(0, 0, Microsoft.DirectX.Direct3D.LockFlags.None))
+                    {
+                        gs.Write(vrt[0]);
+                        gs.Write(vrt[1]);
+                        gs.Write(vrt[2]);
+                    }
+                    vb.Unlock();
+                }
+            }
+            catch { }
+        }
+    }
+}</value>
+  </data>
 </root>
