@@ -135,9 +135,9 @@ namespace WindowsFormsApp1
         {
             live = false;
             Thread.Sleep(500);
-            dvX.Unacquire();
-            dvY.Unacquire();
-            dvK.Unacquire();
+            try { dvX.Unacquire(); } catch { }
+            try { dvY.Unacquire(); } catch { }
+            try { dvK.Unacquire(); } catch { }
             dvX.Dispose();
             dvY.Dispose();
             dvK.Dispose();

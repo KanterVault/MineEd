@@ -134,13 +134,18 @@ namespace WindowsFormsApp1
             SetCursoreVisible();
         }
 
-        private void Quit(object sender, FormClosingEventArgs e)
+        private void DisposeAll()
         {
             timerUpdate.Enabled = false;
             Render.DisposeAll();
             MouseAndKeyboardEvents.DisposeAll();
             PlayerMoving.DisposeMoveTimer();
             pfc.Dispose();
+        }
+
+        private void Quit(object sender, FormClosingEventArgs e)
+        {
+            DisposeAll();
         }
 
         private void MouseDownScene(object sender, MouseEventArgs e)
@@ -168,6 +173,12 @@ namespace WindowsFormsApp1
         private void KeyboardPress(object sender, KeyPressEventArgs e)
         {
 
+        }
+
+        private void выходToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DisposeAll();
+            Application.Exit();
         }
     }
 }

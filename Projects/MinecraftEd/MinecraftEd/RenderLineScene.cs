@@ -34,7 +34,7 @@ namespace WindowsFormsApp1
                 DegresToRadian(60.0f),                                              //fov
                 (float)form.ClientSize.Width / (float)form.ClientSize.Height,       //aspectRatio
                 0.1f,                                                              //zNear
-                100f);                                                             //zFar
+                10000f);                                                             //zFar
 
             translationsBefore = Vector3.Lerp(
                 translationsBefore,
@@ -175,8 +175,15 @@ namespace WindowsFormsApp1
             Render.dx.Material = mat;
             Render.dx.SetTexture(0, tex[0]);
 
-            ModelRotate(0, 0, 0, 0, 0, 0);
-            EditBlocksCollisions.chankMesh.DrawSubset(0);
+
+            for (int z = 0; z < 10; z++)
+            {
+                for (int x = 0; x < 10; x++)
+                {
+                    ModelRotate(x * 14, 0, z * 14, 0, 0, 0);
+                    EditBlocksCollisions.chankMesh.DrawSubset(0);
+                }
+            }
 
             //ModelRotate(0, 0, 0, 0, 0, 0);
             //EditBlocksCollisions.testMesh.DrawSubset(0);
