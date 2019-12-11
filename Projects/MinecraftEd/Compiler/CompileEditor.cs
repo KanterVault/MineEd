@@ -26,7 +26,7 @@ namespace Compiler
         {
             ce = new FormErrors();
 
-            string[] code = new string[9];
+            string[] code = new string[10];
             code[0] = textBox1.Text;
             code[1] = textBox2.Text;
             code[2] = textBox3.Text;

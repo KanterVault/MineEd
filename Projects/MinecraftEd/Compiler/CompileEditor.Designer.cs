@@ -49,12 +49,12 @@
             this.textBox9 = new System.Windows.Forms.TextBox();
             this.renderLineScene = new System.Windows.Forms.TabPage();
             this.textBox8 = new System.Windows.Forms.TextBox();
+            this.sceneProgram = new System.Windows.Forms.TabPage();
+            this.textBox10 = new System.Windows.Forms.TextBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.программаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolMenu_Compile = new System.Windows.Forms.ToolStripMenuItem();
             this.toolMenu_Quit = new System.Windows.Forms.ToolStripMenuItem();
-            this.sceneProgram = new System.Windows.Forms.TabPage();
-            this.textBox10 = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.chankGenerator.SuspendLayout();
@@ -66,8 +66,8 @@
             this.program.SuspendLayout();
             this.render.SuspendLayout();
             this.renderLineScene.SuspendLayout();
-            this.menuStrip1.SuspendLayout();
             this.sceneProgram.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -290,6 +290,27 @@
             this.textBox8.TabIndex = 1;
             this.textBox8.Text = resources.GetString("textBox8.Text");
             // 
+            // sceneProgram
+            // 
+            this.sceneProgram.Controls.Add(this.textBox10);
+            this.sceneProgram.Location = new System.Drawing.Point(4, 22);
+            this.sceneProgram.Name = "sceneProgram";
+            this.sceneProgram.Padding = new System.Windows.Forms.Padding(3);
+            this.sceneProgram.Size = new System.Drawing.Size(383, 284);
+            this.sceneProgram.TabIndex = 9;
+            this.sceneProgram.Text = "SceneProgram";
+            this.sceneProgram.UseVisualStyleBackColor = true;
+            // 
+            // textBox10
+            // 
+            this.textBox10.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBox10.Location = new System.Drawing.Point(3, 3);
+            this.textBox10.Multiline = true;
+            this.textBox10.Name = "textBox10";
+            this.textBox10.Size = new System.Drawing.Size(377, 278);
+            this.textBox10.TabIndex = 0;
+            this.textBox10.Text = resources.GetString("textBox10.Text");
+            // 
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -323,27 +344,6 @@
             this.toolMenu_Quit.Text = "Выход";
             this.toolMenu_Quit.Click += new System.EventHandler(this.toolMenu_Quit_Click);
             // 
-            // sceneProgram
-            // 
-            this.sceneProgram.Controls.Add(this.textBox10);
-            this.sceneProgram.Location = new System.Drawing.Point(4, 22);
-            this.sceneProgram.Name = "sceneProgram";
-            this.sceneProgram.Padding = new System.Windows.Forms.Padding(3);
-            this.sceneProgram.Size = new System.Drawing.Size(383, 284);
-            this.sceneProgram.TabIndex = 9;
-            this.sceneProgram.Text = "SceneProgram";
-            this.sceneProgram.UseVisualStyleBackColor = true;
-            // 
-            // textBox10
-            // 
-            this.textBox10.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox10.Location = new System.Drawing.Point(3, 3);
-            this.textBox10.Multiline = true;
-            this.textBox10.Name = "textBox10";
-            this.textBox10.Size = new System.Drawing.Size(377, 278);
-            this.textBox10.TabIndex = 0;
-            this.textBox10.Text = resources.GetString("textBox10.Text");
-            // 
             // CompileEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -374,10 +374,10 @@
             this.render.PerformLayout();
             this.renderLineScene.ResumeLayout(false);
             this.renderLineScene.PerformLayout();
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
             this.sceneProgram.ResumeLayout(false);
             this.sceneProgram.PerformLayout();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
