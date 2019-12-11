@@ -83,7 +83,9 @@ namespace MinecraftEd
         {
             if (MouseAndKeyboardEvents.mouseLook == 0)
             {
-                //Cursor.Position = PointToScreen(new Point(ClientSize.Width / 2, ClientSize.Height / 2));
+                Cursor.Position = Program.scene.PointToScreen(
+                    new Point(Program.scene.ClientSize.Width / 2,
+                    Program.scene.ClientSize.Height / 2));
                 if (state1 == 0)
                 {
                     MouseAndKeyboardEvents.dvX.Acquire();

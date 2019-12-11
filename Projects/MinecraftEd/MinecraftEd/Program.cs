@@ -8,7 +8,13 @@ namespace MinecraftEd
     {
         public static bool exit = false;
         public static string message = "";
-        public static Form scene = new Form();
+        public static Form scene = new Form()
+        {
+            StartPosition = FormStartPosition.CenterScreen,
+            Width = 640,
+            Height = 480,
+            Text = "Game"
+        };
 
         [STAThread]
         public static void Thr()
