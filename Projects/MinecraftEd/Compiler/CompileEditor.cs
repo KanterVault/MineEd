@@ -36,13 +36,13 @@ namespace Compiler
             code[6] = textBox7.Text;
             code[7] = textBox8.Text;
             code[8] = textBox9.Text;
+            code[9] = textBox10.Text;
 
             using (CSharpCodeProvider cscp = new CSharpCodeProvider())
             {
                 CompilerParameters cp = new CompilerParameters();
                 TempFileCollection tfc = new TempFileCollection(@"\Temp");
                 CompilerResults cr = new CompilerResults(tfc);
-                CodeNamespace cn = new CodeNamespace("WindowsFormsApp1");
 
                 cp.ReferencedAssemblies.Add("Microsoft.DirectX.AudioVideoPlayback.dll");
                 cp.ReferencedAssemblies.Add("Microsoft.DirectX.Diagnostics.dll");
@@ -65,7 +65,7 @@ namespace Compiler
 
                 cp.GenerateExecutable = true;
                 cp.GenerateInMemory = false;
-                cp.OutputAssembly = "test.exe";
+                cp.OutputAssembly = "Game.exe";
                 cp.TreatWarningsAsErrors = false;
                 cp.WarningLevel = 4;
                 cp.CompilerOptions = "-platform:x86 /unsafe";
