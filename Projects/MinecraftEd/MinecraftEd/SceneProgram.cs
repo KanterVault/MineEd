@@ -58,6 +58,7 @@ namespace MinecraftEd
                 sb.Append("\n   y: " + RenderLineScene.translationsBefore.Y);
                 sb.Append("\n   z: " + RenderLineScene.translationsBefore.Z);
             } catch { }
+            sb.Append("\nBlockSelected: " + EditBlocksCollisions.blockForCreate);
 
             //label_Info.Text = sb.ToString();
             Program.message = sb.ToString();

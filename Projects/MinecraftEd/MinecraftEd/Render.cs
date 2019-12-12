@@ -51,26 +51,51 @@ namespace MinecraftEd
             pp.EnableAutoDepthStencil = true;
         }
 
+        private static int initializeCount = 0;
         public static bool CreateDirectXDevice()
         {
-            Thread.Sleep(1000);
-            try
+            do
             {
-                live = true;
-                dx = new Microsoft.DirectX.Direct3D.Device(
-                    0,
-                    Microsoft.DirectX.Direct3D.DeviceType.Hardware,
-                    Program.scene,
-                    Microsoft.DirectX.Direct3D.CreateFlags.HardwareVertexProcessing,
-                    pp);
-                return true;
+                //Thread.Sleep(200);
+                try
+                {
+                    live = true;
+
+                    try
+                    {
+                        dx = new Microsoft.DirectX.Direct3D.Device(
+                            0,
+                            Microsoft.DirectX.Direct3D.DeviceType.Hardware,
+                            Program.scene,
+                            Microsoft.DirectX.Direct3D.CreateFlags.HardwareVertexProcessing,
+                            pp);
+                    }
+                    catch
+                    {
+                        dx = new Microsoft.DirectX.Direct3D.Device(
+                            0,
+                            Microsoft.DirectX.Direct3D.DeviceType.Hardware,
+                            Program.scene,
+                            Microsoft.DirectX.Direct3D.CreateFlags.SoftwareVertexProcessing,
+                            pp);
+                    }
+
+                    initializeCount = 0;
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    if (initializeCount >= 3)
+                    {
+                        MessageBox.Show("Error: " + ex.ToString());
+                        SceneProgram.ERRORMESSAGE = ex.ToString();
+                        return false;
+                    }
+                    initializeCount++;
+                }
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error: " + ex.ToString());
-                SceneProgram.ERRORMESSAGE = ex.ToString();
-                return false;
-            }
+            while (initializeCount < 4);
+            return true;
         }
 
         public static void RenderThread()

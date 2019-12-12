@@ -22,7 +22,7 @@ namespace MinecraftEd
             scene.FormClosing += SceneProgram.Quit;
             scene.MouseDown += SceneProgram.MouseDownScene;
 
-            scene.WindowState = FormWindowState.Maximized;
+            //scene.WindowState = FormWindowState.Maximized;
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -33,8 +33,8 @@ namespace MinecraftEd
         static void Main()
         {
             Console.SetWindowSize(1, 1);
-            Console.SetBufferSize(40, 20);
-            Console.SetWindowSize(40, 20);
+            Console.SetBufferSize(40, 30);
+            Console.SetWindowSize(40, 30);
 
             Thread th = new Thread(Thr);
             th.Start();
