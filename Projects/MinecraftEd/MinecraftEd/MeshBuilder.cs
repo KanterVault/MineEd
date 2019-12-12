@@ -187,22 +187,22 @@ namespace MinecraftEd
                         {
                             case 0:
                                 break;
-                            case 1: //send
+                            case 1: //песок
                                 CreateFaces(17, 13, "");
                                 break;
-                            case 2: //grass
+                            case 2: //трава
                                 CreateFaces(0, 3, "grass");
                                 break;
-                            case 3: //dirt
+                            case 3: //земля
                                 CreateFaces(1, 5, "");
                                 break;
-                            case 4: //stone
+                            case 4: //камень
                                 CreateFaces(18, 14, "");
                                 break;
-                            case 5: //oak
+                            case 5: //дерево
                                 CreateFaces(19, 2, "");
                                 break;
-                            case 6: //oak
+                            case 6: //булыжник
                                 CreateFaces(18, 12, "");
                                 break;
                         }
