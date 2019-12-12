@@ -117,6 +117,59 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="textBox7.Text" xml:space="preserve">
+    <value>using System;
+using System.Windows.Forms;
+using System.Threading;
+
+namespace MinecraftEd
+{
+    static class Program
+    {
+        public static bool exit = false;
+        public static string message = "";
+        public static Form scene = new Form();
+
+        [STAThread]
+        public static void Thr()
+        {
+            scene.StartPosition = FormStartPosition.CenterScreen;
+            scene.Width = 640;
+            scene.Height = 480;
+            scene.Text = "Game";
+
+            scene.Shown += SceneProgram.Start;
+            scene.FormClosing += SceneProgram.Quit;
+            scene.MouseDown += SceneProgram.MouseDownScene;
+
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(scene);
+            exit = true;
+        }
+
+        static void Main()
+        {
+            Console.SetWindowSize(1, 1);
+            Console.SetBufferSize(40, 20);
+            Console.SetWindowSize(40, 20);
+
+            Thread th = new Thread(Thr);
+            th.Start();
+
+            while (true)
+            {
+                if (exit) break;
+                Thread.Sleep(10);
+                Console.Clear();
+                try { Console.Write(message); } catch { }
+            }
+            th.Abort();
+        }
+    }
+}
+</value>
+  </data>
   <data name="textBox1.Text" xml:space="preserve">
     <value>using System;
 using System.Collections;
@@ -167,9 +220,11 @@ namespace MinecraftEd
             //PlayerMoving.playerWorldPosition;
         }
 
+        private static Chank chank = new Chank();
+        private static GeneratorKey keyg = GeneratorKey.Flat;
         public static void CreateChank(Vector2 chankWorldPosition, GeneratorKey generatorKey)
         {
-            Chank chank = new Chank();
+            keyg = generatorKey;
             chank.chankID = chankCount; chankCount++;
             chank.chankName = "chank_" + chank.chankID;
             chank.chankWorldPosition = chankWorldPosition;
@@ -180,43 +235,41 @@ namespace MinecraftEd
 
             MeshBuilder.CreateChankMesh(chank);
             EditBlocksCollisions.InitializeCollisions();
-
-            //MessageBox.Show("Чанк создан!");
-
-            void PasteBlocksToArray()
-            {
-                if (generatorKey == GeneratorKey.Flat)
-                {
-                    for (int Y = 0; Y &lt; CHANK_MAX_UP_BLOCKS / 4; Y++) //to 64 plane
-                    {
-                        if (Y &lt; 64)
-                            for (int Z = 0; Z &lt; 16; Z++)
-                                for (int X = 0; X &lt; 16; X++) chank.chankArray[Y][Z][X] = (byte)4;
-                        if (Y &gt; 59 &amp;&amp; Y &lt; 63)
-                            for (int Z = 0; Z &lt; 16; Z++)
-                                for (int X = 0; X &lt; 16; X++) chank.chankArray[Y][Z][X] = (byte)3;
-                        if (Y == 63)
-                            for (int Z = 0; Z &lt; 16; Z++)
-                                for (int X = 0; X &lt; 16; X++) chank.chankArray[Y][Z][X] = (byte)2;
-                    }
-                }
-            }
-
-            void InitializeArray()
-            {
-                chank.chankArray = new byte[CHANK_MAX_UP_BLOCKS][][];
-                for (int Y = 0; Y &lt; CHANK_MAX_UP_BLOCKS; Y++)
-                {
-                    chank.chankArray[Y] = new byte[16][];
-                    for (int Z = 0; Z &lt; 16; Z++)
-                    {
-                        chank.chankArray[Y][Z] = new byte[16];
-                        for (int X = 0; X &lt; 16; X++) chank.chankArray[Y][Z][X] = (byte)0;
-                    }
-                }
-            }
-
         }
+
+        private static void PasteBlocksToArray()
+        {
+            if (keyg == GeneratorKey.Flat)
+            {
+                for (int Y = 0; Y &lt; CHANK_MAX_UP_BLOCKS / 4; Y++) //to 64 plane
+                {
+                    if (Y &lt; 64)
+                        for (int Z = 0; Z &lt; 16; Z++)
+                            for (int X = 0; X &lt; 16; X++) chank.chankArray[Y][Z][X] = (byte)4;
+                    if (Y &gt; 59 &amp;&amp; Y &lt; 63)
+                        for (int Z = 0; Z &lt; 16; Z++)
+                            for (int X = 0; X &lt; 16; X++) chank.chankArray[Y][Z][X] = (byte)3;
+                    if (Y == 63)
+                        for (int Z = 0; Z &lt; 16; Z++)
+                            for (int X = 0; X &lt; 16; X++) chank.chankArray[Y][Z][X] = (byte)2;
+                }
+            }
+        }
+
+        private static void InitializeArray()
+        {
+            chank.chankArray = new byte[CHANK_MAX_UP_BLOCKS][][];
+            for (int Y = 0; Y &lt; CHANK_MAX_UP_BLOCKS; Y++)
+            {
+                chank.chankArray[Y] = new byte[16][];
+                for (int Z = 0; Z &lt; 16; Z++)
+                {
+                    chank.chankArray[Y][Z] = new byte[16];
+                    for (int X = 0; X &lt; 16; X++) chank.chankArray[Y][Z][X] = (byte)0;
+                }
+            }
+        }
+
     }
 }
 </value>
@@ -596,9 +649,107 @@ namespace MinecraftEd
         public static Color color = new Color();
         public static CustomVertex.PositionColoredTextured[] vt = null;
 
+        private static void CreateFrontFace(int blockX, int blockY, int blockZ, Vector2 mapPosition)
+        {
+            vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, -0.5f + blockY, -0.5f + blockZ),
+                color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+            vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, 0.5f + blockY, -0.5f + blockZ),
+                color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+            vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, 0.5f + blockY, -0.5f + blockZ),
+                color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+
+            vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, -0.5f + blockY, -0.5f + blockZ),
+                color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+            vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, 0.5f + blockY, -0.5f + blockZ),
+                color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+            vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, -0.5f + blockY, -0.5f + blockZ),
+                color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+        }
+        private static void CreateBackFace(int blockX, int blockY, int blockZ, Vector2 mapPosition)
+        {
+            vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, -0.5f + blockY, 0.5f + blockZ),
+                color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+            vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, 0.5f + blockY, 0.5f + blockZ),
+                color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+            vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, 0.5f + blockY, 0.5f + blockZ),
+                color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+
+            vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, -0.5f + blockY, 0.5f + blockZ),
+                color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+            vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, 0.5f + blockY, 0.5f + blockZ),
+                color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+            vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, -0.5f + blockY, 0.5f + blockZ),
+                color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+        }
+        private static void CreateTopFace(int blockX, int blockY, int blockZ, Vector2 mapPosition)
+        {
+            vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, 0.5f + blockY, -0.5f + blockZ),
+                color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+            vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, 0.5f + blockY, 0.5f + blockZ),
+                color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+            vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, 0.5f + blockY, 0.5f + blockZ),
+                color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+
+            vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, 0.5f + blockY, -0.5f + blockZ),
+                color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+            vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, 0.5f + blockY, 0.5f + blockZ),
+                color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+            vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, 0.5f + blockY, -0.5f + blockZ),
+                color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+        }
+        private static void CreateBottomFace(int blockX, int blockY, int blockZ, Vector2 mapPosition)
+        {
+            vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, -0.5f + blockY, 0.5f + blockZ),
+                color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+            vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, -0.5f + blockY, -0.5f + blockZ),
+                color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+            vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, -0.5f + blockY, -0.5f + blockZ),
+                color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+
+            vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, -0.5f + blockY, 0.5f + blockZ),
+                color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+            vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, -0.5f + blockY, -0.5f + blockZ),
+                color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+            vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, -0.5f + blockY, 0.5f + blockZ),
+                color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+        }
+        private static void CreateLeftFace(int blockX, int blockY, int blockZ, Vector2 mapPosition)
+        {
+            vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, -0.5f + blockY, 0.5f + blockZ),
+                color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+            vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, 0.5f + blockY, 0.5f + blockZ),
+                color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+            vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, 0.5f + blockY, -0.5f + blockZ),
+                color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+
+            vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, -0.5f + blockY, 0.5f + blockZ),
+                color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+            vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, 0.5f + blockY, -0.5f + blockZ),
+                color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+            vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, -0.5f + blockY, -0.5f + blockZ),
+                color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+        }
+        private static void CreateRightFace(int blockX, int blockY, int blockZ, Vector2 mapPosition)
+        {
+            vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, -0.5f + blockY, -0.5f + blockZ),
+                color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+            vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, 0.5f + blockY, -0.5f + blockZ),
+                color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+            vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, 0.5f + blockY, 0.5f + blockZ),
+                color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+
+            vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, -0.5f + blockY, -0.5f + blockZ),
+                color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+            vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, 0.5f + blockY, 0.5f + blockZ),
+                color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+            vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, -0.5f + blockY, 0.5f + blockZ),
+                color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
+        }
+
+        private static ArrayList vertexes = null;
         public static void CreateChankMesh(ChankGenerator.Chank chankToView)
         {
-            ArrayList vertexes = new ArrayList();
+            vertexes = new ArrayList();
 
             for (int y = 1; y &lt; ChankGenerator.CHANK_MAX_UP_BLOCKS - 1; y++)
             {
@@ -711,120 +862,6 @@ namespace MinecraftEd
                         }
                     }
                 }
-            }
-
-
-            //void CreateBlockMesh(int blockX, int blockY, int blockZ, Vector2 mapPosition)
-            //{
-            //    color = Color.FromArgb(200, 200, 200);
-            //    CreateFrontFace(blockX, blockY, blockZ, mapPosition);
-            //    color = Color.FromArgb(200, 200, 200);
-            //    CreateBackFace(blockX, blockY, blockZ, mapPosition);
-            //    color = Color.FromArgb(255, 255, 255);
-            //    CreateTopFace(blockX, blockY, blockZ, mapPosition);
-            //    color = Color.FromArgb(100, 100, 100);
-            //    CreateBottomFace(blockX, blockY, blockZ, mapPosition);
-            //    color = Color.FromArgb(200, 200, 200);
-            //    CreateLeftFace(blockX, blockY, blockZ, mapPosition);
-            //    color = Color.FromArgb(200, 200, 200);
-            //    CreateRightFace(blockX, blockY, blockZ, mapPosition);
-            //}
-
-            void CreateFrontFace(int blockX, int blockY, int blockZ, Vector2 mapPosition)
-            {
-                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, -0.5f + blockY, -0.5f + blockZ),
-                    color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
-                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, 0.5f + blockY, -0.5f + blockZ),
-                    color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
-                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, 0.5f + blockY, -0.5f + blockZ),
-                    color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
-
-                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, -0.5f + blockY, -0.5f + blockZ),
-                    color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
-                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, 0.5f + blockY, -0.5f + blockZ),
-                    color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
-                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, -0.5f + blockY, -0.5f + blockZ),
-                    color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
-            }
-            void CreateBackFace(int blockX, int blockY, int blockZ, Vector2 mapPosition)
-            {
-                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, -0.5f + blockY, 0.5f + blockZ),
-                    color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
-                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, 0.5f + blockY, 0.5f + blockZ),
-                    color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
-                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, 0.5f + blockY, 0.5f + blockZ),
-                    color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
-
-                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, -0.5f + blockY, 0.5f + blockZ),
-                    color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
-                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, 0.5f + blockY, 0.5f + blockZ),
-                    color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
-                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, -0.5f + blockY, 0.5f + blockZ),
-                    color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
-            }
-            void CreateTopFace(int blockX, int blockY, int blockZ, Vector2 mapPosition)
-            {
-                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, 0.5f + blockY, -0.5f + blockZ),
-                    color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
-                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, 0.5f + blockY, 0.5f + blockZ),
-                    color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
-                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, 0.5f + blockY, 0.5f + blockZ),
-                    color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
-
-                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, 0.5f + blockY, -0.5f + blockZ),
-                    color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
-                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, 0.5f + blockY, 0.5f + blockZ),
-                    color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
-                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, 0.5f + blockY, -0.5f + blockZ),
-                    color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
-            }
-            void CreateBottomFace(int blockX, int blockY, int blockZ, Vector2 mapPosition)
-            {
-                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, -0.5f + blockY, 0.5f + blockZ),
-                    color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
-                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, -0.5f + blockY, -0.5f + blockZ),
-                    color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
-                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, -0.5f + blockY, -0.5f + blockZ),
-                    color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
-
-                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, -0.5f + blockY, 0.5f + blockZ),
-                    color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
-                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, -0.5f + blockY, -0.5f + blockZ),
-                    color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
-                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, -0.5f + blockY, 0.5f + blockZ),
-                    color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
-            }
-            void CreateLeftFace(int blockX, int blockY, int blockZ, Vector2 mapPosition)
-            {
-                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, -0.5f + blockY, 0.5f + blockZ),
-                    color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
-                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, 0.5f + blockY, 0.5f + blockZ),
-                    color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
-                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, 0.5f + blockY, -0.5f + blockZ),
-                    color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
-
-                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, -0.5f + blockY, 0.5f + blockZ),
-                    color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
-                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, 0.5f + blockY, -0.5f + blockZ),
-                    color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
-                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(-0.5f + blockX, -0.5f + blockY, -0.5f + blockZ),
-                    color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
-            }
-            void CreateRightFace(int blockX, int blockY, int blockZ, Vector2 mapPosition)
-            {
-                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, -0.5f + blockY, -0.5f + blockZ),
-                    color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
-                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, 0.5f + blockY, -0.5f + blockZ),
-                    color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
-                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, 0.5f + blockY, 0.5f + blockZ),
-                    color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
-
-                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, -0.5f + blockY, -0.5f + blockZ),
-                    color.ToArgb(), 0.0f + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
-                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, 0.5f + blockY, 0.5f + blockZ),
-                    color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (START_HEIGHT + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
-                vertexes.Add(new CustomVertex.PositionColoredTextured(new Vector3(0.5f + blockX, -0.5f + blockY, 0.5f + blockZ),
-                    color.ToArgb(), START_WIDTH + (1.0f / MAP_WIDTH * (float)mapPosition.X), (0.0f + (1.0f / MAP_HEIGHT * (float)mapPosition.Y)) * -1));
             }
 
             vt = new CustomVertex.PositionColoredTextured[vertexes.Count];
@@ -1139,53 +1176,6 @@ namespace MinecraftEd
 //}
 //playerWorldPosition = copyPlayerWorldPosition;
 </value>
-  </data>
-  <data name="textBox7.Text" xml:space="preserve">
-    <value>using System;
-using System.Windows.Forms;
-using System.Threading;
-
-namespace MinecraftEd
-{
-    static class Program
-    {
-        public static bool exit = false;
-        public static string message = "";
-        public static Form scene = new Form();
-        [STAThread]
-        public static void Thr()
-        {
-            scene.StartPosition = FormStartPosition.CenterScreen;
-            scene.Width = 640;
-            scene.Height = 480;
-            scene.Text = "Game";
-
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(scene);
-            exit = true;
-        }
-
-        static void Main()
-        {
-            Console.SetWindowSize(1, 1);
-            Console.SetBufferSize(40, 20);
-            Console.SetWindowSize(40, 20);
-
-            Thread th = new Thread(Thr);
-            th.Start();
-
-            while (true)
-            {
-                if (exit) break;
-                Thread.Sleep(10);
-                Console.Clear();
-                try { Console.Write(message); } catch { }
-            }
-            th.Abort();
-        }
-    }
-}</value>
   </data>
   <data name="textBox9.Text" xml:space="preserve">
     <value>using System;

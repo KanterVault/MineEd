@@ -18,6 +18,7 @@ namespace Compiler
         public CompileEditor()
         {
             InitializeComponent();
+            this.WindowState = FormWindowState.Maximized;
         }
 
         private FormErrors ce = null;
@@ -68,7 +69,7 @@ namespace Compiler
                 cp.OutputAssembly = "Game.exe";
                 cp.TreatWarningsAsErrors = false;
                 cp.WarningLevel = 4;
-                cp.CompilerOptions = "-platform:x86 /unsafe";
+                cp.CompilerOptions = "-platform:x86 /unsafe -optimize+";
 
                 cr = cscp.CompileAssemblyFromSource(cp, code);
 

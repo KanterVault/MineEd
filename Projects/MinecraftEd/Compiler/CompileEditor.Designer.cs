@@ -76,7 +76,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 24);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(391, 310);
+            this.panel1.Size = new System.Drawing.Size(814, 421);
             this.panel1.TabIndex = 0;
             // 
             // tabControl1
@@ -95,7 +95,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(391, 310);
+            this.tabControl1.Size = new System.Drawing.Size(814, 421);
             this.tabControl1.TabIndex = 0;
             // 
             // chankGenerator
@@ -104,7 +104,7 @@
             this.chankGenerator.Location = new System.Drawing.Point(4, 22);
             this.chankGenerator.Name = "chankGenerator";
             this.chankGenerator.Padding = new System.Windows.Forms.Padding(3);
-            this.chankGenerator.Size = new System.Drawing.Size(383, 284);
+            this.chankGenerator.Size = new System.Drawing.Size(806, 395);
             this.chankGenerator.TabIndex = 0;
             this.chankGenerator.Text = "ChankGenerator";
             this.chankGenerator.UseVisualStyleBackColor = true;
@@ -116,7 +116,7 @@
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox1.Size = new System.Drawing.Size(377, 278);
+            this.textBox1.Size = new System.Drawing.Size(800, 389);
             this.textBox1.TabIndex = 0;
             this.textBox1.Text = resources.GetString("textBox1.Text");
             // 
@@ -147,7 +147,7 @@
             this.meshBuilder.Controls.Add(this.textBox3);
             this.meshBuilder.Location = new System.Drawing.Point(4, 22);
             this.meshBuilder.Name = "meshBuilder";
-            this.meshBuilder.Size = new System.Drawing.Size(383, 284);
+            this.meshBuilder.Size = new System.Drawing.Size(806, 395);
             this.meshBuilder.TabIndex = 2;
             this.meshBuilder.Text = "MeshBuilder";
             this.meshBuilder.UseVisualStyleBackColor = true;
@@ -159,7 +159,7 @@
             this.textBox3.Multiline = true;
             this.textBox3.Name = "textBox3";
             this.textBox3.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox3.Size = new System.Drawing.Size(383, 284);
+            this.textBox3.Size = new System.Drawing.Size(806, 395);
             this.textBox3.TabIndex = 1;
             this.textBox3.Text = resources.GetString("textBox3.Text");
             // 
@@ -232,7 +232,7 @@
             this.program.Controls.Add(this.textBox7);
             this.program.Location = new System.Drawing.Point(4, 22);
             this.program.Name = "program";
-            this.program.Size = new System.Drawing.Size(383, 284);
+            this.program.Size = new System.Drawing.Size(806, 395);
             this.program.TabIndex = 6;
             this.program.Text = "Program";
             this.program.UseVisualStyleBackColor = true;
@@ -244,7 +244,7 @@
             this.textBox7.Multiline = true;
             this.textBox7.Name = "textBox7";
             this.textBox7.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox7.Size = new System.Drawing.Size(383, 284);
+            this.textBox7.Size = new System.Drawing.Size(806, 395);
             this.textBox7.TabIndex = 1;
             this.textBox7.Text = resources.GetString("textBox7.Text");
             // 
@@ -317,7 +317,7 @@
             this.программаToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(391, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(814, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -333,14 +333,14 @@
             // toolMenu_Compile
             // 
             this.toolMenu_Compile.Name = "toolMenu_Compile";
-            this.toolMenu_Compile.Size = new System.Drawing.Size(162, 22);
+            this.toolMenu_Compile.Size = new System.Drawing.Size(180, 22);
             this.toolMenu_Compile.Text = "Компилировать";
             this.toolMenu_Compile.Click += new System.EventHandler(this.toolMenu_Compile_Click);
             // 
             // toolMenu_Quit
             // 
             this.toolMenu_Quit.Name = "toolMenu_Quit";
-            this.toolMenu_Quit.Size = new System.Drawing.Size(162, 22);
+            this.toolMenu_Quit.Size = new System.Drawing.Size(180, 22);
             this.toolMenu_Quit.Text = "Выход";
             this.toolMenu_Quit.Click += new System.EventHandler(this.toolMenu_Quit_Click);
             // 
@@ -348,7 +348,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(391, 334);
+            this.ClientSize = new System.Drawing.Size(814, 445);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;

@@ -38,14 +38,14 @@
             this.listBox1.HorizontalScrollbar = true;
             this.listBox1.Location = new System.Drawing.Point(0, 0);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(267, 422);
+            this.listBox1.Size = new System.Drawing.Size(916, 338);
             this.listBox1.TabIndex = 0;
             // 
             // FormErrors
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(267, 422);
+            this.ClientSize = new System.Drawing.Size(916, 338);
             this.Controls.Add(this.listBox1);
             this.Name = "FormErrors";
             this.Text = "Errors list";

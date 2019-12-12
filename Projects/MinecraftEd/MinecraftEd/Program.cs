@@ -8,17 +8,20 @@ namespace MinecraftEd
     {
         public static bool exit = false;
         public static string message = "";
-        public static Form scene = new Form()
-        {
-            StartPosition = FormStartPosition.CenterScreen,
-            Width = 640,
-            Height = 480,
-            Text = "Game"
-        };
+        public static Form scene = new Form();
 
         [STAThread]
         public static void Thr()
         {
+            scene.StartPosition = FormStartPosition.CenterScreen;
+            scene.Width = 640;
+            scene.Height = 480;
+            scene.Text = "Game";
+
+            scene.Shown += SceneProgram.Start;
+            scene.FormClosing += SceneProgram.Quit;
+            scene.MouseDown += SceneProgram.MouseDownScene;
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(scene);
@@ -33,10 +36,6 @@ namespace MinecraftEd
 
             Thread th = new Thread(Thr);
             th.Start();
-
-            scene.Shown += SceneProgram.Start;
-            scene.FormClosing += SceneProgram.Quit;
-            scene.MouseDown += SceneProgram.MouseDownScene;
 
             while (true)
             {
