@@ -52,9 +52,12 @@ namespace MinecraftEd
             sb.Append("\nDeltatime: " + deltaTimerStr);
             sb.Append("\nMouseLock: " + MouseAndKeyboardEvents.mouseLook);
             sb.Append("\nLerpCameraPosition:");
-            sb.Append("\n   x: " + RenderLineScene.translationsBefore.X);
-            sb.Append("\n   y: " + RenderLineScene.translationsBefore.Y);
-            sb.Append("\n   z: " + RenderLineScene.translationsBefore.Z);
+            try
+            {
+                sb.Append("\n   x: " + RenderLineScene.translationsBefore.X);
+                sb.Append("\n   y: " + RenderLineScene.translationsBefore.Y);
+                sb.Append("\n   z: " + RenderLineScene.translationsBefore.Z);
+            } catch { }
 
             //label_Info.Text = sb.ToString();
             Program.message = sb.ToString();

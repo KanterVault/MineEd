@@ -50,40 +50,12 @@ namespace MinecraftEd
             //begincode:
             SceneProgram.deltaTimerStr = deltatime;
 
-            // 1) Проверка на коллизию с треугольником.
-            // 2) Если коллизия есть, то двигаемся только до точки соприкосновения.
             if (onMove)
             {
-                for (int round = 0; round < 10; round++)
-                {
-                    if (EditBlocksCollisions.chankMesh.Intersect(
-                    playerWorldPosition - new Vector3(0, -0.5f, 0),
-                    new Vector3(
-                        (float)Math.Sin(DegresToRadian(round * (360 / 10))),
-                        0,
-                        (float)Math.Cos(DegresToRadian(round * (360 / 10)))),
-                    out hitInfo))
-                    {
-                        SceneProgram.physDebag = hitInfo.Dist.ToString();
-                        //Запись трёх точек треугольника на который указывает луч.
-                        A = MeshBuilder.vt[hitInfo.FaceIndex * 3 + 0].Position;
-                        B = MeshBuilder.vt[hitInfo.FaceIndex * 3 + 1].Position;
-                        C = MeshBuilder.vt[hitInfo.FaceIndex * 3 + 2].Position;
+                playerWorldPosition += directionMove * speedMove * deltatime;
 
-                        //Вычисление вектора нормали по формуле нормали для плоскости через три точки.
-                        normalVector = new Vector3(
-                            (B.Y - A.Y) * (C.Z - A.Z) - (B.Z - A.Z) * (C.Y - A.Y),
-                            (B.X - A.X) * (C.Z - A.Z) - (B.Z - A.Z) * (C.X - A.X),
-                            (B.X - A.X) * (C.Y - A.Y) - (B.Y - A.Y) * (C.X - A.X));
-                        normalVector.Normalize();
 
-                        currentPosition = playerWorldPosition + directionMove * speedMove * deltatime;
-                        if (hitInfo.Dist < 0.3f) currentPosition += normalVector * 1000.0f;
-                    }
-                    currentPosition = playerWorldPosition + directionMove * speedMove * deltatime;
-                }
-                //playerWorldPosition += directionMove * speedMove * deltatime;
-                playerWorldPosition = currentPosition;
+
                 onMove = false;
             }
 

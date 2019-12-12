@@ -83,6 +83,8 @@ namespace MinecraftEd
 
                 using (IndexBuffer ib = chankMesh.IndexBuffer)
                     ib.SetData(indices, 0, Microsoft.DirectX.Direct3D.LockFlags.None);
+
+                chankMesh.ComputeNormals();
             }
             catch { }
         }

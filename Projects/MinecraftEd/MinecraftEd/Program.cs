@@ -22,6 +22,8 @@ namespace MinecraftEd
             scene.FormClosing += SceneProgram.Quit;
             scene.MouseDown += SceneProgram.MouseDownScene;
 
+            scene.WindowState = FormWindowState.Maximized;
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(scene);

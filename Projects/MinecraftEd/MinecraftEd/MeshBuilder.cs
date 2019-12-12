@@ -132,107 +132,78 @@ namespace MinecraftEd
                 {
                     for (int x = 1; x < 15; x++)
                     {
-                        switch (chankToView.chankArray[y][z][x])
+                        void CreateFaces(int u, int v, string sp)
                         {
-                            case 0:
-                                break;
-                            case 1:
-                                break;
-                            case 2: //grass
-                                if (chankToView.chankArray[y][z][x - 1] == (byte)0)
-                                {
-                                    color = Color.FromArgb(175, 175, 175);
-                                    CreateLeftFace(x, y, z, new Vector2(0, 3));
-                                }
-                                if (chankToView.chankArray[y][z][x + 1] == (byte)0)
-                                {
-                                    color = Color.FromArgb(175, 175, 175);
-                                    CreateRightFace(x, y, z, new Vector2(0, 3));
-                                }
-                                if (chankToView.chankArray[y][z - 1][x] == (byte)0)
-                                {
-                                    color = Color.FromArgb(175, 175, 175);
-                                    CreateFrontFace(x, y, z, new Vector2(0, 3));
-                                }
-                                if (chankToView.chankArray[y][z + 1][x] == (byte)0)
-                                {
-                                    color = Color.FromArgb(175, 175, 175);
-                                    CreateBackFace(x, y, z, new Vector2(0, 3));
-                                }
-                                if (chankToView.chankArray[y + 1][z][x] == (byte)0)
+                            if (chankToView.chankArray[y][z][x - 1] == (byte)0)
+                            {
+                                color = Color.FromArgb(127, 127, 127);
+                                CreateLeftFace(x, y, z, new Vector2(u, v));
+                            }
+                            if (chankToView.chankArray[y][z][x + 1] == (byte)0)
+                            {
+                                color = Color.FromArgb(127, 127, 127);
+                                CreateRightFace(x, y, z, new Vector2(u, v));
+                            }
+                            if (chankToView.chankArray[y][z - 1][x] == (byte)0)
+                            {
+                                color = Color.FromArgb(127 + 30, 127 + 30, 127 + 30);
+                                CreateFrontFace(x, y, z, new Vector2(u, v));
+                            }
+                            if (chankToView.chankArray[y][z + 1][x] == (byte)0)
+                            {
+                                color = Color.FromArgb(127 - 30, 127 - 30, 127 - 30);
+                                CreateBackFace(x, y, z, new Vector2(u, v));
+                            }
+                            if (chankToView.chankArray[y + 1][z][x] == (byte)0)
+                            {
+                                if (sp == "grass")
                                 {
                                     color = Color.FromArgb(100, 255, 100);
                                     CreateTopFace(x, y, z, new Vector2(2, 3));
                                 }
-                                if (chankToView.chankArray[y - 1][z][x] == (byte)0)
+                                else
                                 {
-                                    color = Color.FromArgb(100, 100, 100);
+                                    color = Color.FromArgb(255, 255, 255);
+                                    CreateTopFace(x, y, z, new Vector2(u, v));
+                                }
+                            }
+                            if (chankToView.chankArray[y - 1][z][x] == (byte)0)
+                            {
+                                if (sp == "grass")
+                                {
+                                    color = Color.FromArgb(63, 63, 63);
                                     CreateBottomFace(x, y, z, new Vector2(1, 5));
                                 }
+                                else
+                                {
+                                    color = Color.FromArgb(63, 63, 63);
+                                    CreateBottomFace(x, y, z, new Vector2(u, v));
+                                }
+                                
+                            }
+                        }
+
+                        switch (chankToView.chankArray[y][z][x])
+                        {
+                            case 0:
+                                break;
+                            case 1: //send
+                                CreateFaces(17, 13, "");
+                                break;
+                            case 2: //grass
+                                CreateFaces(0, 3, "grass");
                                 break;
                             case 3: //dirt
-                                if (chankToView.chankArray[y][z][x - 1] == (byte)0)
-                                {
-                                    color = Color.FromArgb(175, 175, 175);
-                                    CreateLeftFace(x, y, z, new Vector2(1, 5));
-                                }
-                                if (chankToView.chankArray[y][z][x + 1] == (byte)0)
-                                {
-                                    color = Color.FromArgb(175, 175, 175);
-                                    CreateRightFace(x, y, z, new Vector2(1, 5));
-                                }
-                                if (chankToView.chankArray[y][z - 1][x] == (byte)0)
-                                {
-                                    color = Color.FromArgb(175, 175, 175);
-                                    CreateFrontFace(x, y, z, new Vector2(1, 5));
-                                }
-                                if (chankToView.chankArray[y][z + 1][x] == (byte)0)
-                                {
-                                    color = Color.FromArgb(175, 175, 175);
-                                    CreateBackFace(x, y, z, new Vector2(1, 5));
-                                }
-                                if (chankToView.chankArray[y + 1][z][x] == (byte)0)
-                                {
-                                    color = Color.FromArgb(255, 255, 255);
-                                    CreateTopFace(x, y, z, new Vector2(1, 5));
-                                }
-                                if (chankToView.chankArray[y - 1][z][x] == (byte)0)
-                                {
-                                    color = Color.FromArgb(100, 100, 100);
-                                    CreateBottomFace(x, y, z, new Vector2(1, 5));
-                                }
+                                CreateFaces(1, 5, "");
                                 break;
                             case 4: //stone
-                                if (chankToView.chankArray[y][z][x - 1] == (byte)0)
-                                {
-                                    color = Color.FromArgb(175, 175, 175);
-                                    CreateLeftFace(x, y, z, new Vector2(18, 14));
-                                }
-                                if (chankToView.chankArray[y][z][x + 1] == (byte)0)
-                                {
-                                    color = Color.FromArgb(175, 175, 175);
-                                    CreateRightFace(x, y, z, new Vector2(18, 14));
-                                }
-                                if (chankToView.chankArray[y][z - 1][x] == (byte)0)
-                                {
-                                    color = Color.FromArgb(175, 175, 175);
-                                    CreateFrontFace(x, y, z, new Vector2(18, 14));
-                                }
-                                if (chankToView.chankArray[y][z + 1][x] == (byte)0)
-                                {
-                                    color = Color.FromArgb(175, 175, 175);
-                                    CreateBackFace(x, y, z, new Vector2(18, 14));
-                                }
-                                if (chankToView.chankArray[y + 1][z][x] == (byte)0)
-                                {
-                                    color = Color.FromArgb(255, 255, 255);
-                                    CreateTopFace(x, y, z, new Vector2(18, 14));
-                                }
-                                if (chankToView.chankArray[y - 1][z][x] == (byte)0)
-                                {
-                                    color = Color.FromArgb(100, 100, 100);
-                                    CreateBottomFace(x, y, z, new Vector2(18, 14));
-                                }
+                                CreateFaces(18, 14, "");
+                                break;
+                            case 5: //oak
+                                CreateFaces(19, 2, "");
+                                break;
+                            case 6: //oak
+                                CreateFaces(18, 12, "");
                                 break;
                         }
                     }

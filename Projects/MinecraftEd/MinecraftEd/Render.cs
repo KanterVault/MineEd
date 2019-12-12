@@ -45,8 +45,8 @@ namespace MinecraftEd
             pp.BackBufferFormat = Format.A8R8G8B8;
             pp.PresentationInterval = PresentInterval.Default;
             pp.PresentFlag = PresentFlag.None;
-            pp.AutoDepthStencilFormat = DepthFormat.D24S8;
-            pp.MultiSample = MultiSampleType.None; //MultiSampleType.FourSamples; 
+            pp.AutoDepthStencilFormat = DepthFormat.D16;
+            pp.MultiSample = MultiSampleType.None;
             pp.MultiSampleQuality = 0;
             pp.EnableAutoDepthStencil = true;
         }
@@ -111,23 +111,28 @@ namespace MinecraftEd
             dx.RenderState.ZBufferEnable = true;
             dx.RenderState.CullMode = Cull.CounterClockwise;
             Render.dx.VertexFormat = CustomVertex.PositionColoredTextured.Format;
+            dx.RenderState.MultiSampleAntiAlias = false;
 
-            dx.Lights[0].Diffuse = Color.White;
+            dx.Lights[0].Diffuse = Color.FromArgb(255, 255, 255);
+            dx.Lights[0].Ambient = Color.FromArgb(127, 127, 127);
+            dx.Lights[0].Specular = Color.FromArgb(0, 0, 0);
             dx.Lights[0].Type = LightType.Directional;
-            dx.Lights[0].Direction = new Vector3(0, -1, 0);
+            dx.Lights[0].Direction = new Vector3(0.2f, -0.7f, 0.1f);
             dx.Lights[0].Position = new Vector3();
             dx.Lights[0].Enabled = false;
             dx.Lights[0].Update();
 
-            dx.RenderState.AlphaBlendEnable = true;
+            dx.RenderState.AlphaBlendEnable = false;
             dx.RenderState.AlphaBlendOperation = BlendOperation.Add;
             dx.RenderState.SourceBlend = Blend.SourceAlpha;
             dx.RenderState.DestinationBlend = Blend.InvSourceAlpha;
             //dx.RenderState.BlendFactor = Color.Azure;
 
             dx.SamplerState[0].MagFilter = TextureFilter.Point;
-            dx.SamplerState[0].MipFilter = TextureFilter.Point;
-            dx.SamplerState[0].MinFilter = TextureFilter.Point;
+            dx.SamplerState[0].MipFilter = TextureFilter.None;
+            dx.SamplerState[0].MinFilter = TextureFilter.None;
+
+            //dx.RenderState.AntiAliasedLineEnable = true;
         }
 
         public static void StartRenderThread()

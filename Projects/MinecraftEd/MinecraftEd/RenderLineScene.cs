@@ -22,8 +22,9 @@ namespace MinecraftEd
 
         public static void SetUpMaterial()
         {
-            mat.Diffuse = Color.Green;
-            mat.Ambient = Color.FromArgb(255, 255, 255);
+            mat.Diffuse = Color.FromArgb(0, 0, 0);
+            mat.Ambient = Color.FromArgb(0, 0, 0);
+            mat.Emissive = Color.FromArgb(0, 0, 0);
         }
 
         public static void SetProjectionsAndCameras()
@@ -163,50 +164,119 @@ namespace MinecraftEd
 
         public static Mesh pointCollision = Mesh.Sphere(Render.dx, 0.1f, 10, 10);
         public static Mesh boxSelect = Mesh.Box(Render.dx, 1.005f, 1.005f, 1.005f);
+        public static CustomVertex.PositionOnly[] selectLines = new CustomVertex.PositionOnly[24]
+        {
+            //UP
+            new CustomVertex.PositionOnly(new Vector3(-0.5f, 0.5f, -0.5f)),
+            new CustomVertex.PositionOnly(new Vector3(-0.5f, 0.5f, 0.5f)),
+
+            new CustomVertex.PositionOnly(new Vector3(0.5f, 0.5f, -0.5f)),
+            new CustomVertex.PositionOnly(new Vector3(0.5f, 0.5f, 0.5f)),
+
+            new CustomVertex.PositionOnly(new Vector3(-0.5f, 0.5f, -0.5f)),
+            new CustomVertex.PositionOnly(new Vector3(0.5f, 0.5f, -0.5f)),
+
+            new CustomVertex.PositionOnly(new Vector3(-0.5f, 0.5f, 0.5f)),
+            new CustomVertex.PositionOnly(new Vector3(0.5f, 0.5f, 0.5f)),
+
+            //DOWN
+            new CustomVertex.PositionOnly(new Vector3(-0.5f, -0.5f, -0.5f)),
+            new CustomVertex.PositionOnly(new Vector3(-0.5f, -0.5f, 0.5f)),
+
+            new CustomVertex.PositionOnly(new Vector3(0.5f, -0.5f, -0.5f)),
+            new CustomVertex.PositionOnly(new Vector3(0.5f, -0.5f, 0.5f)),
+
+            new CustomVertex.PositionOnly(new Vector3(-0.5f, -0.5f, -0.5f)),
+            new CustomVertex.PositionOnly(new Vector3(0.5f, -0.5f, -0.5f)),
+
+            new CustomVertex.PositionOnly(new Vector3(-0.5f, -0.5f, 0.5f)),
+            new CustomVertex.PositionOnly(new Vector3(0.5f, -0.5f, 0.5f)),
+
+            //EDGES
+            new CustomVertex.PositionOnly(new Vector3(-0.5f, -0.5f, -0.5f)),
+            new CustomVertex.PositionOnly(new Vector3(-0.5f, 0.5f, -0.5f)),
+
+            new CustomVertex.PositionOnly(new Vector3(0.5f, -0.5f, -0.5f)),
+            new CustomVertex.PositionOnly(new Vector3(0.5f, 0.5f, -0.5f)),
+
+            new CustomVertex.PositionOnly(new Vector3(0.5f, -0.5f, 0.5f)),
+            new CustomVertex.PositionOnly(new Vector3(0.5f, 0.5f, 0.5f)),
+
+            new CustomVertex.PositionOnly(new Vector3(-0.5f, -0.5f, 0.5f)),
+            new CustomVertex.PositionOnly(new Vector3(-0.5f, 0.5f, 0.5f))
+        };
+
         public static void RenderScene()
         {
             Render.SetRenderStateParametrs();
             SetProjectionsAndCameras();
+            Render.dx.Material = mat;
+            Render.dx.SetTexture(0, tex[0]);
+            EditBlocksCollisions.CheckCameraRayCollision();
+            PlayerMoving.DeltaTimeFixedUpdate();
+
 
             DrawUISprite();
 
-            Render.dx.Material = mat;
-            Render.dx.SetTexture(0, tex[0]);
-
-
-            for (int z = 0; z < 10; z++)
+            for (int z = 0; z < 2; z++)
             {
-                for (int x = 0; x < 10; x++)
+                for (int x = 0; x < 2; x++)
                 {
                     ModelRotate(x * 14, 0, z * 14, 0, 0, 0);
                     EditBlocksCollisions.chankMesh.DrawSubset(0);
                 }
             }
 
-            //ModelRotate(0, 0, 0, 0, 0, 0);
-            //EditBlocksCollisions.testMesh.DrawSubset(0);
-
-            //ModelRotate(
-            //    EditBlocksCollisions.pointPosition.X,
-            //    EditBlocksCollisions.pointPosition.Y,
-            //    EditBlocksCollisions.pointPosition.Z,
-            //    0, 0, 0);
-            //pointCollision.DrawSubset(0);
-
-
-            Render.dx.RenderState.FillMode = FillMode.WireFrame;
-            Render.dx.RenderState.Lighting = true;
+            #region SelectPaste
             ModelRotate(
                 EditBlocksCollisions.boxSelectionPositionRound.X,
                 EditBlocksCollisions.boxSelectionPositionRound.Y,
                 EditBlocksCollisions.boxSelectionPositionRound.Z,
                 0, 0, 0);
-            boxSelect.DrawSubset(0);
-            Render.dx.RenderState.Lighting = false;
-            Render.dx.RenderState.FillMode = FillMode.Solid;
-
-            EditBlocksCollisions.CheckCameraRayCollision();
-            PlayerMoving.DeltaTimeFixedUpdate();
+            Render.dx.DrawUserPrimitives(PrimitiveType.LineList, 12, selectLines);
+            ModelRotate(
+                EditBlocksCollisions.boxSelectionPositionRound.X + 0.0005f,
+                EditBlocksCollisions.boxSelectionPositionRound.Y + 0.0005f,
+                EditBlocksCollisions.boxSelectionPositionRound.Z + 0.0005f,
+                0, 0, 0);
+            Render.dx.DrawUserPrimitives(PrimitiveType.LineList, 12, selectLines);
+            ModelRotate(
+                EditBlocksCollisions.boxSelectionPositionRound.X - 0.0005f,
+                EditBlocksCollisions.boxSelectionPositionRound.Y - 0.0005f,
+                EditBlocksCollisions.boxSelectionPositionRound.Z - 0.0005f,
+                0, 0, 0);
+            Render.dx.DrawUserPrimitives(PrimitiveType.LineList, 12, selectLines);
+            ModelRotate(
+                EditBlocksCollisions.boxSelectionPositionRound.X - 0.0005f,
+                EditBlocksCollisions.boxSelectionPositionRound.Y - 0.0005f,
+                EditBlocksCollisions.boxSelectionPositionRound.Z + 0.0005f,
+                0, 0, 0);
+            Render.dx.DrawUserPrimitives(PrimitiveType.LineList, 12, selectLines);
+            ModelRotate(
+                EditBlocksCollisions.boxSelectionPositionRound.X + 0.0005f,
+                EditBlocksCollisions.boxSelectionPositionRound.Y - 0.0005f,
+                EditBlocksCollisions.boxSelectionPositionRound.Z - 0.0005f,
+                0, 0, 0);
+            Render.dx.DrawUserPrimitives(PrimitiveType.LineList, 12, selectLines);
+            ModelRotate(
+                EditBlocksCollisions.boxSelectionPositionRound.X - 0.0005f,
+                EditBlocksCollisions.boxSelectionPositionRound.Y + 0.0005f,
+                EditBlocksCollisions.boxSelectionPositionRound.Z - 0.0005f,
+                0, 0, 0);
+            Render.dx.DrawUserPrimitives(PrimitiveType.LineList, 12, selectLines);
+            ModelRotate(
+                EditBlocksCollisions.boxSelectionPositionRound.X + 0.0005f,
+                EditBlocksCollisions.boxSelectionPositionRound.Y + 0.0005f,
+                EditBlocksCollisions.boxSelectionPositionRound.Z - 0.0005f,
+                0, 0, 0);
+            Render.dx.DrawUserPrimitives(PrimitiveType.LineList, 12, selectLines);
+            ModelRotate(
+                EditBlocksCollisions.boxSelectionPositionRound.X - 0.0005f,
+                EditBlocksCollisions.boxSelectionPositionRound.Y + 0.0005f,
+                EditBlocksCollisions.boxSelectionPositionRound.Z + 0.0005f,
+                0, 0, 0);
+            Render.dx.DrawUserPrimitives(PrimitiveType.LineList, 12, selectLines);
+            #endregion
         }
 
         public static void DisposeAllTextures()

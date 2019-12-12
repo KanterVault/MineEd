@@ -90,11 +90,12 @@ namespace MinecraftEd
                 if (keys[a] == Key.Escape) if (mouseLook == 0) mouseLook++;
                 if (keys[a] == Key.Space) movePlayerDirections.Y = 1;
                 if (keys[a] == Key.LeftShift) movePlayerDirections.Y = -1;
-                if (keys[a] == Key.D1) Thread.Sleep(26);
-                if (keys[a] == Key.D2) Thread.Sleep(50);
-                if (keys[a] == Key.D3) Thread.Sleep(100);
-                if (keys[a] == Key.D4) Thread.Sleep(250);
-                if (keys[a] == Key.D5) Thread.Sleep(600);
+                if (keys[a] == Key.D1) EditBlocksCollisions.blockForCreate = (byte)1; //Thread.Sleep(26);
+                if (keys[a] == Key.D2) EditBlocksCollisions.blockForCreate = (byte)2; //Thread.Sleep(50);
+                if (keys[a] == Key.D3) EditBlocksCollisions.blockForCreate = (byte)3; //Thread.Sleep(100);
+                if (keys[a] == Key.D4) EditBlocksCollisions.blockForCreate = (byte)4; //Thread.Sleep(250);
+                if (keys[a] == Key.D5) EditBlocksCollisions.blockForCreate = (byte)5; //Thread.Sleep(600);
+                if (keys[a] == Key.D6) EditBlocksCollisions.blockForCreate = (byte)6;
 
                 //if (keys[a] == Key.R) PlayerMoving.playerWorldPosition = new Vector3(8, 256, 8);
                 //if (keys[a] == Key.Space) PlayerMoving.spaceButton = true;
