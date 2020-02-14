@@ -30,10 +30,10 @@ namespace MinecraftEd
         public static void SetProjectionsAndCameras()
         {
             Render.dx.Transform.Projection = Matrix.PerspectiveFovLH(
-                DegresToRadian(60.0f),                                              //fov
-                (float)Program.scene.ClientSize.Width / (float)Program.scene.ClientSize.Height,       //aspectRatio
-                0.1f,                                                              //zNear
-                10000f);                                                             //zFar
+                DegresToRadian(60.0f),
+                (float)Program.scene.ClientSize.Width / (float)Program.scene.ClientSize.Height,
+                0.1f,
+                10000f);
 
             translationsBefore = Vector3.Lerp(
                 translationsBefore,
@@ -125,25 +125,6 @@ namespace MinecraftEd
                     new Vector3(8, 8, 0),
                     new Vector3(Program.scene.ClientSize.Width / 2, Program.scene.ClientSize.Height / 2, 0),
                     Color.White.ToArgb());
-
-                //spCursore.Transform = Matrix.Transformation(
-                //    new Vector3(),
-                //    Quaternion.Identity,
-                //    new Vector3(2, 2, 2),
-                //    new Vector3(),
-                //    Quaternion.RotationYawPitchRoll(
-                //        MouseAndKeyboardEvents.DegresToRadian(0),
-                //        MouseAndKeyboardEvents.DegresToRadian(0),
-                //        MouseAndKeyboardEvents.DegresToRadian(0)),
-                //    new Vector3(0, 0, 0));
-
-                //spCursore.Draw(
-                //    tex[1],
-                //    new Rectangle(0, 0, 256, 256),
-                //    new Vector3(0, 0, 0),
-                //    new Vector3(0, 0, 0),
-                //    Color.White.ToArgb());
-
                 spCursore.End();
             }
         }

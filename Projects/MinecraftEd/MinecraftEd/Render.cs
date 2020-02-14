@@ -24,19 +24,6 @@ namespace MinecraftEd
 
         public static void SetUpPresentParametrs()
         {
-            //pp = new PresentParameters();
-            //pp.Windowed = true;
-            //pp.SwapEffect = SwapEffect.Copy;
-            //pp.DeviceWindow = form;
-            //pp.BackBufferCount = 1;
-            //pp.BackBufferFormat = Format.A8R8G8B8;
-            //pp.PresentationInterval = PresentInterval.Default;
-            //pp.PresentFlag = PresentFlag.None;
-            //pp.AutoDepthStencilFormat = DepthFormat.D24S8;
-            //pp.MultiSample = MultiSampleType.None;
-            //pp.MultiSampleQuality = 0;
-            //pp.EnableAutoDepthStencil = true;
-
             pp = new PresentParameters();
             pp.Windowed = true;
             pp.SwapEffect = SwapEffect.Copy;
