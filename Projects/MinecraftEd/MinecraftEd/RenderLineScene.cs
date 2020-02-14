@@ -48,7 +48,7 @@ namespace MinecraftEd
 
         public static float DegresToRadian(float degres) { return (float)Math.PI / 180.0f * degres; }
 
-        public static void ModelRotate(float x, float y, float z, float Yaw, float Pitch, float Roll)
+        public static void ModelRotate(float x, float y, float z, float Yaw, float Pitch, float Roll) // вращаем модель 
         {
             Render.dx.Transform.World = Matrix.Transformation(
                 new Vector3(),
@@ -68,7 +68,7 @@ namespace MinecraftEd
                 
             tex[0] = TextureLoader.FromFile(
                 Render.dx,
-                @"Res\debug.stitched_terrain.png");
+                @"Res\debug.stitched_terrain.png");  // путь к папке текстур
             tex[0].PreLoad();
 
             tex[1] = TextureLoader.FromFile(
