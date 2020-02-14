@@ -68,12 +68,12 @@ namespace MinecraftEd
                 
             tex[0] = TextureLoader.FromFile(
                 Render.dx,
-                @"C:\Users\vr1\Desktop\MinecraftEd\Projects\MinecraftEd\MinecraftEd\Res\debug.stitched_terrain.png");
+                @"Res\debug.stitched_terrain.png");
             tex[0].PreLoad();
 
             tex[1] = TextureLoader.FromFile(
                 Render.dx,
-                @"C:\Users\vr1\Desktop\MinecraftEd\Projects\MinecraftEd\MinecraftEd\Res\minecraft\textures\gui\widgets.png");
+                @"Res\minecraft\textures\gui\widgets.png");
             tex[1].PreLoad();
 
             //tex[1] = TextureLoader.FromFile(
