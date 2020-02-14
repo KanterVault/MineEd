@@ -76,20 +76,6 @@ namespace MinecraftEd
                 @"C:\Users\vr1\Desktop\MinecraftEd\Projects\MinecraftEd\MinecraftEd\Res\minecraft\textures\gui\widgets.png");
             tex[1].PreLoad();
 
-            //tex[1] = TextureLoader.FromFile(
-            //    Render.dx,
-            //    @"Res\minecraft\textures\gui\widgets.png",
-            //    256,
-            //    256,
-            //    0,
-            //    Usage.None,
-            //    Format.A8R8G8B8,
-            //    Pool.Managed,
-            //    Filter.Point,
-            //    Filter.Point,
-            //    Color.White.ToArgb());
-            //tex[1].PreLoad();
-
             if (tex[1] == null) MessageBox.Show("Fack!"); 
         }
 
