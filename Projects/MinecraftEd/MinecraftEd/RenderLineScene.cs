@@ -185,9 +185,9 @@ namespace MinecraftEd
 
             DrawUISprite();
 
-            for (int z = 0; z < 2; z++)
+            for (int z = 0; z < 10; z++)
             {
-                for (int x = 0; x < 2; x++)
+                for (int x = 0; x < 10; x++)
                 {
                     ModelRotate(x * 14, 0, z * 14, 0, 0, 0);
                     EditBlocksCollisions.chankMesh.DrawSubset(0);
