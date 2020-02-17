@@ -16,8 +16,7 @@ namespace MinecraftEd
             scene.StartPosition = FormStartPosition.CenterScreen;
             scene.Width = 640;
             scene.Height = 480;
-            scene.Text = "Under";
-
+            scene.Text = "Game";
             scene.Shown += SceneProgram.Start;
             scene.FormClosing += SceneProgram.Quit;
             scene.MouseDown += SceneProgram.MouseDownScene;
