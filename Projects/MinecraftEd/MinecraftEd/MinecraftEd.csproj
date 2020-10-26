@@ -124,7 +124,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Res\debug.stitched_items.png" />
-    <Content Include="Res\debug.stitched_terrain.png" />
+    <Content Include="Res\debug.stitched_terrain.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Res\icon.ico" />
     <Content Include="Res\minecraft\texts\credits.txt" />
     <Content Include="Res\minecraft\texts\end.txt" />
@@ -1413,7 +1415,9 @@
     <Content Include="Res\minecraft\textures\gui\title\minecraft.png" />
     <Content Include="Res\minecraft\textures\gui\title\mojang.png" />
     <Content Include="Res\minecraft\textures\gui\toasts.png" />
-    <Content Include="Res\minecraft\textures\gui\widgets.png" />
+    <Content Include="Res\minecraft\textures\gui\widgets.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Res\minecraft\textures\gui\world_selection.png" />
     <Content Include="Res\minecraft\textures\item\acacia_boat.png" />
     <Content Include="Res\minecraft\textures\item\acacia_door.png" />
